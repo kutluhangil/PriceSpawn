@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Sora, Manrope } from "next/font/google";
+import { Unbounded, Manrope } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-sora",
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
   subsets: ["latin"],
 });
 
@@ -32,7 +32,7 @@ export default function RootLayout({
       lang="tr"
       data-theme="dark"
       suppressHydrationWarning
-      className={`${sora.variable} ${manrope.variable} h-full antialiased`}
+      className={`${unbounded.variable} ${manrope.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
