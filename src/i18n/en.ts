@@ -1,0 +1,26 @@
+import type { tr } from "./tr";
+
+export const en: Record<keyof typeof tr, string> = {
+  heroTitleA: "Which one is",
+  heroTitleB: "cheaper?",
+  tagline: "Compare every game store available in Türkiye at a glance. TL prices, live exchange rate.",
+  searchPlaceholder: "Search a game… (e.g. Forza Horizon 6)",
+  noResults: "No results found",
+  todaysDeals: "Today's Deals",
+  popularGames: "Popular Games",
+  cheapest: "CHEAPEST",
+  cheapestAt: "Cheapest:",
+  includedIn: "Included in subscriptions",
+  perMonth: "/mo",
+  steamNote: "at current rate",
+  allPrices: "All Prices",
+  storesCount: "stores",
+  scoreLabel: "Score",
+  notFoundTitle: "Game not found",
+  notFoundBody: "The page you are looking for does not exist or may have moved.",
+  backHome: "Back to home",
+  footerNote: "Prices are demo data; store prices may vary.",
+  demoRateNote: "Demo rate: $1 ≈ ₺44.20",
+  themeToggle: "Toggle theme",
+  discount: "off",
+};
