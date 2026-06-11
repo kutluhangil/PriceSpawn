@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Unbounded, Manrope } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
@@ -39,7 +41,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <div className="mesh" aria-hidden="true" />
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
