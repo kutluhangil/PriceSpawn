@@ -20,7 +20,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("tr");
 
   useEffect(() => {
+    // Sync once after hydration with the values the inline <head> script applied;
+    // SSR must render deterministic defaults, so this can't be a lazy initializer.
     const t = (document.documentElement.dataset.theme as Theme) || "dark";
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(t);
     const l = (localStorage.getItem("hdu-locale") as Locale) || "tr";
     setLocaleState(l);
