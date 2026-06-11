@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { GAMES } from "@/data/games";
 import { searchGames } from "@/lib/search";
 import { bestPrice } from "@/lib/price";
-import { formatTRY } from "@/lib/format";
 import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
 import { SubBadges } from "@/components/sub-badges";
+import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
 
-export function SearchBar() {
+export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
   const { locale, t } = useApp();
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -22,6 +22,7 @@ export function SearchBar() {
 
   const results = useMemo(() => searchGames(query, GAMES, 8), [query]);
   const showDropdown = open && query.trim().length > 0;
+  const isHero = variant === "hero";
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Escape") {
@@ -48,50 +49,54 @@ export function SearchBar() {
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto w-full max-w-2xl"
+      className={`relative z-40 w-full ${isHero ? "mx-auto max-w-2xl" : ""}`}
       onBlur={(e) => {
         if (!containerRef.current?.contains(e.relatedTarget as Node)) setOpen(false);
       }}
     >
-      <div className="aurora rounded-full">
-        <div className="glass flex items-center gap-3 rounded-full px-5 py-3.5 sm:px-6 sm:py-4">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            className="shrink-0 text-muted"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setOpen(true);
-              setHighlight(0);
-            }}
-            onFocus={() => setOpen(true)}
-            onKeyDown={onKeyDown}
-            placeholder={t.searchPlaceholder}
-            aria-label={t.searchPlaceholder}
-            className="w-full bg-transparent text-sm sm:text-base outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden"
-          />
-        </div>
+      <div
+        className={`surface-flat flex items-center gap-3 rounded-lg transition-all focus-within:border-accent focus-within:shadow-[0_0_0_3px_var(--accent-soft)] ${
+          isHero ? "px-4 py-3.5 sm:px-5" : "px-3 py-1.5"
+        }`}
+      >
+        <svg
+          width={isHero ? 18 : 14}
+          height={isHero ? 18 : 14}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="shrink-0 text-muted"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOpen(true);
+            setHighlight(0);
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={onKeyDown}
+          placeholder={t.searchPlaceholder}
+          aria-label={t.searchPlaceholder}
+          className={`w-full bg-transparent outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden ${
+            isHero ? "text-sm sm:text-base" : "text-xs"
+          }`}
+        />
       </div>
 
       {showDropdown && (
-        <div className="glass absolute left-0 right-0 top-full z-40 mt-3 overflow-hidden rounded-2xl">
+        <div className="surface absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-lg">
           {results.length === 0 ? (
-            <p className="px-5 py-4 text-sm text-muted">{t.noResults}</p>
+            <p className="px-4 py-4 text-sm text-muted">{t.noResults}</p>
           ) : (
-            <ul>
+            <ul className="divide-y divide-border">
               {results.map((game, i) => {
                 const best = bestPrice(game);
                 return (
@@ -100,14 +105,14 @@ export function SearchBar() {
                       href={`/oyun/${game.slug}`}
                       onClick={() => setOpen(false)}
                       onMouseEnter={() => setHighlight(i)}
-                      className={`flex items-center gap-3 px-4 py-3 transition-colors ${
-                        i === highlight ? "bg-accent/15" : ""
+                      className={`flex items-center gap-3 px-3 py-2.5 transition-colors ${
+                        i === highlight ? "bg-(--accent-soft)" : ""
                       }`}
                     >
                       <CoverImage
                         src={game.coverUrl}
                         title={game.title}
-                        className="h-10 w-[86px] shrink-0 rounded-lg"
+                        className="h-9 w-[78px] shrink-0 rounded"
                       />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold">
@@ -118,11 +123,9 @@ export function SearchBar() {
                         </span>
                       </span>
                       {best && (
-                        <span className="shrink-0 text-right">
-                          <span className="block font-display text-sm font-bold text-best">
-                            {formatTRY(best.tryAmount, locale)}
-                          </span>
-                          <span className="block text-[10px] text-muted">
+                        <span className="flex shrink-0 flex-col items-end gap-0.5">
+                          <PriceTag rp={best} locale={locale} size="sm" />
+                          <span className="text-[10px] text-muted">
                             {STORES[best.price.store].label}
                           </span>
                         </span>

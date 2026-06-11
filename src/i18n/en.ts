@@ -8,6 +8,8 @@ export const en: Record<keyof typeof tr, string> = {
   noResults: "No results found",
   todaysDeals: "Today's Deals",
   popularGames: "Popular Games",
+  featured: "Featured Deal",
+  viewPrices: "See all prices",
   cheapest: "CHEAPEST",
   cheapestAt: "Cheapest:",
   includedIn: "Included in subscriptions",

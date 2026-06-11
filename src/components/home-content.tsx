@@ -4,6 +4,7 @@ import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
+import { Spotlight } from "@/components/spotlight";
 import { useApp } from "@/components/providers";
 
 export function HomeContent() {
@@ -14,47 +15,53 @@ export function HomeContent() {
     discount: bestPrice(game)?.price.discountPercent ?? 0,
   }));
 
-  const deals = withDiscount
+  const byDiscount = withDiscount
     .filter((x) => x.discount > 0)
     .sort((a, b) => b.discount - a.discount)
-    .slice(0, 6)
     .map((x) => x.game);
 
-  const dealSlugs = new Set(deals.map((g) => g.slug));
-  const popular = GAMES.filter((g) => !dealSlugs.has(g.slug)).sort(
+  const spotlightGames = byDiscount.slice(0, 5);
+  const deals = byDiscount.slice(5, 17);
+  const spotlightSlugs = new Set([...spotlightGames, ...deals].map((g) => g.slug));
+  const popular = GAMES.filter((g) => !spotlightSlugs.has(g.slug)).sort(
     (a, b) => b.score - a.score
   );
 
   return (
-    <div className="mx-auto w-[min(100%-2rem,72rem)]">
-      {/* Hero */}
-      <section className="reveal flex flex-col items-center gap-6 pb-14 pt-16 text-center sm:pt-24">
-        <h1 className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
-          {t.heroTitleA} <span className="gradient-text">{t.heroTitleB}</span>
+    <div className="mx-auto w-[min(100%-2rem,76rem)]">
+      {/* Hero + arama — z-30: dropdown her zaman içerik üstünde */}
+      <section className="reveal relative z-30 flex flex-col items-center gap-4 pb-10 pt-12 text-center sm:pt-16">
+        <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+          {t.heroTitleA} <span className="text-accent">{t.heroTitleB}</span>
         </h1>
         <p className="max-w-xl text-sm text-muted sm:text-base">{t.tagline}</p>
-        <div className="w-full pt-2">
+        <div className="w-full pt-3">
           <SearchBar />
         </div>
       </section>
 
-      {/* Günün Fırsatları */}
-      <section className="reveal pb-12" style={{ animationDelay: "0.12s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold sm:text-xl">
-          <span className="gradient-text">{t.todaysDeals}</span>
+      {/* Spotlight karuseli */}
+      <div className="reveal relative z-0" style={{ animationDelay: "0.1s" }}>
+        <Spotlight games={spotlightGames} />
+      </div>
+
+      {/* Günün Fırsatları — yatay ray */}
+      <section className="reveal pt-12" style={{ animationDelay: "0.18s" }}>
+        <h2 className="font-display mb-4 text-lg font-extrabold sm:text-xl">
+          {t.todaysDeals}
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {deals.map((game, i) => (
-            <div key={game.slug} className="reveal" style={{ animationDelay: `${0.15 + i * 0.05}s` }}>
+        <div className="row-scroll -mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3">
+          {deals.map((game) => (
+            <div key={game.slug} className="w-[270px] shrink-0 snap-start">
               <GameCard game={game} />
             </div>
           ))}
         </div>
       </section>
 
-      {/* Popüler Oyunlar */}
-      <section className="reveal" style={{ animationDelay: "0.3s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold sm:text-xl">
+      {/* Popüler Oyunlar — grid */}
+      <section className="reveal pt-10" style={{ animationDelay: "0.26s" }}>
+        <h2 className="font-display mb-4 text-lg font-extrabold sm:text-xl">
           {t.popularGames}
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
