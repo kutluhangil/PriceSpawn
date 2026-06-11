@@ -15,7 +15,7 @@ export function GameDetail({ game }: { game: Game }) {
   return (
     <div className="mx-auto w-[min(100%-2rem,56rem)] pt-10">
       {/* Başlık paneli */}
-      <section className="glass relative overflow-hidden rounded-3xl">
+      <section className="glass reveal relative overflow-hidden rounded-3xl">
         {game.coverUrl && (
           <div
             className="absolute inset-0 scale-110 bg-cover bg-center opacity-30 blur-2xl"
@@ -48,7 +48,7 @@ export function GameDetail({ game }: { game: Game }) {
       </section>
 
       {/* Fiyat listesi */}
-      <section className="mt-8">
+      <section className="reveal mt-8" style={{ animationDelay: "0.12s" }}>
         <h2 className="font-display mb-4 text-lg font-bold">
           {t.allPrices}{" "}
           <span className="text-sm font-normal text-muted">
@@ -115,7 +115,7 @@ export function GameDetail({ game }: { game: Game }) {
 
       {/* Abonelikler */}
       {game.subscriptions.length > 0 && (
-        <section className="mt-8">
+        <section className="reveal mt-8" style={{ animationDelay: "0.24s" }}>
           <h2 className="font-display mb-4 text-lg font-bold">{t.includedIn}</h2>
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {game.subscriptions.map((id) => {

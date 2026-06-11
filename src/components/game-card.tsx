@@ -16,7 +16,7 @@ export function GameCard({ game }: { game: Game }) {
   return (
     <Link
       href={`/oyun/${game.slug}`}
-      className="glass glass-hover group block overflow-hidden rounded-2xl"
+      className="glass glass-hover group block h-full overflow-hidden rounded-2xl hover:ring-1 hover:ring-accent/40"
     >
       <div className="relative aspect-[460/215] overflow-hidden">
         <CoverImage
