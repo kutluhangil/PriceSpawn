@@ -6,6 +6,8 @@ export const tr = {
   noResults: "Sonuç bulunamadı",
   todaysDeals: "Günün Fırsatları",
   popularGames: "Popüler Oyunlar",
+  featured: "Öne Çıkan Fırsat",
+  viewPrices: "Tüm fiyatları gör",
   cheapest: "EN UCUZ",
   cheapestAt: "En ucuz:",
   includedIn: "Aboneliklere dahil",
