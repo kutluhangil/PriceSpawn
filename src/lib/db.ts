@@ -43,4 +43,10 @@ export async function ensureSchema(): Promise<void> {
       appid   text PRIMARY KEY,
       itad_id text NOT NULL
     )`;
+  // appid → PlayStation Store product id ('' = searched, not on PS)
+  await sql`
+    CREATE TABLE IF NOT EXISTS ps_map (
+      appid      text PRIMARY KEY,
+      product_id text NOT NULL
+    )`;
 }
