@@ -102,7 +102,7 @@ export function GameDetail({ slug }: { slug: string }) {
               return (
                 <li
                   key={rp.price.store}
-                  className={`flex items-center justify-between gap-4 rounded-2xl px-4 py-4 sm:px-5 ${
+                  className={`flex items-center justify-between gap-4 rounded-[var(--radius-card)] px-4 py-4 sm:px-5 ${
                     isBest ? "spectrum-ring shadow-lg" : "panel"
                   }`}
                 >
@@ -160,7 +160,7 @@ export function GameDetail({ slug }: { slug: string }) {
                 return (
                   <li
                     key={id}
-                    className="panel flex items-center justify-between rounded-2xl px-4 py-4 sm:px-5"
+                    className="panel flex items-center justify-between rounded-[var(--radius-card)] px-4 py-4 sm:px-5"
                   >
                     <span className="flex items-center gap-2 text-sm font-bold" style={{ color: sub.accent }}>
                       <SubLogo id={id} size={18} /> {sub.label}
