@@ -4,27 +4,15 @@ import Link from "next/link";
 import type { Game } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { formatTRY } from "@/lib/format";
+import { CoverImage } from "@/components/cover-image";
 import { useApp } from "@/components/providers";
 
-// discount% → heat color (cool blue → hot green-yellow)
-function heat(pct: number): string {
-  const stops: [number, string][] = [
-    [20, "#1e3a8a"],
-    [40, "#0e7490"],
-    [55, "#15803d"],
-    [70, "#65a30d"],
-    [85, "#bef264"],
-  ];
-  let color = stops[0][1];
-  for (const [p, c] of stops) if (pct >= p) color = c;
-  return color;
-}
-
+/** Compact deal grid: cover thumbnail + discount badge, price on hover. */
 export function DealRadar({ games }: { games: Game[] }) {
   const { locale } = useApp();
 
   return (
-    <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-6 lg:grid-cols-9">
+    <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
       {games.map((g) => {
         const best = bestPrice(g);
         const pct = best?.price.discountPercent ?? 0;
@@ -32,21 +20,28 @@ export function DealRadar({ games }: { games: Game[] }) {
           <Link
             key={g.slug}
             href={`/oyun/${g.slug}`}
-            className="heat-block group relative flex aspect-square flex-col items-center justify-center rounded-lg p-1 text-center"
-            style={{ background: heat(pct) }}
             title={g.title}
+            className="group relative block overflow-hidden rounded-xl border border-border transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_14px_36px_rgba(0,0,0,0.35)]"
           >
-            <span className="font-display text-sm font-extrabold text-white drop-shadow sm:text-base">
-              -%{pct}
-            </span>
-            <span className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-0.5 rounded-lg bg-black/80 px-1 text-center opacity-0 transition-opacity group-hover:opacity-100">
-              <span className="line-clamp-3 text-[10px] font-semibold text-white">{g.title}</span>
-              {best && (
-                <span className="text-xs font-bold text-best">
-                  {formatTRY(best.tryAmount, locale)}
-                </span>
-              )}
-            </span>
+            <div className="relative aspect-[460/215] overflow-hidden">
+              <CoverImage
+                src={g.coverUrl}
+                title={g.title}
+                className="h-full w-full transition-transform duration-500 group-hover:scale-105"
+              />
+              <span className="discount-chip absolute left-2 top-2 rounded-md px-1.5 py-0.5 text-xs shadow-lg">
+                -%{pct}
+              </span>
+              {/* alttan kayan fiyat */}
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-1 bg-gradient-to-t from-black/85 to-transparent px-2 pb-1.5 pt-6">
+                <span className="truncate text-[11px] font-semibold text-white/90">{g.title}</span>
+                {best && (
+                  <span className="shrink-0 text-xs font-bold text-best">
+                    {formatTRY(best.tryAmount, locale)}
+                  </span>
+                )}
+              </div>
+            </div>
           </Link>
         );
       })}
