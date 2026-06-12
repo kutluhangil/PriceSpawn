@@ -78,6 +78,7 @@ export const en: Record<keyof typeof tr, string> = {
   valueWorth: "worth",
   breakEven: "break-even",
   monthsWord: "mo",
+  platforms: "Platforms",
   dealRadar: "Deal Radar",
   openIn: "open in store",
   cmdkHint: "Quick search",

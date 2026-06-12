@@ -8,10 +8,18 @@ import { formatTRY } from "@/lib/format";
 import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
 import { SubBadges } from "@/components/sub-badges";
+import { StoreLogo } from "@/components/store-logo";
 import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
 
-/** Sinematik vitrin: bulanık oyun ambiyansı + sol bilgi, sağ yüzen kapak */
+/** Upgrade a Steam header.jpg to the larger, sharper capsule when possible. */
+function bigCover(url: string): string {
+  return /\/apps\/\d+\/header\.jpg$/.test(url)
+    ? url.replace(/header\.jpg$/, "capsule_616x353.jpg")
+    : url;
+}
+
+/** Steam-style featured showcase: large clear image left, info panel right. */
 export function Billboard({ games }: { games: Game[] }) {
   const { locale, t } = useApp();
   const [index, setIndex] = useState(0);
@@ -25,72 +33,64 @@ export function Billboard({ games }: { games: Game[] }) {
 
   if (games.length === 0) return null;
   const game = games[index];
-  const prices = sortedPrices(game).slice(0, 3);
+  const prices = sortedPrices(game).slice(0, 4);
   const best = prices[0];
+  const prev = () => setIndex((i) => (i - 1 + games.length) % games.length);
+  const next = () => setIndex((i) => (i + 1) % games.length);
 
   return (
     <section
-      className="relative overflow-hidden rounded-3xl border border-border"
+      className="relative"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
       aria-label={t.featured}
     >
-      {/* Ambiyans: kapağın kendisi atmosfer olur */}
-      {games.map((g, i) => (
-        <div
-          key={g.slug}
-          aria-hidden="true"
-          className={`ambient absolute inset-0 scale-125 bg-cover bg-center blur-3xl transition-opacity duration-1000 ${
-            i === index ? "" : "!opacity-0"
-          }`}
-          style={g.coverUrl ? { backgroundImage: `url(${g.coverUrl})` } : { background: "var(--accent-soft)" }}
-        />
-      ))}
-      <div
-        className="absolute inset-0"
-        aria-hidden="true"
-        style={{ background: "linear-gradient(100deg, var(--bg) 8%, transparent 60%)" }}
-      />
+      <div className="panel-strong grid overflow-hidden rounded-2xl md:grid-cols-[1.7fr_1fr]">
+        {/* Büyük net görsel */}
+        <Link href={`/oyun/${game.slug}`} className="group relative block aspect-[616/353] overflow-hidden">
+          <CoverImage
+            key={game.slug}
+            src={bigCover(game.coverUrl)}
+            title={game.title}
+            className="billboard-fade h-full w-full transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+          {best?.price.discountPercent !== undefined && (
+            <span className="discount-chip absolute left-4 top-4 rounded-lg px-2.5 py-1 text-sm shadow-lg">
+              -%{best.price.discountPercent}
+            </span>
+          )}
+        </Link>
 
-      <div
-        key={game.slug}
-        className="billboard-fade relative grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-12"
-      >
-        {/* Sol: bilgi */}
-        <div className="flex min-w-0 flex-col gap-4">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
+        {/* Bilgi paneli */}
+        <div className="flex flex-col gap-3 bg-(--row) p-5 sm:p-6">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">
             {t.featured}
           </p>
-          <h2 className="font-display text-3xl font-bold leading-[1.05] text-bright sm:text-4xl">
+          <h2 className="font-display text-2xl font-bold leading-tight text-bright">
             {game.title}
           </h2>
-          <p className="text-sm text-muted">
+          <p className="text-xs text-muted">
             {game.releaseYear} · {game.genres.join(" · ")}
           </p>
           <SubBadges ids={game.subscriptions} size="md" />
 
-          <div className="mt-1 flex max-w-sm flex-col gap-1">
+          {/* Mağaza fiyat satırları */}
+          <div className="mt-1 flex flex-col divide-y divide-border">
             {prices.map((rp, i) => (
-              <div
-                key={rp.price.store}
-                className="flex items-baseline justify-between gap-4 text-sm"
-              >
-                <span className={i === 0 ? "font-semibold text-fg" : "text-muted"}>
+              <div key={rp.price.store} className="flex items-center justify-between gap-3 py-1.5 text-sm">
+                <span className="flex items-center gap-2 text-muted">
+                  <StoreLogo id={rp.price.store} size={15} />
                   {STORES[rp.price.store].label}
                 </span>
-                <span
-                  className={`font-semibold tabular-nums ${
-                    i === 0 ? "text-best" : "text-muted"
-                  }`}
-                >
+                <span className={`font-semibold tabular-nums ${i === 0 ? "text-best" : "text-muted"}`}>
                   {formatTRY(rp.tryAmount, locale)}
                 </span>
               </div>
             ))}
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-4">
+          <div className="mt-auto flex items-center justify-between gap-3 pt-3">
             {best && <PriceTag rp={best} locale={locale} size="lg" highlight />}
             <Link
               href={`/oyun/${game.slug}`}
@@ -100,39 +100,39 @@ export function Billboard({ games }: { games: Game[] }) {
             </Link>
           </div>
         </div>
-
-        {/* Sağ: yüzen kapak */}
-        <Link
-          href={`/oyun/${game.slug}`}
-          className="group relative hidden lg:block"
-          tabIndex={-1}
-          aria-hidden="true"
-        >
-          <CoverImage
-            src={game.coverUrl}
-            title={game.title}
-            className="aspect-[460/215] w-full rotate-[1.2deg] rounded-2xl shadow-2xl transition-transform duration-500 group-hover:rotate-0 group-hover:scale-[1.02]"
-          />
-        </Link>
       </div>
 
-      {/* İlerleme çizgileri */}
+      {/* Oklar + noktalar */}
       {games.length > 1 && (
-        <div className="relative flex justify-center gap-2 pb-5">
-          {games.map((g, i) => (
-            <button
-              key={g.slug}
-              onClick={() => setIndex(i)}
-              aria-label={g.title}
-              aria-current={i === index}
-              className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
-                i === index
-                  ? "w-10 bg-gradient-to-r from-[#ff6b6b] via-[#4ade80] to-[#a78bfa]"
-                  : "w-5 bg-(--row-hover) hover:bg-muted"
-              }`}
-            />
-          ))}
-        </div>
+        <>
+          <button
+            onClick={prev}
+            aria-label="Previous"
+            className="absolute -left-3 top-1/3 hidden h-14 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-bg/80 text-xl text-fg backdrop-blur transition-colors hover:text-bright md:flex cursor-pointer"
+          >
+            ‹
+          </button>
+          <button
+            onClick={next}
+            aria-label="Next"
+            className="absolute -right-3 top-1/3 hidden h-14 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-bg/80 text-xl text-fg backdrop-blur transition-colors hover:text-bright md:flex cursor-pointer"
+          >
+            ›
+          </button>
+          <div className="mt-4 flex justify-center gap-2">
+            {games.map((g, i) => (
+              <button
+                key={g.slug}
+                onClick={() => setIndex(i)}
+                aria-label={g.title}
+                aria-current={i === index}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  i === index ? "w-8 bg-accent" : "w-4 bg-(--row-hover) hover:bg-muted"
+                }`}
+              />
+            ))}
+          </div>
+        </>
       )}
     </section>
   );

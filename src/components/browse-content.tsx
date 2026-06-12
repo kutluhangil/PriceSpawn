@@ -6,11 +6,12 @@ import { filterSortGames } from "@/lib/filters";
 import { GameCard } from "@/components/game-card";
 import { FilterBar } from "@/components/filter-bar";
 import { useGameFilters } from "@/hooks/use-game-filters";
+import type { StoreId } from "@/lib/stores";
 import { useApp } from "@/components/providers";
 
-export function BrowseContent() {
+export function BrowseContent({ initialStore }: { initialStore?: StoreId }) {
   const { t } = useApp();
-  const f = useGameFilters();
+  const f = useGameFilters(initialStore ? { stores: [initialStore] } : undefined);
   const results = useMemo(() => filterSortGames(GAMES, f.opts), [f.opts]);
 
   return (

@@ -6,6 +6,7 @@ import { FREE_OFFERS } from "@/data/free";
 import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
 import { Billboard } from "@/components/billboard";
+import { PlatformTiles } from "@/components/platform-tiles";
 import { DealRadar } from "@/components/deal-radar";
 import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
@@ -56,8 +57,16 @@ export function HomeContent() {
         <Billboard games={billboardGames} />
       </div>
 
-      {/* Fırsat Radarı — ısı haritası */}
-      <section className="reveal pt-12" style={{ animationDelay: "0.16s" }}>
+      {/* Platformlar */}
+      <section className="reveal pt-12" style={{ animationDelay: "0.14s" }}>
+        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
+          {t.platforms}
+        </h2>
+        <PlatformTiles />
+      </section>
+
+      {/* Fırsat Radarı */}
+      <section className="reveal pt-12" style={{ animationDelay: "0.18s" }}>
         <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
           {t.dealRadar}
         </h2>
