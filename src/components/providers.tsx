@@ -17,6 +17,8 @@ interface AppContext {
   locale: Locale;
   setLocale: (l: Locale) => void;
   t: Dict;
+  priceVersion: number; // bumps when live prices/rate are applied
+  liveUpdatedAt: string | null;
 }
 
 const Ctx = createContext<AppContext | null>(null);
@@ -35,6 +37,31 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [themePref, setThemePref] = useState<ThemePref>("dark");
   const [theme, setTheme] = useState<Theme>("dark");
   const [locale, setLocaleState] = useState<Locale>("tr");
+  const [priceVersion, setPriceVersion] = useState(0);
+  const [liveUpdatedAt, setLiveUpdatedAt] = useState<string | null>(null);
+
+  // Pull live prices + FX once, then patch the demo catalog and re-render.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/prices");
+        if (!res.ok) return;
+        const payload = await res.json();
+        if (cancelled) return;
+        const { applyLive } = await import("@/lib/live");
+        if (applyLive(payload)) {
+          setPriceVersion((v) => v + 1);
+          setLiveUpdatedAt(payload.updatedAt ?? null);
+        }
+      } catch {
+        // keep demo data
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const stored =
@@ -90,6 +117,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         locale,
         setLocale,
         t: locale === "tr" ? tr : en,
+        priceVersion,
+        liveUpdatedAt,
       }}
     >
       {children}

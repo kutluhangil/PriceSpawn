@@ -85,6 +85,8 @@ export const tr = {
   missingNote: "Not (opsiyonel) — platform, sürüm vb.",
   missingSend: "Mail ile bildir",
   missingClose: "Kapat",
+  liveNote: "Steam fiyatları ve kur canlı; diğer mağazalar yakında.",
+  liveBadge: "Canlı fiyat",
   openIn: "mağazasında aç",
   cmdkHint: "Hızlı ara",
   themeSystem: "Otomatik",
