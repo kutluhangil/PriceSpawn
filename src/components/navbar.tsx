@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useApp } from "@/components/providers";
-import { SITE_SHORT } from "@/lib/site";
 import { SearchBar } from "@/components/search-bar";
 
 function SunIcon() {
@@ -24,59 +24,46 @@ function MoonIcon() {
 
 export function Navbar() {
   const { theme, toggleTheme, locale, setLocale, t } = useApp();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   return (
-    <header className="sticky top-0 z-50">
-      {/* Üst bar — Steam'in #171a21 global nav'ı */}
-      <div className="bg-bg-deep">
-        <div className="mx-auto flex h-12 w-[min(100%-2rem,71rem)] items-center justify-between">
-          <Link
-            href="/"
-            className="text-base font-extrabold uppercase tracking-[0.18em] text-bright"
-          >
-            price<span className="text-accent">spawn</span>
-          </Link>
+    <header className="sticky top-0 z-50 border-b border-border bg-bg/75 backdrop-blur-xl">
+      <nav className="mx-auto flex h-14 w-[min(100%-2rem,74rem)] items-center justify-between gap-4">
+        <Link href="/" className="font-display shrink-0 text-[15px] font-bold tracking-tight text-bright">
+          price<span className="spectrum-text font-extrabold">spawn</span>
+        </Link>
 
-          <div className="flex items-center gap-1 text-[11px] font-bold uppercase">
-            {(["tr", "en"] as const).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLocale(l)}
-                aria-pressed={locale === l}
-                className={`px-2 py-1 transition-colors cursor-pointer ${
-                  locale === l ? "text-bright" : "text-muted hover:text-fg"
-                }`}
-              >
-                {l}
-              </button>
-            ))}
-            <button
-              onClick={toggleTheme}
-              aria-label={t.themeToggle}
-              className="ml-2 flex h-7 w-7 items-center justify-center rounded text-muted transition-colors cursor-pointer hover:text-bright"
-            >
-              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mağaza barı — gezinme + premium arama */}
-      <div className="border-b border-border bg-bg/95 backdrop-blur-sm">
-        <div className="mx-auto flex h-11 w-[min(100%-2rem,71rem)] items-center justify-between gap-4">
-          <nav className="flex items-center gap-1 text-[12px] font-semibold uppercase tracking-wide">
-            <Link href="/" className="px-2 py-1.5 text-fg transition-colors hover:text-bright">
-              {t.allGames}
-            </Link>
-            <Link href="/#offers" className="px-2 py-1.5 text-fg transition-colors hover:text-bright">
-              {t.specialOffers}
-            </Link>
-          </nav>
-          <div className="w-full max-w-[15rem] sm:max-w-xs">
+        {!isHome && (
+          <div className="hidden max-w-xs flex-1 sm:block">
             <SearchBar variant="nav" />
           </div>
+        )}
+
+        <div className="flex shrink-0 items-center gap-1">
+          {(["tr", "en"] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => setLocale(l)}
+              aria-pressed={locale === l}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-bold uppercase transition-colors cursor-pointer ${
+                locale === l
+                  ? "bg-accent/20 text-bright"
+                  : "text-muted hover:text-fg"
+              }`}
+            >
+              {l}
+            </button>
+          ))}
+          <button
+            onClick={toggleTheme}
+            aria-label={t.themeToggle}
+            className="ml-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted transition-colors cursor-pointer hover:text-bright"
+          >
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          </button>
         </div>
-      </div>
+      </nav>
     </header>
   );
 }
