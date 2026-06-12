@@ -49,4 +49,12 @@ export async function ensureSchema(): Promise<void> {
       appid      text PRIMARY KEY,
       product_id text NOT NULL
     )`;
+  // real all-time-low per game (from ITAD)
+  await sql`
+    CREATE TABLE IF NOT EXISTS all_time_low (
+      slug   text PRIMARY KEY,
+      amount numeric NOT NULL,
+      shop   text NOT NULL,
+      day    text NOT NULL
+    )`;
 }

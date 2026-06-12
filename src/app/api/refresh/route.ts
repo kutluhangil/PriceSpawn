@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { GAMES } from "@/data/games";
 import { sql, ensureSchema, hasDb } from "@/lib/db";
-import { fetchUsdTry, itadLookup, itadPrices, mapLimit } from "@/lib/fetchers";
+import { fetchUsdTry, itadLookup, itadPrices, itadStoreLow, mapLimit } from "@/lib/fetchers";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -95,6 +95,23 @@ export async function GET(req: Request) {
       ON CONFLICT (slug, store, day) DO UPDATE SET try_amount = ${o.amount}`;
   });
 
+  // 4) Real all-time-low (ITAD storelow), chunked.
+  let lows = 0;
+  for (const ids of chunk(allIds, 100)) {
+    const byItad = await itadStoreLow(ids, key);
+    const lowOps = Object.entries(byItad)
+      .map(([itadId, low]) => ({ slug: slugByItad.get(itadId), low }))
+      .filter((x): x is { slug: string; low: typeof x.low } => !!x.slug);
+    await mapLimit(lowOps, 24, async ({ slug, low }) => {
+      await sql!`
+        INSERT INTO all_time_low (slug, amount, shop, day)
+        VALUES (${slug}, ${low.amount}, ${low.shop}, ${low.day})
+        ON CONFLICT (slug) DO UPDATE
+          SET amount = ${low.amount}, shop = ${low.shop}, day = ${low.day}`;
+      lows++;
+    });
+  }
+
   return NextResponse.json({
     ok: true,
     fx: rate,
@@ -102,6 +119,7 @@ export async function GET(req: Request) {
     lookedUp,
     pricedGames: pricedSlugs.size,
     priceRows: ops.length,
+    allTimeLows: lows,
     at: new Date().toISOString(),
   });
 }
