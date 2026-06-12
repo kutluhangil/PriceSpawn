@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Sora, Onest } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+});
+
+const onest = Onest({
+  variable: "--font-onest",
   subsets: ["latin"],
 });
 
@@ -29,7 +34,7 @@ export default function RootLayout({
       lang="tr"
       data-theme="dark"
       suppressHydrationWarning
-      className={`${figtree.variable} h-full antialiased`}
+      className={`${sora.variable} ${onest.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
