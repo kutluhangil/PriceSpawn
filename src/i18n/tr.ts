@@ -76,6 +76,7 @@ export const tr = {
   valueWorth: "değerinde",
   breakEven: "başa baş",
   monthsWord: "ay",
+  platforms: "Platformlar",
   dealRadar: "Fırsat Radarı",
   openIn: "mağazasında aç",
   cmdkHint: "Hızlı ara",

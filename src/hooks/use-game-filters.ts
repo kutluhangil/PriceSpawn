@@ -5,18 +5,20 @@ import type { FilterOpts, SortKey } from "@/lib/filters";
 import type { StoreId } from "@/lib/stores";
 import type { SubscriptionId } from "@/lib/subscriptions";
 
-const EMPTY: FilterOpts = {
-  genres: [],
-  stores: [],
-  subscriptions: [],
-  onlyDiscounted: false,
-  minTRY: null,
-  maxTRY: null,
-  sort: "discount",
-};
+function emptyOpts(): FilterOpts {
+  return {
+    genres: [],
+    stores: [],
+    subscriptions: [],
+    onlyDiscounted: false,
+    minTRY: null,
+    maxTRY: null,
+    sort: "discount",
+  };
+}
 
-export function useGameFilters() {
-  const [opts, setOpts] = useState<FilterOpts>(EMPTY);
+export function useGameFilters(initial?: Partial<FilterOpts>) {
+  const [opts, setOpts] = useState<FilterOpts>({ ...emptyOpts(), ...initial });
 
   const toggleIn = <T,>(key: "genres" | "stores" | "subscriptions", value: T) =>
     setOpts((o) => {
@@ -34,6 +36,6 @@ export function useGameFilters() {
     setMin: (v: number | null) => setOpts((o) => ({ ...o, minTRY: v })),
     setMax: (v: number | null) => setOpts((o) => ({ ...o, maxTRY: v })),
     setSort: (s: SortKey) => setOpts((o) => ({ ...o, sort: s })),
-    reset: () => setOpts(EMPTY),
+    reset: () => setOpts(emptyOpts()),
   };
 }
