@@ -248,6 +248,47 @@ footer {
   background: transparent;
 }
 
+/* ── Apple Spotlight komut paleti ─────────────────────────────────── */
+.spotlight-overlay {
+  background: rgba(0, 0, 0, 0.22);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  animation: spotlight-in 0.16s ease-out;
+}
+
+[data-theme="dark"] .spotlight-overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.spotlight-panel {
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-deep) 72%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+  backdrop-filter: blur(28px) saturate(1.8);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 24px 70px rgba(0, 0, 0, 0.4);
+  animation: spotlight-pop 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes spotlight-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spotlight-pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-overlay,
+  .spotlight-panel {
+    animation: none;
+  }
+}
+
 /* ── Shimmer (skeleton yükleme) ───────────────────────────────────── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }

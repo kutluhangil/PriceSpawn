@@ -86,99 +86,111 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/55 px-4 pt-[12vh] backdrop-blur-md"
+      className="spotlight-overlay fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[16vh]"
       onClick={() => setOpen(false)}
     >
-      {/* Spektrum kenarlı premium kutu */}
+      {/* Apple Spotlight: buzlu cam, kenarsız, yumuşak */}
       <div
-        className="w-full max-w-xl overflow-hidden rounded-2xl shadow-2xl"
+        className="spotlight-panel w-full max-w-[34rem] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
-        style={{ padding: 1.5, background: "linear-gradient(120deg, #ff6b6b, #ffc371, #4ade80, #38bdf8, #a78bfa)" }}
       >
-        <div className="overflow-hidden rounded-[15px] bg-bg-deep">
-          {/* Arama satırı */}
-          <div className="flex items-center gap-3 px-4 py-3.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-accent" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setHighlight(0);
-              }}
-              onKeyDown={onKeyDown}
-              placeholder={t.searchPlaceholder}
-              className="w-full bg-transparent text-base text-fg outline-none placeholder:text-muted"
-            />
-            <kbd className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-semibold text-muted">ESC</kbd>
-          </div>
+        {/* Arama satırı — büyük, çerçevesiz */}
+        <div className="flex items-center gap-3.5 px-5 py-4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-muted" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setHighlight(0);
+            }}
+            onKeyDown={onKeyDown}
+            placeholder={t.searchPlaceholder}
+            className="no-focus-ring w-full bg-transparent text-lg text-fg outline-none placeholder:text-muted"
+          />
+          <kbd className="rounded-md bg-(--row-hover) px-1.5 py-0.5 text-[10px] font-semibold text-muted">esc</kbd>
+        </div>
 
-          <div className="h-px bg-border" />
+        {(showNav || results.length > 0 || query.trim().length > 0) && (
+          <div className="mx-3 h-px bg-border" />
+        )}
 
-          {/* Sonuçlar */}
-          <div className="max-h-[52vh] overflow-y-auto p-2">
-            <p className="px-2 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-wider text-muted">
-              {showNav ? t.footerSite : `${results.length} ${t.resultCount}`}
-            </p>
+        {/* Sonuçlar */}
+        <div className="max-h-[54vh] overflow-y-auto px-2 py-2">
+          <p className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-wider text-muted">
+            {showNav ? t.footerSite : `${results.length} ${t.resultCount}`}
+          </p>
 
-            {showNav ? (
-              <ul>
-                {navItems.map((n, i) => (
-                  <li key={n.href}>
-                    <button
-                      onClick={() => go(n.href)}
+          {showNav ? (
+            <ul>
+              {navItems.map((n, i) => (
+                <li key={n.href}>
+                  <button
+                    onClick={() => go(n.href)}
+                    onMouseEnter={() => setHighlight(i)}
+                    className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors ${
+                      i === highlight ? "bg-accent text-white" : "text-fg"
+                    }`}
+                  >
+                    <span className={i === highlight ? "text-white" : "text-muted"}>→</span>
+                    {n.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : results.length === 0 ? (
+            <div className="px-1 pb-1">
+              <p className="px-3 py-3 text-sm text-muted">{t.noResults}</p>
+              <MissingGame query={query.trim()} />
+            </div>
+          ) : (
+            <ul>
+              {results.map((g, i) => {
+                const best = bestPrice(g);
+                const active = i === highlight;
+                return (
+                  <li key={g.slug}>
+                    <Link
+                      href={`/oyun/${g.slug}`}
+                      onClick={() => setOpen(false)}
                       onMouseEnter={() => setHighlight(i)}
-                      className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-colors ${
-                        i === highlight ? "bg-(--row-hover) text-bright" : "text-fg"
+                      className={`flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors ${
+                        active ? "bg-accent" : ""
                       }`}
                     >
-                      <span className="text-accent">→</span> {n.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : results.length === 0 ? (
-              <div className="px-1 pb-1">
-                <p className="px-2 py-3 text-sm text-muted">{t.noResults}</p>
-                <MissingGame query={query.trim()} />
-              </div>
-            ) : (
-              <ul>
-                {results.map((g, i) => {
-                  const best = bestPrice(g);
-                  return (
-                    <li key={g.slug}>
-                      <Link
-                        href={`/oyun/${g.slug}`}
-                        onClick={() => setOpen(false)}
-                        onMouseEnter={() => setHighlight(i)}
-                        className={`flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors ${
-                          i === highlight ? "bg-(--row-hover)" : ""
-                        }`}
-                      >
-                        <CoverImage src={g.coverUrl} title={g.title} className="h-9 w-[78px] shrink-0 rounded-md" />
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-semibold text-bright">{g.title}</span>
-                          <span className="block truncate text-[11px] text-muted">{g.genres.join(", ")}</span>
+                      <CoverImage src={g.coverUrl} title={g.title} className="h-9 w-[78px] shrink-0 rounded-md" />
+                      <span className="min-w-0 flex-1">
+                        <span className={`block truncate text-sm font-semibold ${active ? "text-white" : "text-bright"}`}>
+                          {g.title}
                         </span>
-                        {best && (
-                          <span className="flex shrink-0 flex-col items-end">
-                            <PriceTag rp={best} locale={locale} size="sm" />
-                            <span className="flex items-center gap-1 text-[10px] text-muted">
-                              <StoreLogo id={best.price.store} size={11} /> {STORES[best.price.store].label}
+                        <span className={`block truncate text-[11px] ${active ? "text-white/70" : "text-muted"}`}>
+                          {g.genres.join(", ")}
+                        </span>
+                      </span>
+                      {best && (
+                        <span className="flex shrink-0 flex-col items-end">
+                          {active ? (
+                            <span className="text-sm font-bold tabular-nums text-white">
+                              {/* keep price readable on accent */}
+                              <PriceTag rp={best} locale={locale} size="sm" />
                             </span>
+                          ) : (
+                            <PriceTag rp={best} locale={locale} size="sm" />
+                          )}
+                          <span className={`flex items-center gap-1 text-[10px] ${active ? "text-white/70" : "text-muted"}`}>
+                            <StoreLogo id={best.price.store} size={11} /> {STORES[best.price.store].label}
                           </span>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       </div>
     </div>
