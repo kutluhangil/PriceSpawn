@@ -33,13 +33,20 @@ export function Footer() {
           </h3>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted">
             {Object.values(STORES).map((store) => (
-              <li key={store.id} className="flex items-center gap-2">
-                <span
-                  className="h-1.5 w-1.5 rounded-full"
-                  style={{ background: store.accent }}
-                  aria-hidden="true"
-                />
-                {store.label}
+              <li key={store.id}>
+                <a
+                  href={store.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 transition-colors hover:text-bright"
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: store.accent }}
+                    aria-hidden="true"
+                  />
+                  {store.label}
+                </a>
               </li>
             ))}
           </ul>
@@ -52,13 +59,20 @@ export function Footer() {
           </h3>
           <ul className="flex flex-col gap-2 text-sm text-muted">
             {Object.values(SUBSCRIPTIONS).map((sub) => (
-              <li key={sub.id} className="flex items-center gap-2">
-                <span
-                  className="h-1.5 w-1.5 rounded-full"
-                  style={{ background: sub.accent }}
-                  aria-hidden="true"
-                />
-                {sub.label}
+              <li key={sub.id}>
+                <a
+                  href={sub.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 transition-colors hover:text-bright"
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: sub.accent }}
+                    aria-hidden="true"
+                  />
+                  {sub.label}
+                </a>
               </li>
             ))}
           </ul>

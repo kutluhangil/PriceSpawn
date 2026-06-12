@@ -9,6 +9,8 @@ import { bestPrice } from "@/lib/price";
 import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
 import { PriceTag } from "@/components/price-tag";
+import { StoreLogo } from "@/components/store-logo";
+import { MissingGame } from "@/components/missing-game";
 import { useApp } from "@/components/providers";
 
 export function CommandPalette() {
@@ -84,50 +86,68 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 px-4 pt-[12vh] backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/55 px-4 pt-[12vh] backdrop-blur-md"
       onClick={() => setOpen(false)}
     >
+      {/* Spektrum kenarlı premium kutu */}
       <div
-        className="panel-strong w-full max-w-xl overflow-hidden rounded-2xl border border-border shadow-2xl"
+        className="w-full max-w-xl overflow-hidden rounded-2xl shadow-2xl"
         onClick={(e) => e.stopPropagation()}
+        style={{ padding: 1.5, background: "linear-gradient(120deg, #ff6b6b, #ffc371, #4ade80, #38bdf8, #a78bfa)" }}
       >
-        <div className="flex items-center gap-3 border-b border-border px-4 py-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-muted" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setHighlight(0);
-            }}
-            onKeyDown={onKeyDown}
-            placeholder={t.searchPlaceholder}
-            className="w-full bg-transparent text-base text-fg outline-none placeholder:text-muted"
-          />
-          <kbd className="rounded border border-border px-1.5 py-0.5 text-[10px] text-muted">ESC</kbd>
-        </div>
+        <div className="overflow-hidden rounded-[15px] bg-bg-deep">
+          {/* Arama satırı */}
+          <div className="flex items-center gap-3 px-4 py-3.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-accent" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <input
+              ref={inputRef}
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setHighlight(0);
+              }}
+              onKeyDown={onKeyDown}
+              placeholder={t.searchPlaceholder}
+              className="w-full bg-transparent text-base text-fg outline-none placeholder:text-muted"
+            />
+            <kbd className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-semibold text-muted">ESC</kbd>
+          </div>
 
-        <ul className="max-h-[50vh] overflow-y-auto p-2">
-          {showNav
-            ? navItems.map((n, i) => (
-                <li key={n.href}>
-                  <button
-                    onClick={() => go(n.href)}
-                    onMouseEnter={() => setHighlight(i)}
-                    className={`flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors ${
-                      i === highlight ? "bg-(--row-hover) text-bright" : "text-fg"
-                    }`}
-                  >
-                    {n.label}
-                  </button>
-                </li>
-              ))
-            : results.length === 0
-              ? <li className="px-3 py-3 text-sm text-muted">{t.noResults}</li>
-              : results.map((g, i) => {
+          <div className="h-px bg-border" />
+
+          {/* Sonuçlar */}
+          <div className="max-h-[52vh] overflow-y-auto p-2">
+            <p className="px-2 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-wider text-muted">
+              {showNav ? t.footerSite : `${results.length} ${t.resultCount}`}
+            </p>
+
+            {showNav ? (
+              <ul>
+                {navItems.map((n, i) => (
+                  <li key={n.href}>
+                    <button
+                      onClick={() => go(n.href)}
+                      onMouseEnter={() => setHighlight(i)}
+                      className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-colors ${
+                        i === highlight ? "bg-(--row-hover) text-bright" : "text-fg"
+                      }`}
+                    >
+                      <span className="text-accent">→</span> {n.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : results.length === 0 ? (
+              <div className="px-1 pb-1">
+                <p className="px-2 py-3 text-sm text-muted">{t.noResults}</p>
+                <MissingGame query={query.trim()} />
+              </div>
+            ) : (
+              <ul>
+                {results.map((g, i) => {
                   const best = bestPrice(g);
                   return (
                     <li key={g.slug}>
@@ -135,11 +155,11 @@ export function CommandPalette() {
                         href={`/oyun/${g.slug}`}
                         onClick={() => setOpen(false)}
                         onMouseEnter={() => setHighlight(i)}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+                        className={`flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors ${
                           i === highlight ? "bg-(--row-hover)" : ""
                         }`}
                       >
-                        <CoverImage src={g.coverUrl} title={g.title} className="h-8 w-[72px] shrink-0 rounded" />
+                        <CoverImage src={g.coverUrl} title={g.title} className="h-9 w-[78px] shrink-0 rounded-md" />
                         <span className="min-w-0 flex-1">
                           <span className="block truncate text-sm font-semibold text-bright">{g.title}</span>
                           <span className="block truncate text-[11px] text-muted">{g.genres.join(", ")}</span>
@@ -147,14 +167,19 @@ export function CommandPalette() {
                         {best && (
                           <span className="flex shrink-0 flex-col items-end">
                             <PriceTag rp={best} locale={locale} size="sm" />
-                            <span className="text-[10px] text-muted">{STORES[best.price.store].label}</span>
+                            <span className="flex items-center gap-1 text-[10px] text-muted">
+                              <StoreLogo id={best.price.store} size={11} /> {STORES[best.price.store].label}
+                            </span>
                           </span>
                         )}
                       </Link>
                     </li>
                   );
                 })}
-        </ul>
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
