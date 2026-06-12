@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRef } from "react";
 import type { Game } from "@/data/games";
 import { sortedPrices } from "@/lib/price";
 import { formatTRY } from "@/lib/format";
@@ -9,6 +10,12 @@ import { SUBSCRIPTIONS } from "@/lib/subscriptions";
 import { CoverImage } from "@/components/cover-image";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
+import { StoreLogo, SubLogo } from "@/components/store-logo";
+import { AtlBadge } from "@/components/atl-badge";
+import { CountUp } from "@/components/count-up";
+import { WatchButton } from "@/components/watch-button";
+import { PriceChart } from "@/components/price-chart";
+import { StickyCta } from "@/components/sticky-cta";
 import { useApp } from "@/components/providers";
 import type { Dict } from "@/i18n";
 
@@ -22,6 +29,7 @@ function reviewText(score: number, t: Dict): string {
 export function GameDetail({ game }: { game: Game }) {
   const { locale, t } = useApp();
   const prices = sortedPrices(game);
+  const priceListRef = useRef<HTMLElement | null>(null);
 
   return (
     <div>
@@ -52,6 +60,9 @@ export function GameDetail({ game }: { game: Game }) {
               className="aspect-[460/215] w-full shrink-0 rounded-2xl shadow-2xl sm:w-80"
             />
             <div className="flex min-w-0 flex-col gap-2.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <AtlBadge game={game} size="md" />
+              </div>
               <h1 className="font-display text-3xl font-bold leading-[1.05] text-bright sm:text-4xl">
                 {game.title}
               </h1>
@@ -62,17 +73,18 @@ export function GameDetail({ game }: { game: Game }) {
                 <span className="font-semibold text-accent">{reviewText(game.score, t)}</span>{" "}
                 <span className="text-muted">· {game.score}/100</span>
               </p>
-              <div className="mt-1">
+              <div className="mt-1 flex flex-wrap items-center gap-3">
                 <SubBadges ids={game.subscriptions} size="md" />
+                <WatchButton slug={game.slug} />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto w-[min(100%-2rem,60rem)]">
+      <div className="mx-auto w-[min(100%-2rem,60rem)] pb-24">
         {/* Fiyatlar */}
-        <section className="reveal mt-8" style={{ animationDelay: "0.1s" }}>
+        <section ref={priceListRef} className="reveal mt-8" style={{ animationDelay: "0.1s" }}>
           <h2 className="font-display mb-4 text-lg font-bold text-bright">
             {t.allPrices}{" "}
             <span className="text-sm font-normal text-muted">
@@ -91,14 +103,8 @@ export function GameDetail({ game }: { game: Game }) {
                   }`}
                 >
                   <span className="flex min-w-0 items-center gap-3">
-                    <span
-                      className="h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ background: store.accent }}
-                      aria-hidden="true"
-                    />
-                    <span className="truncate text-sm font-bold text-bright">
-                      {store.label}
-                    </span>
+                    <StoreLogo id={rp.price.store} size={20} />
+                    <span className="truncate text-sm font-bold text-bright">{store.label}</span>
                     {isBest && (
                       <span className="discount-chip shrink-0 rounded-full px-2 py-0.5 text-[10px]">
                         {t.cheapest}
@@ -107,7 +113,22 @@ export function GameDetail({ game }: { game: Game }) {
                   </span>
 
                   <span className="flex shrink-0 flex-col items-end gap-0.5">
-                    <PriceTag rp={rp} locale={locale} highlight={isBest} />
+                    {isBest ? (
+                      <span className="inline-flex items-center gap-2">
+                        {rp.price.discountPercent !== undefined && (
+                          <span className="discount-chip rounded px-1.5 py-0.5 text-xs">
+                            -%{rp.price.discountPercent}
+                          </span>
+                        )}
+                        <CountUp
+                          value={rp.tryAmount}
+                          locale={locale}
+                          className="text-lg font-bold tabular-nums text-best"
+                        />
+                      </span>
+                    ) : (
+                      <PriceTag rp={rp} locale={locale} />
+                    )}
                     {rp.price.currency === "USD" && (
                       <span className="text-[11px] text-muted">
                         ${rp.price.amount.toFixed(2)} · {t.steamNote}
@@ -120,9 +141,14 @@ export function GameDetail({ game }: { game: Game }) {
           </ul>
         </section>
 
+        {/* Fiyat geçmişi */}
+        <section className="reveal mt-8" style={{ animationDelay: "0.16s" }}>
+          <PriceChart game={game} />
+        </section>
+
         {/* Abonelikler */}
         {game.subscriptions.length > 0 && (
-          <section className="reveal mt-8" style={{ animationDelay: "0.18s" }}>
+          <section className="reveal mt-8" style={{ animationDelay: "0.22s" }}>
             <h2 className="font-display mb-4 text-lg font-bold text-bright">{t.includedIn}</h2>
             <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {game.subscriptions.map((id) => {
@@ -132,8 +158,8 @@ export function GameDetail({ game }: { game: Game }) {
                     key={id}
                     className="panel flex items-center justify-between rounded-2xl px-4 py-4 sm:px-5"
                   >
-                    <span className="text-sm font-bold" style={{ color: sub.accent }}>
-                      {sub.label}
+                    <span className="flex items-center gap-2 text-sm font-bold" style={{ color: sub.accent }}>
+                      <SubLogo id={id} size={18} /> {sub.label}
                     </span>
                     <span className="text-sm font-bold tabular-nums text-bright">
                       {formatTRY(sub.monthlyTRY, locale)}
@@ -146,6 +172,8 @@ export function GameDetail({ game }: { game: Game }) {
           </section>
         )}
       </div>
+
+      <StickyCta game={game} watchRef={priceListRef} />
     </div>
   );
 }
