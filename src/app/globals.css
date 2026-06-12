@@ -254,6 +254,12 @@ footer {
   outline-offset: 2px;
 }
 
+/* Arama girdisi: aurora halka zaten odak gösteriyor, içte ikinci kutu olmasın */
+.no-focus-ring:focus,
+.no-focus-ring:focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .page-fade,

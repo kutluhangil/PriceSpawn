@@ -92,7 +92,7 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
             onKeyDown={onKeyDown}
             placeholder={t.searchPlaceholder}
             aria-label={t.searchPlaceholder}
-            className={`w-full bg-transparent text-fg outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden ${
+            className={`no-focus-ring w-full bg-transparent text-fg outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden ${
               isHero ? "text-base sm:text-lg" : "text-xs"
             }`}
           />

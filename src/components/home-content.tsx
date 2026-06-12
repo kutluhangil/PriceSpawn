@@ -5,6 +5,7 @@ import { bestPrice } from "@/lib/price";
 import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
 import { Billboard } from "@/components/billboard";
+import { BrandMark } from "@/components/brand-mark";
 import { useApp } from "@/components/providers";
 
 export function HomeContent() {
@@ -36,8 +37,8 @@ export function HomeContent() {
     <div className="mx-auto w-[min(100%-2rem,74rem)]">
       {/* Hero: büyük aurora arama */}
       <section className="reveal relative z-30 flex flex-col items-center gap-5 pb-12 pt-14 text-center sm:pt-20">
-        <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-bright sm:text-5xl">
-          {t.heroTitleA} <span className="spectrum-text">{t.heroTitleB}</span>
+        <h1 className="leading-tight tracking-tight">
+          <BrandMark className="text-4xl font-bold sm:text-6xl" />
         </h1>
         <p className="max-w-xl text-sm text-muted sm:text-base">{t.tagline}</p>
         <div className="w-full pt-4">
@@ -51,7 +52,7 @@ export function HomeContent() {
       </div>
 
       {/* Günün Fırsatları — ray */}
-      <section className="reveal pt-12" style={{ animationDelay: "0.2s" }}>
+      <section id="deals" className="reveal pt-12" style={{ animationDelay: "0.2s" }}>
         <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
           {t.todaysDeals}
         </h2>
@@ -65,7 +66,7 @@ export function HomeContent() {
       </section>
 
       {/* Yeni Çıkanlar — ray */}
-      <section className="reveal pt-10" style={{ animationDelay: "0.26s" }}>
+      <section id="new" className="reveal pt-10" style={{ animationDelay: "0.26s" }}>
         <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
           {t.tabNew}
         </h2>
@@ -79,7 +80,7 @@ export function HomeContent() {
       </section>
 
       {/* Popüler Oyunlar — grid */}
-      <section className="reveal pt-10" style={{ animationDelay: "0.32s" }}>
+      <section id="popular" className="reveal pt-10" style={{ animationDelay: "0.32s" }}>
         <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
           {t.popularGames}
         </h2>

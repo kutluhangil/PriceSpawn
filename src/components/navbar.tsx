@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/components/providers";
 import { SearchBar } from "@/components/search-bar";
+import { BrandMark } from "@/components/brand-mark";
 
 function SunIcon() {
   return (
@@ -30,8 +31,8 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/75 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 w-[min(100%-2rem,74rem)] items-center justify-between gap-4">
-        <Link href="/" className="font-display shrink-0 text-[15px] font-bold tracking-tight text-bright">
-          price<span className="spectrum-text font-extrabold">spawn</span>
+        <Link href="/" className="shrink-0">
+          <BrandMark className="text-[15px] font-bold tracking-tight" />
         </Link>
 
         {!isHome && (
