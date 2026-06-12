@@ -33,7 +33,7 @@ export function CoverImage({
         className={`flex items-center justify-center ${className}`}
         style={{ background: gradientFor(title) }}
       >
-        <span className="font-display text-center text-sm font-semibold text-white/90 px-4 leading-snug">
+        <span className="text-center text-sm font-bold text-white/90 px-4 leading-snug">
           {title}
         </span>
       </div>

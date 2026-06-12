@@ -8,11 +8,10 @@ import { searchGames } from "@/lib/search";
 import { bestPrice } from "@/lib/price";
 import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
-import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
 
-export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
+export function SearchBar({ variant = "nav" }: { variant?: "hero" | "nav" }) {
   const { locale, t } = useApp();
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -22,7 +21,6 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
 
   const results = useMemo(() => searchGames(query, GAMES, 8), [query]);
   const showDropdown = open && query.trim().length > 0;
-  const isHero = variant === "hero";
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Escape") {
@@ -49,30 +47,13 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
   return (
     <div
       ref={containerRef}
-      className={`relative z-40 w-full ${isHero ? "mx-auto max-w-2xl" : ""}`}
+      className="relative w-full"
       onBlur={(e) => {
         if (!containerRef.current?.contains(e.relatedTarget as Node)) setOpen(false);
       }}
     >
-      <div
-        className={`surface-flat flex items-center gap-3 rounded-lg transition-all focus-within:border-accent focus-within:shadow-[0_0_0_3px_var(--accent-soft)] ${
-          isHero ? "px-4 py-3.5 sm:px-5" : "px-3 py-1.5"
-        }`}
-      >
-        <svg
-          width={isHero ? 18 : 14}
-          height={isHero ? 18 : 14}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          className="shrink-0 text-muted"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="7" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
+      {/* Steam arama kutusu: girdi + sağda mavi büyüteç bloğu */}
+      <div className="search-premium flex items-center overflow-hidden rounded">
         <input
           type="search"
           value={query}
@@ -85,16 +66,35 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
           onKeyDown={onKeyDown}
           placeholder={t.searchPlaceholder}
           aria-label={t.searchPlaceholder}
-          className={`w-full bg-transparent outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden ${
-            isHero ? "text-sm sm:text-base" : "text-xs"
+          className={`w-full bg-transparent outline-none placeholder:text-(--search-fg)/55 [&::-webkit-search-cancel-button]:hidden ${
+            variant === "hero" ? "px-4 py-2.5 text-sm" : "px-3 py-1.5 text-xs"
           }`}
         />
+        <button
+          type="button"
+          aria-hidden="true"
+          tabIndex={-1}
+          className="flex h-full items-center self-stretch bg-black/15 px-2.5 text-accent"
+        >
+          <svg
+            width={variant === "hero" ? 18 : 14}
+            height={variant === "hero" ? 18 : 14}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+        </button>
       </div>
 
       {showDropdown && (
-        <div className="surface absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-lg">
+        <div className="panel-strong absolute right-0 top-full z-50 mt-1.5 w-[min(92vw,26rem)] overflow-hidden rounded border border-border">
           {results.length === 0 ? (
-            <p className="px-4 py-4 text-sm text-muted">{t.noResults}</p>
+            <p className="px-4 py-3.5 text-sm text-muted">{t.noResults}</p>
           ) : (
             <ul className="divide-y divide-border">
               {results.map((game, i) => {
@@ -105,25 +105,25 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
                       href={`/oyun/${game.slug}`}
                       onClick={() => setOpen(false)}
                       onMouseEnter={() => setHighlight(i)}
-                      className={`flex items-center gap-3 px-3 py-2.5 transition-colors ${
-                        i === highlight ? "bg-(--accent-soft)" : ""
+                      className={`flex items-center gap-3 px-3 py-2 transition-colors ${
+                        i === highlight ? "bg-row-hover" : ""
                       }`}
                     >
                       <CoverImage
                         src={game.coverUrl}
                         title={game.title}
-                        className="h-9 w-[78px] shrink-0 rounded"
+                        className="h-8 w-[70px] shrink-0 rounded-sm"
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold">
+                        <span className="block truncate text-[13px] font-semibold text-bright">
                           {game.title}
                         </span>
-                        <span className="mt-0.5 block">
-                          <SubBadges ids={game.subscriptions} />
+                        <span className="block truncate text-[11px] text-muted">
+                          {game.genres.join(", ")}
                         </span>
                       </span>
                       {best && (
-                        <span className="flex shrink-0 flex-col items-end gap-0.5">
+                        <span className="flex shrink-0 flex-col items-end">
                           <PriceTag rp={best} locale={locale} size="sm" />
                           <span className="text-[10px] text-muted">
                             {STORES[best.price.store].label}

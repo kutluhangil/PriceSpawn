@@ -1,2 +1,2 @@
-export const SITE_NAME = "hangisidahaucuz.com";
-export const SITE_SHORT = "hangisidahaucuz";
+export const SITE_NAME = "pricespawn.com";
+export const SITE_SHORT = "pricespawn";

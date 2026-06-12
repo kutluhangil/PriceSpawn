@@ -34,8 +34,8 @@ export function PriceTag({
           </span>
         )}
         <span
-          className={`font-display font-bold tabular-nums ${priceCls} ${
-            highlight ? "text-best" : ""
+          className={`font-bold tabular-nums ${priceCls} ${
+            highlight ? "text-best" : "text-bright"
           }`}
         >
           {formatTRY(rp.tryAmount, locale)}
