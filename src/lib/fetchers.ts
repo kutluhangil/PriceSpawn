@@ -107,11 +107,111 @@ export async function itadPrices(
   }
 }
 
+// ── PlayStation Store (Türkiye) — scraped from the store's embedded JSON ──
+const PS_UA =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36";
+const PS_BAD = [
+  "dlc", "bundle", "season", "upgrade", "deluxe", "ultimate", "gold", "premium",
+  "pack", "expansion", "edition", "soundtrack", "artbook", "points", "currency",
+  "credits", "coins", "virtual", "wallet", "membership", "subscription", "trial",
+  "demo", "companion", "theme", "avatar", "beta", "voucher", "cosmetic", "skin",
+];
+
+function psNorm(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[ıİ]/g, "i").replace(/[şŞ]/g, "s").replace(/[çÇ]/g, "c")
+    .replace(/[ğĞ]/g, "g").replace(/[öÖ]/g, "o").replace(/[üÜ]/g, "u")
+    .replace(/[®™’':]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function psPriceTL(s: string | undefined): number | null {
+  if (!s || !/\d/.test(s)) return null;
+  const cleaned = s.replace("TL", "").replace("₺", "").trim().replace(/\./g, "").replace(",", ".");
+  const n = Number(cleaned);
+  return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
+}
+
+function psNextData(html: string): Record<string, unknown> | null {
+  const m = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/);
+  if (!m) return null;
+  try {
+    const data = JSON.parse(m[1]) as { props?: { apolloState?: Record<string, unknown> } };
+    return data?.props?.apolloState ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export interface PsPrice {
+  productId: string;
+  amount: number; // TRY
+  cut: number; // discount %
+}
+
+/** Search PS Store TR by title; returns the best base-game match with TR price. */
+export async function psSearch(title: string): Promise<PsPrice | null> {
+  try {
+    const url = `https://store.playstation.com/tr-tr/search/${encodeURIComponent(title)}`;
+    const res = await fetch(url, { headers: { "User-Agent": PS_UA } });
+    if (!res.ok) return null;
+    const apollo = psNextData(await res.text());
+    if (!apollo) return null;
+    const nt = psNorm(title);
+    let best: { score: number; price: PsPrice } | null = null;
+    for (const v of Object.values(apollo)) {
+      const node = v as { __typename?: string; name?: string; id?: string; price?: { basePrice?: string; discountedPrice?: string } };
+      if (node.__typename !== "Product" || !node.name || !node.id) continue;
+      const base = psPriceTL(node.price?.basePrice);
+      if (base === null) continue;
+      const disc = psPriceTL(node.price?.discountedPrice) ?? base;
+      const nn = psNorm(node.name);
+      // Strict: exact, or starts with the title and isn't much longer (base game,
+      // not an add-on). Reject loose substring matches → avoids wrong products.
+      let score = -1;
+      if (nn === nt) score = 100;
+      else if (nn.startsWith(nt) && nn.length <= nt.length + 14) score = 75;
+      if (score < 0) continue;
+      if (PS_BAD.some((b) => nn.includes(b))) continue; // drop add-ons entirely
+      if (/0+$/.test(node.id)) score += 10;
+      const cut = disc < base ? Math.round((1 - disc / base) * 100) : 0;
+      if (!best || score > best.score) best = { score, price: { productId: node.id, amount: disc, cut } };
+    }
+    return best && best.score >= 75 ? best.price : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Fresh TR price for a known PS product id (from its product page). */
+export async function psProductPrice(productId: string): Promise<PsPrice | null> {
+  try {
+    const res = await fetch(`https://store.playstation.com/tr-tr/product/${productId}`, {
+      headers: { "User-Agent": PS_UA },
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+    const baseM = html.match(/"basePrice":"([^"]+)"/);
+    const discM = html.match(/"discountedPrice":"([^"]+)"/);
+    const base = psPriceTL(baseM?.[1]);
+    if (base === null) return null;
+    const disc = psPriceTL(discM?.[1]) ?? base;
+    const cut = disc < base ? Math.round((1 - disc / base) * 100) : 0;
+    return { productId, amount: disc, cut };
+  } catch {
+    return null;
+  }
+}
+
 /** Limit concurrency so a full refresh stays within the function timeout. */
 export async function mapLimit<T, R>(
   items: T[],
   limit: number,
-  fn: (item: T) => Promise<R>
+  fn: (item: T) => Promise<R>,
+  delayMs = 0
 ): Promise<R[]> {
   const out: R[] = new Array(items.length);
   let i = 0;
@@ -119,6 +219,7 @@ export async function mapLimit<T, R>(
     while (i < items.length) {
       const idx = i++;
       out[idx] = await fn(items[idx]);
+      if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
     }
   }
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
