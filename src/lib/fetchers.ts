@@ -44,6 +44,69 @@ export async function fetchUsdTry(): Promise<number | null> {
   }
 }
 
+// ── IsThereAnyDeal: real Türkiye prices across PC stores ────────────
+const ITAD = "https://api.isthereanydeal.com";
+
+// ITAD shop id → our StoreId (PC stores ITAD covers for TR).
+export const ITAD_SHOP_TO_STORE: Record<number, string> = {
+  61: "steam",
+  16: "epic",
+  35: "gog",
+  37: "humble",
+  62: "ubisoft",
+  48: "xbox", // Microsoft Store
+};
+
+/** Look up the ITAD game id for a Steam appid. "" when not found. */
+export async function itadLookup(appid: string, key: string): Promise<string> {
+  try {
+    const res = await fetch(`${ITAD}/games/lookup/v1?key=${key}&appid=${appid}`);
+    if (!res.ok) return "";
+    const data = await res.json();
+    return data?.found ? (data.game.id as string) : "";
+  } catch {
+    return "";
+  }
+}
+
+export interface ItadDeal {
+  store: string;
+  amount: number; // TRY
+  cut: number; // discount %
+}
+
+/** Current TR prices for a batch of ITAD ids, mapped to our stores. */
+export async function itadPrices(
+  ids: string[],
+  key: string
+): Promise<Record<string, ItadDeal[]>> {
+  if (ids.length === 0) return {};
+  try {
+    const res = await fetch(`${ITAD}/games/prices/v3?key=${key}&country=TR&capacity=8`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ids),
+    });
+    if (!res.ok) return {};
+    const data = (await res.json()) as Array<{
+      id: string;
+      deals: Array<{ shop: { id: number }; price: { amount: number }; cut: number }>;
+    }>;
+    const out: Record<string, ItadDeal[]> = {};
+    for (const g of data) {
+      const deals: ItadDeal[] = [];
+      for (const d of g.deals) {
+        const store = ITAD_SHOP_TO_STORE[d.shop.id];
+        if (store) deals.push({ store, amount: d.price.amount, cut: d.cut || 0 });
+      }
+      if (deals.length) out[g.id] = deals;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 /** Limit concurrency so a full refresh stays within the function timeout. */
 export async function mapLimit<T, R>(
   items: T[],

@@ -37,4 +37,10 @@ export async function ensureSchema(): Promise<void> {
       rate       numeric NOT NULL,
       updated_at timestamptz NOT NULL DEFAULT now()
     )`;
+  // appid → ITAD game id cache ('' = looked up, not found)
+  await sql`
+    CREATE TABLE IF NOT EXISTS itad_map (
+      appid   text PRIMARY KEY,
+      itad_id text NOT NULL
+    )`;
 }
