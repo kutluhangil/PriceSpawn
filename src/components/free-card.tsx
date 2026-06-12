@@ -36,7 +36,7 @@ export function FreeCard({ offer }: { offer: FreeOffer }) {
   }, [offer.freeUntil]);
 
   const inner = (
-    <div className="panel-strong group block h-full overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
+    <div className="panel-strong group block h-full overflow-hidden rounded-[var(--radius-card)] transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
       <div className="relative aspect-[460/215] overflow-hidden">
         <CoverImage
           src={offer.coverUrl}

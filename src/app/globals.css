@@ -21,6 +21,12 @@
   --ambient-opacity: 0.38;
   --shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 16px 48px rgba(0, 0, 0, 0.4);
   --search-glow: rgba(139, 124, 248, 0.35);
+  --bg-glow-1: rgba(109, 40, 217, 0.2);
+  --bg-glow-2: rgba(8, 145, 178, 0.16);
+  --bg-glow-3: rgba(219, 39, 119, 0.13);
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --noise-opacity: 0.05;
+  --radius-card: 6px;
 }
 
 /* ── Gündüz: galeri beyazı ────────────────────────────────────────── */
@@ -42,6 +48,12 @@
   --ambient-opacity: 0.16;
   --shadow: 0 1px 3px rgba(20, 22, 30, 0.07), 0 14px 40px rgba(20, 22, 30, 0.09);
   --search-glow: rgba(99, 86, 240, 0.25);
+  --bg-glow-1: rgba(255, 184, 120, 0.22);
+  --bg-glow-2: rgba(120, 160, 255, 0.18);
+  --bg-glow-3: rgba(200, 140, 255, 0.16);
+  --grid-line: rgba(20, 22, 30, 0.04);
+  --noise-opacity: 0.035;
+  --radius-card: 6px;
 }
 
 @theme inline {
@@ -65,6 +77,49 @@ body {
   background: var(--bg);
   color: var(--fg);
   transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* ── Yaratıcı arka plan: spektrum glow + tech grid + noise ─────────── */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 48% at 14% -10%, var(--bg-glow-1), transparent 62%),
+    radial-gradient(52% 46% at 86% -6%, var(--bg-glow-2), transparent 62%),
+    radial-gradient(60% 55% at 50% 112%, var(--bg-glow-3), transparent 60%);
+  animation: bg-drift 30s ease-in-out alternate infinite;
+}
+
+.app-bg::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(circle at 50% 22%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(circle at 50% 22%, #000 0%, transparent 78%);
+}
+
+.app-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes bg-drift {
+  from { transform: translate3d(-1.5%, -1%, 0) scale(1.02); }
+  to { transform: translate3d(1.5%, 1.5%, 0) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-bg { animation: none; }
 }
 
 .panel,

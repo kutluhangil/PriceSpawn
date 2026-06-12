@@ -21,7 +21,7 @@ export function GameCard({ game }: { game: Game }) {
   return (
     <Link
       href={`/oyun/${game.slug}`}
-      className="panel-strong group block h-full overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
+      className="group block h-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-(--panel-strong) transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/60 hover:shadow-[0_14px_40px_rgba(0,0,0,0.35)]"
     >
       <div className="relative aspect-[460/215] overflow-hidden">
         <HoverTrailer game={game}>
@@ -31,25 +31,37 @@ export function GameCard({ game }: { game: Game }) {
             className="h-full w-full transition-transform duration-500 group-hover:scale-[1.05]"
           />
         </HoverTrailer>
-        <span className="pointer-events-none absolute left-2.5 top-2.5">
+        <span className="pointer-events-none absolute left-2 top-2">
           <AtlBadge game={game} />
         </span>
         {best?.price.discountPercent !== undefined && (
-          <span className="discount-chip absolute bottom-2.5 left-2.5 rounded-full px-2 py-0.5 text-xs shadow-lg">
+          <span className="discount-chip absolute bottom-2 left-2 rounded-[3px] px-1.5 py-0.5 text-xs shadow-lg">
             -%{best.price.discountPercent}
           </span>
         )}
-        <span className="absolute right-2.5 top-2.5">
+        <span className="absolute right-2 top-2">
           <WatchButton slug={game.slug} compact />
         </span>
       </div>
 
-      <Sparkline game={game} className="px-1 opacity-70" />
+      <Sparkline game={game} className="px-0.5 opacity-70" />
 
-      <div className="flex flex-col gap-1.5 px-3.5 pb-3.5 pt-1">
+      <div className="flex flex-col gap-2 p-3">
         <h3 className="truncate text-sm font-bold text-bright">{game.title}</h3>
-        <p className="truncate text-xs text-muted">{game.genres.join(" · ")}</p>
-        <div className="mt-1 flex items-end justify-between gap-2">
+
+        {/* Steam tarzı düz etiket çipleri */}
+        <div className="flex flex-wrap gap-1">
+          {game.genres.slice(0, 3).map((g) => (
+            <span
+              key={g}
+              className="rounded-[3px] bg-(--row-hover) px-1.5 py-0.5 text-[10px] font-medium text-muted"
+            >
+              {g}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-0.5 flex items-end justify-between gap-2">
           <SubBadges ids={game.subscriptions} />
           {best && (
             <span className="ml-auto flex shrink-0 flex-col items-end">
