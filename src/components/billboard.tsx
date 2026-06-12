@@ -46,7 +46,7 @@ export function Billboard({ games }: { games: Game[] }) {
       aria-roledescription="carousel"
       aria-label={t.featured}
     >
-      <div className="panel-strong grid overflow-hidden rounded-2xl md:grid-cols-[1.7fr_1fr]">
+      <div className="panel-strong grid overflow-hidden rounded-[var(--radius-card)] md:grid-cols-[1.7fr_1fr]">
         {/* Büyük net görsel */}
         <Link href={`/oyun/${game.slug}`} className="group relative block aspect-[616/353] overflow-hidden">
           <CoverImage
