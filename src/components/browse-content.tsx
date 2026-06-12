@@ -1,16 +1,21 @@
 "use client";
 
 import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { GAMES } from "@/data/games";
 import { filterSortGames } from "@/lib/filters";
 import { GameCard } from "@/components/game-card";
 import { FilterBar } from "@/components/filter-bar";
 import { useGameFilters } from "@/hooks/use-game-filters";
-import type { StoreId } from "@/lib/stores";
+import { STORES, type StoreId } from "@/lib/stores";
 import { useApp } from "@/components/providers";
 
-export function BrowseContent({ initialStore }: { initialStore?: StoreId }) {
+export function BrowseContent() {
   const { t } = useApp();
+  const params = useSearchParams();
+  const storeParam = params.get("store");
+  const initialStore =
+    storeParam && storeParam in STORES ? (storeParam as StoreId) : undefined;
   const f = useGameFilters(initialStore ? { stores: [initialStore] } : undefined);
   const results = useMemo(() => filterSortGames(GAMES, f.opts), [f.opts]);
 
