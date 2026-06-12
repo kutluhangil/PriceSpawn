@@ -18,6 +18,7 @@ export function useWatchlist() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setList(JSON.parse(raw));
     } catch {
       // localStorage unavailable (private mode) — feature silently disabled
