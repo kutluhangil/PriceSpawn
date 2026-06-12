@@ -75,6 +75,8 @@ export const en: Record<keyof typeof tr, string> = {
   daysLeft: "days",
   allTimeLow: "All-time low",
   allTimeLowFull: "Lowest price ever",
+  historyBuilding: "Price history is building — recording real data",
+  recordedDays: "days recorded",
   priceHistory: "Price History",
   days90: "90 days",
   valueWorth: "worth",

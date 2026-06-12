@@ -5,6 +5,13 @@ import type { LivePayload } from "@/app/api/prices/route";
 
 const bySlug = new Map(GAMES.map((g) => [g.slug, g]));
 
+// Real all-time-low per slug (from ITAD), set by applyLive.
+const liveLows = new Map<string, { amount: number; shop: string; day: string }>();
+
+export function realAtl(slug: string): { amount: number; shop: string; day: string } | undefined {
+  return liveLows.get(slug);
+}
+
 /**
  * Apply live data over the demo catalog in place:
  *  - update the USD→TRY rate
@@ -17,6 +24,12 @@ export function applyLive(payload: LivePayload): boolean {
   if (payload.fx) {
     setRate(payload.fx);
     changed = true;
+  }
+  if (payload.lows) {
+    for (const [slug, low] of Object.entries(payload.lows)) {
+      liveLows.set(slug, low);
+      changed = true;
+    }
   }
   for (const [slug, stores] of Object.entries(payload.prices)) {
     const game = bySlug.get(slug);

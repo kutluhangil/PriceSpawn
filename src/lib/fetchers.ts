@@ -263,6 +263,42 @@ export async function psProductPrice(productId: string): Promise<PsPrice | null>
   }
 }
 
+export interface ItadLow {
+  amount: number; // TRY
+  shop: string;
+  day: string; // ISO date
+}
+
+/** Real all-time-low TR price per ITAD id (min across all shops ITAD tracks). */
+export async function itadStoreLow(ids: string[], key: string): Promise<Record<string, ItadLow>> {
+  if (ids.length === 0) return {};
+  try {
+    const res = await fetch(`https://api.isthereanydeal.com/games/storelow/v2?key=${key}&country=TR`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ids),
+    });
+    if (!res.ok) return {};
+    const data = (await res.json()) as Array<{
+      id: string;
+      lows: Array<{ shop: { name: string }; price: { amount: number }; timestamp: string }>;
+    }>;
+    const out: Record<string, ItadLow> = {};
+    for (const g of data) {
+      let best: ItadLow | null = null;
+      for (const l of g.lows ?? []) {
+        if (!best || l.price.amount < best.amount) {
+          best = { amount: l.price.amount, shop: l.shop.name, day: (l.timestamp || "").slice(0, 10) };
+        }
+      }
+      if (best) out[g.id] = best;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 /** Limit concurrency so a full refresh stays within the function timeout. */
 export async function mapLimit<T, R>(
   items: T[],

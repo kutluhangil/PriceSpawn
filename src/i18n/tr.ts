@@ -73,6 +73,8 @@ export const tr = {
   daysLeft: "gün",
   allTimeLow: "Tarihî dip",
   allTimeLowFull: "Tüm zamanların en düşüğü",
+  historyBuilding: "Fiyat geçmişi birikiyor — gerçek veri kaydediliyor",
+  recordedDays: "gün kayıtlı",
   priceHistory: "Fiyat Geçmişi",
   days90: "90 gün",
   valueWorth: "değerinde",

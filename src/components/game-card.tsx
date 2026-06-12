@@ -8,7 +8,6 @@ import { CoverImage } from "@/components/cover-image";
 import { HoverTrailer } from "@/components/hover-trailer";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
-import { Sparkline } from "@/components/sparkline";
 import { AtlBadge } from "@/components/atl-badge";
 import { StoreLogo } from "@/components/store-logo";
 import { WatchButton } from "@/components/watch-button";
@@ -43,8 +42,6 @@ export function GameCard({ game }: { game: Game }) {
           <WatchButton slug={game.slug} compact />
         </span>
       </div>
-
-      <Sparkline game={game} className="px-0.5 opacity-70" />
 
       <div className="flex flex-col gap-2 p-3">
         <h3 className="truncate text-sm font-bold text-bright">{game.title}</h3>
