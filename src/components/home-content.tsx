@@ -2,9 +2,12 @@
 
 import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
+import { FREE_OFFERS } from "@/data/free";
 import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
 import { Billboard } from "@/components/billboard";
+import { DealRadar } from "@/components/deal-radar";
+import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
 import { useApp } from "@/components/providers";
 
@@ -23,6 +26,8 @@ export function HomeContent() {
 
   const billboardGames = byDiscount.slice(0, 5);
   const deals = byDiscount.slice(5, 17);
+  const radarGames = byDiscount.slice(0, 18);
+  const freeStrip = FREE_OFFERS.slice(0, 4);
   const newReleases = [...GAMES]
     .sort((a, b) => b.releaseYear - a.releaseYear || b.score - a.score)
     .slice(0, 12);
@@ -51,8 +56,28 @@ export function HomeContent() {
         <Billboard games={billboardGames} />
       </div>
 
+      {/* Fırsat Radarı — ısı haritası */}
+      <section className="reveal pt-12" style={{ animationDelay: "0.16s" }}>
+        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
+          {t.dealRadar}
+        </h2>
+        <DealRadar games={radarGames} />
+      </section>
+
+      {/* Şu An Ücretsiz — şerit */}
+      <section className="reveal pt-10" style={{ animationDelay: "0.2s" }}>
+        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
+          {t.freeNow}
+        </h2>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {freeStrip.map((o) => (
+            <FreeCard key={o.title} offer={o} />
+          ))}
+        </div>
+      </section>
+
       {/* Günün Fırsatları — ray */}
-      <section id="deals" className="reveal pt-12" style={{ animationDelay: "0.2s" }}>
+      <section id="deals" className="reveal pt-12" style={{ animationDelay: "0.24s" }}>
         <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
           {t.todaysDeals}
         </h2>
