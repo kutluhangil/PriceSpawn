@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 
-const GLYPHS = "ABCDEFGHJKMNPQRSTUVWXYZ023456789$₺#%&@!?";
+const GLYPHS = "abcdefghijkmnopqrstuvwxyz0123456789";
 const BRAND = "pricespawn";
 const SPLIT = 5; // "price" | "spawn"
 
 /**
- * Matrix tarzı marka yazısı: harfler rastgele karakterlerle karışır,
- * soldan sağa kilitlenerek tekrar "pricespawn"a oturur.
+ * Matrix-style brand mark: letters scramble then lock back to "pricespawn".
+ * The animated text is absolutely positioned over an invisible static sizer,
+ * so its changing width never reflows neighbouring nav items.
  */
 export function BrandMark({ className = "" }: { className?: string }) {
   const [display, setDisplay] = useState(BRAND);
@@ -47,12 +48,14 @@ export function BrandMark({ className = "" }: { className?: string }) {
   }, []);
 
   return (
-    <span className={`font-display ${className}`} aria-label={BRAND}>
-      <span aria-hidden="true" className="text-bright">
-        {display.slice(0, SPLIT)}
+    <span className={`relative inline-block font-display ${className}`} aria-label={BRAND}>
+      {/* invisible sizer reserves the final width so nav never shifts */}
+      <span aria-hidden="true" className="invisible font-extrabold">
+        {BRAND}
       </span>
-      <span aria-hidden="true" className="spectrum-text font-extrabold">
-        {display.slice(SPLIT)}
+      <span aria-hidden="true" className="absolute inset-0 flex items-center whitespace-nowrap">
+        <span className="text-bright">{display.slice(0, SPLIT)}</span>
+        <span className="spectrum-text font-extrabold">{display.slice(SPLIT)}</span>
       </span>
     </span>
   );

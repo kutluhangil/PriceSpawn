@@ -31,7 +31,14 @@ export function SubValueCard({ id }: { id: SubscriptionId }) {
             <SubLogo id={id} size={24} />
           </span>
           <div>
-            <h2 className="font-display text-lg font-bold text-bright">{sub.label}</h2>
+            <a
+              href={sub.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-display text-lg font-bold text-bright transition-opacity hover:opacity-80"
+            >
+              {sub.label} ↗
+            </a>
             <p className="text-xs text-muted">
               {v.count} {t.gamesWord} · {formatTRY(v.totalTRY, locale)} {t.valueWorth}
             </p>
