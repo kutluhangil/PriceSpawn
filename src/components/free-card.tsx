@@ -69,6 +69,13 @@ export function FreeCard({ offer }: { offer: FreeOffer }) {
     </div>
   );
 
+  if (offer.url) {
+    return (
+      <a href={offer.url} target="_blank" rel="noopener noreferrer" aria-label={offer.title}>
+        {inner}
+      </a>
+    );
+  }
   return offer.slug ? (
     <Link href={`/oyun/${offer.slug}`} aria-label={offer.title}>
       {inner}

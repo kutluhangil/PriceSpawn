@@ -31,6 +31,63 @@ export async function fetchSteamPrice(appid: string): Promise<SteamPrice | null>
   }
 }
 
+// ── Epic free games (Türkiye) — keyless public promotions endpoint ──
+export interface EpicFree {
+  title: string;
+  image: string;
+  originalTRY: number;
+  freeUntil: string; // ISO end date
+  url: string;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function fetchEpicFree(): Promise<EpicFree[]> {
+  try {
+    const res = await fetch(
+      "https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=tr-TR&country=TR&allowCountries=TR"
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    const els: any[] = data?.data?.Catalog?.searchStore?.elements ?? [];
+    const out: EpicFree[] = [];
+    for (const e of els) {
+      const total = e?.price?.totalPrice ?? {};
+      if (total.discountPrice !== 0) continue; // not free right now
+      const promos = e?.promotions?.promotionalOffers ?? [];
+      let endDate = "";
+      for (const p of promos) {
+        for (const o of p?.promotionalOffers ?? []) {
+          if (o?.discountSetting?.discountPercentage === 0) endDate = o.endDate ?? endDate;
+        }
+      }
+      if (!endDate) continue;
+      const imgs: any[] = e?.keyImages ?? [];
+      const img =
+        imgs.find((i) => i.type === "OfferImageWide")?.url ||
+        imgs.find((i) => i.type === "DieselStoreFrontWide")?.url ||
+        imgs.find((i) => i.type === "Thumbnail")?.url ||
+        "";
+      const slug =
+        e?.catalogNs?.mappings?.[0]?.pageSlug ||
+        e?.offerMappings?.[0]?.pageSlug ||
+        e?.productSlug ||
+        e?.urlSlug ||
+        "";
+      out.push({
+        title: e.title,
+        image: img,
+        originalTRY: Math.round(((total.originalPrice ?? 0) / 100) * 100) / 100,
+        freeUntil: endDate,
+        url: slug ? `https://store.epicgames.com/tr/p/${slug}` : "https://store.epicgames.com/tr/free-games",
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 /** Live USD→TRY rate; null on failure (caller keeps the demo rate). */
 export async function fetchUsdTry(): Promise<number | null> {
   try {
