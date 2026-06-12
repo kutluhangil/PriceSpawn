@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
-import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
+import { GameRow } from "@/components/game-row";
 import { Spotlight } from "@/components/spotlight";
 import { useApp } from "@/components/providers";
 
+type TabId = "new" | "discount" | "rated";
+
 export function HomeContent() {
   const { t } = useApp();
+  const [tab, setTab] = useState<TabId>("new");
 
   const withDiscount = GAMES.map((game) => ({
     game,
@@ -21,53 +25,63 @@ export function HomeContent() {
     .map((x) => x.game);
 
   const spotlightGames = byDiscount.slice(0, 5);
-  const deals = byDiscount.slice(5, 17);
-  const spotlightSlugs = new Set([...spotlightGames, ...deals].map((g) => g.slug));
-  const popular = GAMES.filter((g) => !spotlightSlugs.has(g.slug)).sort(
-    (a, b) => b.score - a.score
-  );
+  const offers = byDiscount.slice(5, 17);
+
+  const tabGames: Record<TabId, typeof GAMES> = {
+    new: [...GAMES].sort((a, b) => b.releaseYear - a.releaseYear || b.score - a.score).slice(0, 10),
+    discount: byDiscount.slice(0, 10),
+    rated: [...GAMES].sort((a, b) => b.score - a.score).slice(0, 10),
+  };
+
+  const tabs: { id: TabId; label: string }[] = [
+    { id: "new", label: t.tabNew },
+    { id: "discount", label: t.tabDiscount },
+    { id: "rated", label: t.tabRated },
+  ];
 
   return (
-    <div className="mx-auto w-[min(100%-2rem,76rem)]">
-      {/* Hero + arama — z-30: dropdown her zaman içerik üstünde */}
-      <section className="reveal relative z-30 flex flex-col items-center gap-4 pb-10 pt-12 text-center sm:pt-16">
-        <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-          {t.heroTitleA} <span className="text-accent">{t.heroTitleB}</span>
-        </h1>
-        <p className="max-w-xl text-sm text-muted sm:text-base">{t.tagline}</p>
-        <div className="w-full pt-3">
-          <SearchBar />
-        </div>
-      </section>
-
-      {/* Spotlight karuseli */}
-      <div className="reveal relative z-0" style={{ animationDelay: "0.1s" }}>
+    <div className="mx-auto w-[min(100%-2rem,71rem)] pt-6">
+      {/* Öne Çıkanlar */}
+      <section className="reveal">
+        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-bright">
+          {t.featuredSection}
+        </h2>
         <Spotlight games={spotlightGames} />
-      </div>
-
-      {/* Günün Fırsatları — yatay ray */}
-      <section className="reveal pt-12" style={{ animationDelay: "0.18s" }}>
-        <h2 className="font-display mb-4 text-lg font-extrabold sm:text-xl">
-          {t.todaysDeals}
-        </h2>
-        <div className="row-scroll -mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3">
-          {deals.map((game) => (
-            <div key={game.slug} className="w-[270px] shrink-0 snap-start">
-              <GameCard game={game} />
-            </div>
-          ))}
-        </div>
       </section>
 
-      {/* Popüler Oyunlar — grid */}
-      <section className="reveal pt-10" style={{ animationDelay: "0.26s" }}>
-        <h2 className="font-display mb-4 text-lg font-extrabold sm:text-xl">
-          {t.popularGames}
+      {/* Özel Teklifler */}
+      <section id="offers" className="reveal pt-10" style={{ animationDelay: "0.1s" }}>
+        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-bright">
+          {t.specialOffers}
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {popular.map((game) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {offers.map((game) => (
             <GameCard key={game.slug} game={game} />
           ))}
+        </div>
+      </section>
+
+      {/* Sekmeli listeler */}
+      <section className="reveal pt-10" style={{ animationDelay: "0.18s" }}>
+        <div role="tablist" className="flex gap-1 px-1">
+          {tabs.map(({ id, label }) => (
+            <button
+              key={id}
+              role="tab"
+              aria-selected={tab === id}
+              onClick={() => setTab(id)}
+              className="tab-btn rounded-t px-4 py-2 text-xs font-bold uppercase tracking-wide cursor-pointer"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="panel rounded-b rounded-tr p-2">
+          <div key={tab} className="reveal flex flex-col gap-1">
+            {tabGames[tab].map((game) => (
+              <GameRow key={game.slug} game={game} />
+            ))}
+          </div>
         </div>
       </section>
     </div>

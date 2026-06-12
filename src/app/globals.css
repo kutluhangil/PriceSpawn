@@ -2,55 +2,67 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* ── Gündüz vitrini: sıcak kâğıt + kobalt ─────────────────────────── */
-:root[data-theme="light"] {
-  --bg: #f4f3ef;
-  --surface: #ffffff;
-  --surface-2: #eceae3;
-  --border: rgba(22, 28, 38, 0.1);
-  --fg: #161c26;
-  --muted: #5d6b7c;
-  --accent: #0a66d0;
-  --accent-soft: rgba(10, 102, 208, 0.1);
-  --best: #3f7d12;
-  --best-soft: rgba(63, 125, 18, 0.1);
-  --discount-bg: #dff0c8;
-  --discount-fg: #3a7410;
-  --glow-a: rgba(255, 196, 130, 0.45);
-  --glow-b: rgba(10, 102, 208, 0.1);
-  --shadow: 0 1px 2px rgba(22, 28, 38, 0.05), 0 8px 24px rgba(22, 28, 38, 0.07);
-}
-
-/* ── Gece vitrini: mürekkep mavisi + neon yeşil indirim ───────────── */
+/* ── Gece: Steam mağaza paleti ────────────────────────────────────── */
 :root[data-theme="dark"] {
-  --bg: #0f141c;
-  --surface: #161d28;
-  --surface-2: #1e2836;
-  --border: rgba(255, 255, 255, 0.08);
-  --fg: #eef3f8;
-  --muted: #8a98ab;
-  --accent: #3da6ff;
-  --accent-soft: rgba(61, 166, 255, 0.12);
-  --best: #bdec3f;
-  --best-soft: rgba(189, 236, 63, 0.1);
+  --bg: #1b2838;
+  --bg-deep: #171a21;
+  --panel: rgba(0, 0, 0, 0.2);
+  --panel-strong: #16202d;
+  --row: rgba(255, 255, 255, 0.03);
+  --row-hover: #2a475e;
+  --border: rgba(255, 255, 255, 0.07);
+  --fg: #c7d5e0;
+  --bright: #ffffff;
+  --muted: #8f98a0;
+  --accent: #66c0f4;
+  --accent-2: #1a9fff;
+  --accent-soft: rgba(102, 192, 244, 0.16);
+  --best: #beee11;
+  --best-soft: rgba(190, 238, 17, 0.08);
   --discount-bg: #4c6b22;
   --discount-fg: #beee11;
-  --glow-a: rgba(28, 76, 134, 0.55);
-  --glow-b: rgba(108, 58, 162, 0.28);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.35);
+  --search-bg: #316282;
+  --search-fg: #ffffff;
+  --body-grad: radial-gradient(140% 60% at 50% -10%, #2a475e 0%, #1b2838 60%);
+  --shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Gündüz: aynı yapı, açık palet ────────────────────────────────── */
+:root[data-theme="light"] {
+  --bg: #e4ebf1;
+  --bg-deep: #ffffff;
+  --panel: rgba(255, 255, 255, 0.72);
+  --panel-strong: #ffffff;
+  --row: rgba(27, 40, 56, 0.04);
+  --row-hover: #cfdfeb;
+  --border: rgba(27, 40, 56, 0.1);
+  --fg: #30455a;
+  --bright: #1b2838;
+  --muted: #67788a;
+  --accent: #1a6fb4;
+  --accent-2: #1a9fff;
+  --accent-soft: rgba(26, 111, 180, 0.12);
+  --best: #4c6b22;
+  --best-soft: rgba(76, 107, 34, 0.08);
+  --discount-bg: #d6e8ae;
+  --discount-fg: #3a5a10;
+  --search-bg: #ffffff;
+  --search-fg: #1b2838;
+  --body-grad: radial-gradient(140% 60% at 50% -10%, #f6fafd 0%, #e4ebf1 60%);
+  --shadow: 0 1px 3px rgba(27, 40, 56, 0.12);
 }
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
   --color-fg: var(--fg);
+  --color-bright: var(--bright);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-best: var(--best);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
   --color-border: var(--border);
-  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --color-row-hover: var(--row-hover);
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -58,37 +70,34 @@ html {
 }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: var(--body-grad);
+  background-repeat: no-repeat;
   color: var(--fg);
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color 0.45s ease, color 0.45s ease;
 }
 
-/* Üst ışık: temaya göre atmosfer */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  pointer-events: none;
-  background:
-    radial-gradient(55% 42% at 28% -6%, var(--glow-a), transparent 70%),
-    radial-gradient(45% 38% at 78% -4%, var(--glow-b), transparent 70%);
-  transition: opacity 0.4s ease;
+/* Tema geçişinde yüzeyler de yumuşak değişsin */
+.panel,
+.panel-strong,
+.game-row,
+header,
+footer {
+  transition: background-color 0.45s ease, border-color 0.45s ease;
 }
 
-/* ── Yüzeyler ─────────────────────────────────────────────────────── */
-.surface {
-  background: var(--surface);
-  border: 1px solid var(--border);
+/* ── Paneller (Steam: koyu yarı saydam bloklar) ───────────────────── */
+.panel {
+  background: var(--panel);
   box-shadow: var(--shadow);
 }
 
-.surface-flat {
-  background: var(--surface);
-  border: 1px solid var(--border);
+.panel-strong {
+  background: var(--panel-strong);
+  box-shadow: var(--shadow);
 }
 
-/* ── Steam tarzı indirim bloğu ────────────────────────────────────── */
+/* ── Steam indirim bloğu ──────────────────────────────────────────── */
 .discount-chip {
   background: var(--discount-bg);
   color: var(--discount-fg);
@@ -96,23 +105,82 @@ body::before {
   letter-spacing: 0.02em;
 }
 
-/* ── Yatay kaydırma rayı ──────────────────────────────────────────── */
-.row-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface-2) transparent;
+/* ── Liste satırı (Steam arama sonucu stili) ──────────────────────── */
+.game-row {
+  background: var(--row);
 }
 
-.row-scroll::-webkit-scrollbar {
-  height: 8px;
+.game-row:hover {
+  background: var(--row-hover);
 }
 
-.row-scroll::-webkit-scrollbar-thumb {
-  background: var(--surface-2);
-  border-radius: 8px;
+.game-row:hover .row-title {
+  color: var(--bright);
 }
 
-.row-scroll::-webkit-scrollbar-track {
-  background: transparent;
+/* ── Premium arama: nefes alan mavi hale ──────────────────────────── */
+.search-premium {
+  background: var(--search-bg);
+  color: var(--search-fg);
+  box-shadow: 0 0 0 0 rgba(102, 192, 244, 0);
+  transition: box-shadow 0.3s ease;
+}
+
+.search-premium:focus-within {
+  animation: search-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes search-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px var(--accent), 0 0 14px rgba(102, 192, 244, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 1px var(--accent), 0 0 26px rgba(102, 192, 244, 0.75);
+  }
+}
+
+/* ── Sekmeler (Steam ana sayfa sekmeleri) ─────────────────────────── */
+.tab-btn {
+  color: var(--muted);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--bright);
+}
+
+.tab-btn[aria-selected="true"] {
+  background: linear-gradient(135deg, var(--row-hover), transparent 160%);
+  color: var(--bright);
+}
+
+/* ── Karusel ──────────────────────────────────────────────────────── */
+.carousel-arrow {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--accent);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.carousel-arrow:hover {
+  background: rgba(102, 192, 244, 0.25);
+  color: var(--bright);
+}
+
+/* ── Sayfa geçişi (template.tsx her gezinmede yeniden mount olur) ─── */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-fade {
+  animation: page-in 0.35s ease-out both;
 }
 
 /* ── Giriş animasyonu ─────────────────────────────────────────────── */
@@ -131,6 +199,25 @@ body::before {
   animation: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
+/* ── Yatay kaydırma rayı ──────────────────────────────────────────── */
+.row-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--row-hover) transparent;
+}
+
+.row-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.row-scroll::-webkit-scrollbar-thumb {
+  background: var(--row-hover);
+  border-radius: 8px;
+}
+
+.row-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* ── Erişilebilirlik ──────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -138,8 +225,13 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .page-fade {
     animation: none;
+  }
+  .search-premium:focus-within {
+    animation: none;
+    box-shadow: 0 0 0 1px var(--accent);
   }
   html {
     scroll-behavior: auto;
