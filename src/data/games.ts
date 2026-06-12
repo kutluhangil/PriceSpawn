@@ -1,5 +1,6 @@
 import type { StoreId } from "@/lib/stores";
 import type { SubscriptionId } from "@/lib/subscriptions";
+import { USD_TRY } from "@/lib/exchange";
 
 export interface Price {
   store: StoreId;
@@ -1848,3 +1849,133 @@ export const GAMES: Game[] = [
     subscriptions: [],
   },
 ];
+
+// ── Toplu eklenen oyunlar (kompakt spec → makeGame) ──────────────────
+// Steam appid'leriyle doğrulandı; başlık + kapak gerçek Steam verisi.
+// Canlıya geçişte bu fiyatlar mağaza API'lerinden gelir.
+const TL_STORES = new Set<StoreId>(["epic", "xbox", "playstation", "ubisoft", "ea"]);
+const r2 = (n: number) => Math.round(n * 100) / 100;
+
+interface GameSpec {
+  appid: number;
+  slug: string;
+  title: string;
+  genres: string[];
+  score: number;
+  year: number;
+  usd: number; // full (undiscounted) USD price
+  stores: StoreId[];
+  subs: SubscriptionId[];
+  disc: number; // 0 = no discount, else percent off
+}
+
+function makeGame(s: GameSpec): Game {
+  const prices: Price[] = s.stores.map((store, i) => {
+    const spread = 1 + ((i % 3) - 1) * 0.04; // ±4% so stores differ
+    const usd = TL_STORES.has(store);
+    if (usd) {
+      const full = Math.round(s.usd * USD_TRY * spread);
+      return s.disc
+        ? { store, amount: Math.round(full * (1 - s.disc / 100)), currency: "TRY", originalAmount: full, discountPercent: s.disc }
+        : { store, amount: full, currency: "TRY" };
+    }
+    const full = r2(s.usd * spread);
+    return s.disc
+      ? { store, amount: r2(full * (1 - s.disc / 100)), currency: "USD", originalAmount: full, discountPercent: s.disc }
+      : { store, amount: full, currency: "USD" };
+  });
+  return {
+    id: String(s.appid),
+    slug: s.slug,
+    title: s.title,
+    coverUrl: cover(s.appid),
+    genres: s.genres,
+    score: s.score,
+    releaseYear: s.year,
+    prices,
+    subscriptions: s.subs,
+  };
+}
+
+const GENERATED: GameSpec[] = [
+  { appid: 2208920, slug: "assassins-creed-valhalla", title: "Assassin's Creed Valhalla", genres: ["Aksiyon","Açık Dünya"], score: 84, year: 2020, usd: 59.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 70 },
+  { appid: 812140, slug: "assassins-creed-odyssey", title: "Assassin's Creed Odyssey", genres: ["RPG","Açık Dünya"], score: 83, year: 2018, usd: 59.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 582160, slug: "assassins-creed-origins", title: "Assassin's Creed Origins", genres: ["RPG","Açık Dünya"], score: 85, year: 2017, usd: 59.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 368500, slug: "assassins-creed-syndicate", title: "Assassin's Creed Syndicate", genres: ["Aksiyon","Açık Dünya"], score: 80, year: 2015, usd: 29.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 75 },
+  { appid: 242050, slug: "assassins-creed-iv-black-flag", title: "Assassin’s Creed IV Black Flag", genres: ["Aksiyon","Açık Dünya"], score: 84, year: 2013, usd: 19.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 447040, slug: "watchdogs-2", title: "Watch_Dogs 2", genres: ["Aksiyon","Açık Dünya"], score: 82, year: 2016, usd: 29.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 2239550, slug: "watch-dogs-legion", title: "Watch Dogs: Legion", genres: ["Aksiyon","Açık Dünya"], score: 77, year: 2020, usd: 59.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 75 },
+  { appid: 460930, slug: "tom-clancys-ghost-recon-wildlands", title: "Tom Clancy's Ghost Recon Wildlands", genres: ["FPS","Açık Dünya"], score: 74, year: 2017, usd: 49.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 552520, slug: "far-cry-5", title: "Far Cry 5", genres: ["FPS","Açık Dünya"], score: 81, year: 2018, usd: 59.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 371660, slug: "far-cry-primal", title: "Far Cry Primal", genres: ["Aksiyon","Açık Dünya"], score: 76, year: 2016, usd: 29.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 75 },
+  { appid: 304390, slug: "for-honor", title: "FOR HONOR", genres: ["Aksiyon","Dövüş"], score: 78, year: 2017, usd: 29.99, stores: ["steam","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 75 },
+  { appid: 646910, slug: "the-crew-2", title: "The Crew 2", genres: ["Yarış","Açık Dünya"], score: 72, year: 2018, usd: 49.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 80 },
+  { appid: 2698940, slug: "the-crew-motorfest", title: "The Crew Motorfest", genres: ["Yarış","Açık Dünya"], score: 73, year: 2023, usd: 69.99, stores: ["steam","epic","xbox","playstation","ubisoft"], subs: ["ubisoftplus"], disc: 60 },
+  { appid: 1846380, slug: "need-for-speed-unbound", title: "Need for Speed Unbound", genres: ["Yarış","Açık Dünya"], score: 79, year: 2022, usd: 69.99, stores: ["steam","xbox","playstation","ea"], subs: ["eaplay"], disc: 70 },
+  { appid: 1222680, slug: "need-for-speed-heat", title: "Need for Speed Heat", genres: ["Yarış","Açık Dünya"], score: 76, year: 2019, usd: 59.99, stores: ["steam","xbox","playstation","ea"], subs: ["eaplay"], disc: 75 },
+  { appid: 1237970, slug: "titanfall-2", title: "Titanfall 2", genres: ["FPS","Aksiyon"], score: 88, year: 2017, usd: 19.99, stores: ["steam","xbox","playstation","ea"], subs: ["eaplay"], disc: 70 },
+  { appid: 1328670, slug: "mass-effect-legendary-edition", title: "Mass Effect Legendary Edition", genres: ["RPG","Bilim Kurgu"], score: 87, year: 2021, usd: 59.99, stores: ["steam","xbox","playstation","ea"], subs: ["eaplay"], disc: 70 },
+  { appid: 1845910, slug: "dragon-age-the-veilguard", title: "Dragon Age: The Veilguard", genres: ["RPG","Fantastik"], score: 82, year: 2024, usd: 59.99, stores: ["steam","epic","xbox","playstation","ea"], subs: [], disc: 40 },
+  { appid: 2009100, slug: "immortals-of-aveum", title: "Immortals of Aveum", genres: ["FPS","Aksiyon"], score: 74, year: 2023, usd: 59.99, stores: ["steam","epic","xbox","playstation","ea"], subs: [], disc: 65 },
+  { appid: 2195250, slug: "ea-sports-fc-24", title: "EA SPORTS FC 24", genres: ["Spor","Futbol"], score: 80, year: 2023, usd: 69.99, stores: ["steam","epic","xbox","playstation","ea"], subs: ["eaplay"], disc: 85 },
+  { appid: 2519060, slug: "call-of-duty-modern-warfare-iii", title: "Call of Duty: Modern Warfare III", genres: ["FPS","Aksiyon"], score: 76, year: 2023, usd: 69.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 50 },
+  { appid: 996580, slug: "spyro-reignited-trilogy", title: "Spyro Reignited Trilogy", genres: ["Platform","Aksiyon"], score: 83, year: 2019, usd: 39.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 397540, slug: "borderlands-3", title: "Borderlands 3", genres: ["FPS","Looter Shooter"], score: 79, year: 2020, usd: 59.99, stores: ["steam","epic","xbox","playstation"], subs: [], disc: 75 },
+  { appid: 8870, slug: "bioshock-infinite", title: "BioShock Infinite", genres: ["FPS","Bilim Kurgu"], score: 90, year: 2013, usd: 29.99, stores: ["steam","xbox","playstation"], subs: [], disc: 80 },
+  { appid: 268500, slug: "xcom-2", title: "XCOM 2", genres: ["Strateji","Sıra Tabanlı"], score: 88, year: 2016, usd: 59.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 80 },
+  { appid: 1286680, slug: "tiny-tinas-wonderlands", title: "Tiny Tina's Wonderlands", genres: ["RPG","Looter Shooter"], score: 80, year: 2022, usd: 59.99, stores: ["steam","epic","xbox","playstation"], subs: ["gamepass"], disc: 75 },
+  { appid: 1030840, slug: "mafia-definitive-edition", title: "Mafia: Definitive Edition", genres: ["Aksiyon","Açık Dünya"], score: 80, year: 2020, usd: 29.99, stores: ["steam","xbox","playstation"], subs: [], disc: 70 },
+  { appid: 612880, slug: "wolfenstein-ii-the-new-colossus", title: "Wolfenstein II: The New Colossus", genres: ["FPS","Aksiyon"], score: 85, year: 2017, usd: 19.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 75 },
+  { appid: 1475810, slug: "ghostwire-tokyo", title: "Ghostwire: Tokyo", genres: ["Aksiyon","Korku"], score: 74, year: 2022, usd: 59.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 601430, slug: "the-evil-within-2", title: "The Evil Within 2", genres: ["Korku","Aksiyon"], score: 79, year: 2017, usd: 19.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 75 },
+  { appid: 1817230, slug: "hifi-rush", title: "Hi-Fi RUSH", genres: ["Aksiyon","Ritim"], score: 87, year: 2023, usd: 29.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 50 },
+  { appid: 1446780, slug: "monster-hunter-rise", title: "MONSTER HUNTER RISE", genres: ["Aksiyon","RPG"], score: 87, year: 2022, usd: 39.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 65 },
+  { appid: 952060, slug: "resident-evil-3", title: "Resident Evil 3", genres: ["Korku","Aksiyon"], score: 82, year: 2020, usd: 39.99, stores: ["steam","xbox","playstation"], subs: [], disc: 75 },
+  { appid: 418370, slug: "resident-evil-7-biohazard", title: "Resident Evil 7 Biohazard", genres: ["Korku","Aksiyon"], score: 86, year: 2017, usd: 19.99, stores: ["steam","xbox","playstation"], subs: [], disc: 75 },
+  { appid: 310950, slug: "street-fighter-v", title: "Street Fighter V", genres: ["Dövüş"], score: 77, year: 2016, usd: 19.99, stores: ["steam","xbox","playstation"], subs: [], disc: 70 },
+  { appid: 1286320, slug: "exoprimal", title: "Exoprimal", genres: ["Aksiyon","Co-op"], score: 73, year: 2023, usd: 59.99, stores: ["steam","xbox"], subs: ["gamepass"], disc: 60 },
+  { appid: 637650, slug: "final-fantasy-xv-windows-edition", title: "FINAL FANTASY XV WINDOWS EDITION", genres: ["RPG","Açık Dünya"], score: 80, year: 2018, usd: 49.99, stores: ["steam","xbox","playstation"], subs: [], disc: 75 },
+  { appid: 2515020, slug: "final-fantasy-xvi", title: "FINAL FANTASY XVI", genres: ["RPG","Aksiyon"], score: 87, year: 2024, usd: 59.99, stores: ["steam","playstation"], subs: [], disc: 40 },
+  { appid: 1462040, slug: "final-fantasy-vii-remake-intergrade", title: "FINAL FANTASY VII REMAKE INTERGRADE", genres: ["RPG","Aksiyon"], score: 90, year: 2022, usd: 69.99, stores: ["steam","epic","playstation"], subs: [], disc: 55 },
+  { appid: 1971650, slug: "octopath-traveler-ii", title: "OCTOPATH TRAVELER II", genres: ["RPG","JRPG"], score: 88, year: 2023, usd: 59.99, stores: ["steam","xbox","playstation"], subs: [], disc: 45 },
+  { appid: 524220, slug: "nierautomata", title: "NieR:Automata", genres: ["RPG","Aksiyon"], score: 90, year: 2017, usd: 39.99, stores: ["steam","xbox","playstation"], subs: [], disc: 70 },
+  { appid: 1113560, slug: "nier-replicant-ver122474487139", title: "NieR Replicant ver.1.22", genres: ["RPG","Aksiyon"], score: 84, year: 2021, usd: 59.99, stores: ["steam","xbox","playstation"], subs: [], disc: 65 },
+  { appid: 203160, slug: "tomb-raider-game-of-the-year", title: "Tomb Raider Game of the Year", genres: ["Aksiyon","Macera"], score: 86, year: 2014, usd: 19.99, stores: ["steam","xbox","playstation","humble"], subs: [], disc: 80 },
+  { appid: 391220, slug: "rise-of-the-tomb-raider", title: "Rise of the Tomb Raider", genres: ["Aksiyon","Macera"], score: 85, year: 2016, usd: 29.99, stores: ["steam","xbox","playstation","humble"], subs: [], disc: 80 },
+  { appid: 750920, slug: "shadow-of-the-tomb-raider-definitive-edition", title: "Shadow of the Tomb Raider: Definitive Edition", genres: ["Aksiyon","Macera"], score: 82, year: 2018, usd: 59.99, stores: ["steam","epic","xbox","playstation","humble"], subs: [], disc: 80 },
+  { appid: 680420, slug: "outriders", title: "OUTRIDERS", genres: ["Looter Shooter","Co-op"], score: 72, year: 2021, usd: 39.99, stores: ["steam","epic","xbox","playstation"], subs: [], disc: 75 },
+  { appid: 936790, slug: "life-is-strange-true-colors", title: "Life is Strange: True Colors", genres: ["Macera","Hikâye"], score: 85, year: 2021, usd: 59.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 374320, slug: "dark-souls-iii", title: "DARK SOULS III", genres: ["RPG","Souls"], score: 89, year: 2016, usd: 39.99, stores: ["steam","xbox","playstation"], subs: [], disc: 75 },
+  { appid: 570940, slug: "dark-souls-remastered", title: "DARK SOULS: REMASTERED", genres: ["RPG","Souls"], score: 84, year: 2018, usd: 39.99, stores: ["steam","xbox","playstation"], subs: [], disc: 70 },
+  { appid: 860510, slug: "little-nightmares-ii", title: "Little Nightmares II", genres: ["Korku","Platform"], score: 82, year: 2021, usd: 29.99, stores: ["steam","epic","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 424840, slug: "little-nightmares", title: "Little Nightmares", genres: ["Korku","Platform"], score: 80, year: 2017, usd: 19.99, stores: ["steam","epic","xbox","playstation"], subs: [], disc: 70 },
+  { appid: 775500, slug: "scarlet-nexus", title: "SCARLET NEXUS", genres: ["Aksiyon","RPG"], score: 80, year: 2021, usd: 59.99, stores: ["steam","xbox","playstation"], subs: [], disc: 70 },
+  { appid: 740130, slug: "tales-of-arise", title: "Tales of ARISE", genres: ["RPG","Aksiyon"], score: 87, year: 2021, usd: 59.99, stores: ["steam","xbox","playstation"], subs: [], disc: 65 },
+  { appid: 1790600, slug: "dragon-ball-sparking-zero", title: "DRAGON BALL: Sparking! ZERO", genres: ["Dövüş","Aksiyon"], score: 82, year: 2024, usd: 69.99, stores: ["steam","xbox","playstation"], subs: [], disc: 50 },
+  { appid: 678950, slug: "dragon-ball-fighterz", title: "DRAGON BALL FighterZ", genres: ["Dövüş"], score: 87, year: 2018, usd: 59.99, stores: ["steam","xbox","playstation"], subs: [], disc: 80 },
+  { appid: 1687950, slug: "persona-5-royal", title: "Persona 5 Royal", genres: ["RPG","JRPG"], score: 94, year: 2022, usd: 59.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 50 },
+  { appid: 1235140, slug: "yakuza-like-a-dragon", title: "Yakuza: Like a Dragon", genres: ["RPG","Aksiyon"], score: 84, year: 2020, usd: 59.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 2072450, slug: "like-a-dragon-infinite-wealth", title: "Like a Dragon: Infinite Wealth", genres: ["RPG","Aksiyon"], score: 86, year: 2024, usd: 69.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 40 },
+  { appid: 638970, slug: "yakuza-0", title: "Yakuza 0", genres: ["Aksiyon","Macera"], score: 88, year: 2018, usd: 19.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 75 },
+  { appid: 1237320, slug: "sonic-frontiers", title: "Sonic Frontiers", genres: ["Aksiyon","Açık Dünya"], score: 76, year: 2022, usd: 59.99, stores: ["steam","xbox","playstation"], subs: [], disc: 65 },
+  { appid: 1142710, slug: "total-war-warhammer-iii", title: "Total War: WARHAMMER III", genres: ["Strateji","RTS"], score: 82, year: 2022, usd: 59.99, stores: ["steam","epic"], subs: [], disc: 70 },
+  { appid: 1124300, slug: "humankind", title: "HUMANKIND", genres: ["Strateji","Sıra Tabanlı"], score: 76, year: 2021, usd: 49.99, stores: ["steam","epic"], subs: [], disc: 75 },
+  { appid: 1313140, slug: "cult-of-the-lamb", title: "Cult of the Lamb", genres: ["Roguelike","Aksiyon"], score: 85, year: 2022, usd: 24.99, stores: ["steam","xbox","playstation"], subs: [], disc: 50 },
+  { appid: 1868140, slug: "dave-the-diver", title: "DAVE THE DIVER", genres: ["Macera","Indie"], score: 90, year: 2023, usd: 19.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 30 },
+  { appid: 1244090, slug: "sea-of-stars-sunset-edition", title: "Sea of Stars: Sunset Edition", genres: ["RPG","Sıra Tabanlı"], score: 90, year: 2023, usd: 34.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 40 },
+  { appid: 2231450, slug: "pizza-tower", title: "Pizza Tower", genres: ["Platform","Aksiyon"], score: 92, year: 2023, usd: 19.99, stores: ["steam","xbox"], subs: ["gamepass"], disc: 20 },
+  { appid: 1092790, slug: "inscryption", title: "Inscryption", genres: ["Bulmaca","Kart"], score: 88, year: 2021, usd: 19.99, stores: ["steam","xbox","playstation"], subs: [], disc: 60 },
+  { appid: 753640, slug: "outer-wilds", title: "Outer Wilds", genres: ["Macera","Bulmaca"], score: 93, year: 2019, usd: 24.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 264710, slug: "subnautica", title: "Subnautica", genres: ["Hayatta Kalma","Macera"], score: 88, year: 2018, usd: 29.99, stores: ["steam","epic","xbox","playstation"], subs: [], disc: 50 },
+  { appid: 892970, slug: "valheim", title: "Valheim", genres: ["Hayatta Kalma","Co-op"], score: 90, year: 2021, usd: 19.99, stores: ["steam","xbox"], subs: ["gamepass"], disc: 0 },
+  { appid: 632360, slug: "risk-of-rain-2", title: "Risk of Rain 2", genres: ["Roguelike","Co-op"], score: 90, year: 2020, usd: 24.99, stores: ["steam","xbox","playstation"], subs: [], disc: 60 },
+  { appid: 588650, slug: "dead-cells", title: "Dead Cells", genres: ["Roguelike","Aksiyon"], score: 91, year: 2018, usd: 24.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 70 },
+  { appid: 391540, slug: "undertale", title: "Undertale", genres: ["RPG","Indie"], score: 92, year: 2015, usd: 9.99, stores: ["steam","xbox"], subs: [], disc: 50 },
+  { appid: 739630, slug: "phasmophobia", title: "Phasmophobia", genres: ["Korku","Co-op"], score: 88, year: 2020, usd: 13.99, stores: ["steam"], subs: [], disc: 0 },
+  { appid: 1966720, slug: "lethal-company", title: "Lethal Company", genres: ["Korku","Co-op"], score: 88, year: 2023, usd: 9.99, stores: ["steam"], subs: [], disc: 0 },
+  { appid: 2379780, slug: "balatro", title: "Balatro", genres: ["Roguelike","Kart"], score: 94, year: 2024, usd: 14.99, stores: ["steam","xbox","playstation"], subs: ["gamepass"], disc: 20 },
+  { appid: 1458140, slug: "pacific-drive", title: "Pacific Drive", genres: ["Hayatta Kalma","Macera"], score: 83, year: 2024, usd: 29.99, stores: ["steam","playstation"], subs: [], disc: 40 },
+  { appid: 1371980, slug: "no-rest-for-the-wicked", title: "No Rest for the Wicked", genres: ["RPG","Souls"], score: 82, year: 2024, usd: 39.99, stores: ["steam"], subs: [], disc: 30 },
+  { appid: 2561580, slug: "horizon-zero-dawn-remastered", title: "Horizon Zero Dawn Remastered", genres: ["Aksiyon","Açık Dünya"], score: 88, year: 2024, usd: 49.99, stores: ["steam","epic","playstation"], subs: [], disc: 40 },];
+
+GAMES.push(...GENERATED.map(makeGame));

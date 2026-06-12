@@ -10,6 +10,7 @@ import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
+import { MissingGame } from "@/components/missing-game";
 import { useApp } from "@/components/providers";
 
 export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
@@ -106,7 +107,10 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
           }`}
         >
           {results.length === 0 ? (
-            <p className="px-5 py-4 text-sm text-muted">{t.noResults}</p>
+            <div className="p-2">
+              <p className="px-3 py-2 text-sm text-muted">{t.noResults}</p>
+              <MissingGame query={query.trim()} />
+            </div>
           ) : (
             <ul className="divide-y divide-border">
               {results.map((game, i) => {
