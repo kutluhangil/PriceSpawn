@@ -35,4 +35,11 @@ export const en: Record<keyof typeof tr, string> = {
   demoRateNote: "Demo rate: $1 ≈ ₺44.20",
   themeToggle: "Toggle theme",
   discount: "off",
+  footerStores: "Stores",
+  footerSubs: "Subscriptions",
+  footerSite: "Explore",
+  footerHome: "Home",
+  footerTagline: "The independent guide for comparing game prices in Türkiye.",
+  gamesWord: "games",
+  subsWord: "subscriptions",
 };

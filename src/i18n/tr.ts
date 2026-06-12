@@ -33,4 +33,11 @@ export const tr = {
   demoRateNote: "Demo kur: $1 ≈ ₺44,20",
   themeToggle: "Tema değiştir",
   discount: "indirim",
+  footerStores: "Mağazalar",
+  footerSubs: "Abonelikler",
+  footerSite: "Keşfet",
+  footerHome: "Ana Sayfa",
+  footerTagline: "Türkiye'deki oyun fiyatlarını karşılaştıran bağımsız rehber.",
+  gamesWord: "oyun",
+  subsWord: "abonelik",
 } as const;
