@@ -25,6 +25,7 @@
   --bg-glow-2: rgba(8, 145, 178, 0.16);
   --bg-glow-3: rgba(219, 39, 119, 0.13);
   --grid-line: rgba(255, 255, 255, 0.035);
+  --doodle-color: rgba(186, 192, 230, 0.16);
   --noise-opacity: 0.05;
   --radius-card: 6px;
 }
@@ -52,6 +53,7 @@
   --bg-glow-2: rgba(120, 160, 255, 0.18);
   --bg-glow-3: rgba(200, 140, 255, 0.16);
   --grid-line: rgba(20, 22, 30, 0.04);
+  --doodle-color: rgba(40, 45, 75, 0.13);
   --noise-opacity: 0.035;
   --radius-card: 6px;
 }
@@ -96,13 +98,14 @@ body {
 .app-bg::before {
   content: "";
   position: absolute;
-  inset: -2px;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 46px 46px;
-  -webkit-mask-image: radial-gradient(circle at 50% 22%, #000 0%, transparent 78%);
-  mask-image: radial-gradient(circle at 50% 22%, #000 0%, transparent 78%);
+  inset: 0;
+  background-color: var(--doodle-color);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20viewBox%3D%270%200%20320%20320%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2730%27%20y%3D%2746%27%20width%3D%2774%27%20height%3D%2740%27%20rx%3D%2717%27%2F%3E%3Cpath%20d%3D%27M48%2060v16M40%2068h16%27%2F%3E%3Ccircle%20cx%3D%2784%27%20cy%3D%2762%27%20r%3D%273.2%27%2F%3E%3Ccircle%20cx%3D%2793%27%20cy%3D%2771%27%20r%3D%273.2%27%2F%3E%3Cpath%20d%3D%27M210%2086V64a17%2017%200%200%201%2034%200v22l-5.5-5-6%205-5.5-5-6%205-5-5z%27%2F%3E%3Ccircle%20cx%3D%27220%27%20cy%3D%2762%27%20r%3D%272.2%27%2F%3E%3Ccircle%20cx%3D%27234%27%20cy%3D%2762%27%20r%3D%272.2%27%2F%3E%3Cpath%20d%3D%27M160%20104l7.5%2015%2016%202.4-11.5%2011.5%203%2016-15-7.6-15%207.6%203-16-11.5-11.5%2016-2.4z%27%2F%3E%3Cpath%20d%3D%27M64%20196c-11-11-24-2-24%207.5%200%2011%2024%2020%2024%2020s24-9%2024-20c0-9.5-13-18.5-24-7.5z%27%2F%3E%3Cpath%20d%3D%27M252%20156l-13%2024h10l-6%2022%2019-26h-10z%27%2F%3E%3Ccircle%20cx%3D%27158%27%20cy%3D%27250%27%20r%3D%2717%27%2F%3E%3Cpath%20d%3D%27M158%20240v20M151%20245h10%27%2F%3E%3Cpath%20d%3D%27M262%20250h13v10h10v13h-10v10h-13v-10h-10v-13h10z%27%2F%3E%3Crect%20x%3D%2744%27%20y%3D%27250%27%20width%3D%2740%27%20height%3D%2726%27%20rx%3D%275%27%2F%3E%3Cpath%20d%3D%27M52%20263h10M70%20259v8%27%2F%3E%3Ccircle%20cx%3D%27130%27%20cy%3D%2762%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27286%27%20cy%3D%27128%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%2740%27%20cy%3D%27150%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27200%27%20cy%3D%27210%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%27300%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27110%27%20cy%3D%27300%27%20r%3D%271.8%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20viewBox%3D%270%200%20320%20320%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%272.4%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2730%27%20y%3D%2746%27%20width%3D%2774%27%20height%3D%2740%27%20rx%3D%2717%27%2F%3E%3Cpath%20d%3D%27M48%2060v16M40%2068h16%27%2F%3E%3Ccircle%20cx%3D%2784%27%20cy%3D%2762%27%20r%3D%273.2%27%2F%3E%3Ccircle%20cx%3D%2793%27%20cy%3D%2771%27%20r%3D%273.2%27%2F%3E%3Cpath%20d%3D%27M210%2086V64a17%2017%200%200%201%2034%200v22l-5.5-5-6%205-5.5-5-6%205-5-5z%27%2F%3E%3Ccircle%20cx%3D%27220%27%20cy%3D%2762%27%20r%3D%272.2%27%2F%3E%3Ccircle%20cx%3D%27234%27%20cy%3D%2762%27%20r%3D%272.2%27%2F%3E%3Cpath%20d%3D%27M160%20104l7.5%2015%2016%202.4-11.5%2011.5%203%2016-15-7.6-15%207.6%203-16-11.5-11.5%2016-2.4z%27%2F%3E%3Cpath%20d%3D%27M64%20196c-11-11-24-2-24%207.5%200%2011%2024%2020%2024%2020s24-9%2024-20c0-9.5-13-18.5-24-7.5z%27%2F%3E%3Cpath%20d%3D%27M252%20156l-13%2024h10l-6%2022%2019-26h-10z%27%2F%3E%3Ccircle%20cx%3D%27158%27%20cy%3D%27250%27%20r%3D%2717%27%2F%3E%3Cpath%20d%3D%27M158%20240v20M151%20245h10%27%2F%3E%3Cpath%20d%3D%27M262%20250h13v10h10v13h-10v10h-13v-10h-10v-13h10z%27%2F%3E%3Crect%20x%3D%2744%27%20y%3D%27250%27%20width%3D%2740%27%20height%3D%2726%27%20rx%3D%275%27%2F%3E%3Cpath%20d%3D%27M52%20263h10M70%20259v8%27%2F%3E%3Ccircle%20cx%3D%27130%27%20cy%3D%2762%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27286%27%20cy%3D%27128%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%2740%27%20cy%3D%27150%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27200%27%20cy%3D%27210%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%27300%27%20r%3D%271.8%27%2F%3E%3Ccircle%20cx%3D%27110%27%20cy%3D%27300%27%20r%3D%271.8%27%2F%3E%3C%2Fsvg%3E");
+  -webkit-mask-size: 320px 320px;
+  mask-size: 320px 320px;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
 }
 
 .app-bg::after {
