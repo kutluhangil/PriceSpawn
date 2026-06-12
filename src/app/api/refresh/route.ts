@@ -61,43 +61,47 @@ export async function GET(req: Request) {
     if (itadId && slugByAppid.has(appid)) slugByItad.set(itadId, slugByAppid.get(appid)!);
   }
 
-  // 3) Prices for all ITAD ids (chunked), real TR across stores
+  // 3) Prices for all ITAD ids (chunked), real TR across stores.
+  // Collect all rows first, then write them with bounded concurrency so the
+  // whole refresh stays well within the 60s function limit.
   const allIds = [...slugByItad.keys()];
   const today = new Date().toISOString().slice(0, 10);
-  let priced = 0;
-  let rows = 0;
+  const ops: { slug: string; store: string; amount: number; original: number | null; cut: number | null }[] = [];
+  const pricedSlugs = new Set<string>();
 
   for (const ids of chunk(allIds, 100)) {
     const byItad = await itadPrices(ids, key);
     for (const [itadId, deals] of Object.entries(byItad)) {
       const slug = slugByItad.get(itadId);
       if (!slug) continue;
-      priced++;
+      pricedSlugs.add(slug);
       for (const d of deals) {
         const original = d.cut > 0 ? Math.round((d.amount / (1 - d.cut / 100)) * 100) / 100 : null;
-        await sql!`
-          INSERT INTO game_prices (slug, store, amount, currency, original_amount, discount_percent, updated_at)
-          VALUES (${slug}, ${d.store}, ${d.amount}, 'TRY', ${original}, ${d.cut > 0 ? d.cut : null}, now())
-          ON CONFLICT (slug, store) DO UPDATE
-            SET amount = ${d.amount}, currency = 'TRY',
-                original_amount = ${original},
-                discount_percent = ${d.cut > 0 ? d.cut : null}, updated_at = now()`;
-        await sql!`
-          INSERT INTO price_history (slug, store, day, try_amount)
-          VALUES (${slug}, ${d.store}, ${today}, ${d.amount})
-          ON CONFLICT (slug, store, day) DO UPDATE SET try_amount = ${d.amount}`;
-        rows++;
+        ops.push({ slug, store: d.store, amount: d.amount, original, cut: d.cut > 0 ? d.cut : null });
       }
     }
   }
+
+  await mapLimit(ops, 24, async (o) => {
+    await sql!`
+      INSERT INTO game_prices (slug, store, amount, currency, original_amount, discount_percent, updated_at)
+      VALUES (${o.slug}, ${o.store}, ${o.amount}, 'TRY', ${o.original}, ${o.cut}, now())
+      ON CONFLICT (slug, store) DO UPDATE
+        SET amount = ${o.amount}, currency = 'TRY',
+            original_amount = ${o.original}, discount_percent = ${o.cut}, updated_at = now()`;
+    await sql!`
+      INSERT INTO price_history (slug, store, day, try_amount)
+      VALUES (${o.slug}, ${o.store}, ${today}, ${o.amount})
+      ON CONFLICT (slug, store, day) DO UPDATE SET try_amount = ${o.amount}`;
+  });
 
   return NextResponse.json({
     ok: true,
     fx: rate,
     games: games.length,
     lookedUp,
-    pricedGames: priced,
-    priceRows: rows,
+    pricedGames: pricedSlugs.size,
+    priceRows: ops.length,
     at: new Date().toISOString(),
   });
 }
