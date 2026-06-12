@@ -3,6 +3,8 @@ import { Sora, Onest } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { CommandPalette } from "@/components/command-palette";
+import { BottomNav } from "@/components/bottom-nav";
 import { SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
@@ -42,8 +44,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <Providers>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-16 sm:pb-0">{children}</main>
           <Footer />
+          <CommandPalette />
+          <BottomNav />
         </Providers>
       </body>
     </html>
