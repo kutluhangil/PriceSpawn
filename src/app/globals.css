@@ -248,6 +248,27 @@ footer {
   background: transparent;
 }
 
+/* ── Shimmer (skeleton yükleme) ───────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, var(--row) 25%, var(--row-hover) 37%, var(--row) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ── Isı rampası (fırsat radarı) ──────────────────────────────────── */
+.heat-block {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.heat-block:hover {
+  transform: scale(1.04);
+  z-index: 2;
+}
+
 /* ── Erişilebilirlik ──────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -265,7 +286,8 @@ footer {
   .page-fade,
   .billboard-fade,
   .aurora::before,
-  .aurora::after {
+  .aurora::after,
+  .animate-shimmer {
     animation: none;
   }
   html {
