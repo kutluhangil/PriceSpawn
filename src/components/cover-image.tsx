@@ -26,6 +26,7 @@ export function CoverImage({
   className?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   if (!src || failed) {
     return (
@@ -41,13 +42,19 @@ export function CoverImage({
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- demo external covers need onError fallback
-    <img
-      src={src}
-      alt={title}
-      loading="lazy"
-      onError={() => setFailed(true)}
-      className={`object-cover ${className}`}
-    />
+    <span className={`relative block overflow-hidden ${className}`}>
+      {!loaded && <span className="animate-shimmer absolute inset-0" aria-hidden="true" />}
+      {/* eslint-disable-next-line @next/next/no-img-element -- demo external covers need onError fallback */}
+      <img
+        src={src}
+        alt={title}
+        loading="lazy"
+        onError={() => setFailed(true)}
+        onLoad={() => setLoaded(true)}
+        className={`h-full w-full object-cover transition-opacity duration-300 ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </span>
   );
 }

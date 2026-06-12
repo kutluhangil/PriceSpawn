@@ -5,8 +5,13 @@ import type { Game } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
+import { HoverTrailer } from "@/components/hover-trailer";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
+import { Sparkline } from "@/components/sparkline";
+import { AtlBadge } from "@/components/atl-badge";
+import { StoreLogo } from "@/components/store-logo";
+import { WatchButton } from "@/components/watch-button";
 import { useApp } from "@/components/providers";
 
 export function GameCard({ game }: { game: Game }) {
@@ -19,32 +24,43 @@ export function GameCard({ game }: { game: Game }) {
       className="panel-strong group block h-full overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_18px_50px_rgba(0,0,0,0.35)]"
     >
       <div className="relative aspect-[460/215] overflow-hidden">
-        <CoverImage
-          src={game.coverUrl}
-          title={game.title}
-          className="h-full w-full transition-transform duration-500 group-hover:scale-[1.05]"
-        />
+        <HoverTrailer game={game}>
+          <CoverImage
+            src={game.coverUrl}
+            title={game.title}
+            className="h-full w-full transition-transform duration-500 group-hover:scale-[1.05]"
+          />
+        </HoverTrailer>
+        <span className="pointer-events-none absolute left-2.5 top-2.5">
+          <AtlBadge game={game} />
+        </span>
         {best?.price.discountPercent !== undefined && (
-          <span className="discount-chip absolute right-2.5 top-2.5 rounded-full px-2 py-0.5 text-xs shadow-lg">
+          <span className="discount-chip absolute bottom-2.5 left-2.5 rounded-full px-2 py-0.5 text-xs shadow-lg">
             -%{best.price.discountPercent}
           </span>
         )}
+        <span className="absolute right-2.5 top-2.5">
+          <WatchButton slug={game.slug} compact />
+        </span>
       </div>
 
-      <div className="flex flex-col gap-1.5 p-3.5">
+      <Sparkline game={game} className="px-1 opacity-70" />
+
+      <div className="flex flex-col gap-1.5 px-3.5 pb-3.5 pt-1">
         <h3 className="truncate text-sm font-bold text-bright">{game.title}</h3>
         <p className="truncate text-xs text-muted">{game.genres.join(" · ")}</p>
         <div className="mt-1 flex items-end justify-between gap-2">
           <SubBadges ids={game.subscriptions} />
           {best && (
             <span className="ml-auto flex shrink-0 flex-col items-end">
-              <span className="text-[10px] uppercase tracking-wide text-muted">
-                {t.cheapestAt} {STORES[best.price.store].label}
+              <span className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted">
+                <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label}
               </span>
               <PriceTag rp={best} locale={locale} size="sm" highlight />
             </span>
           )}
         </div>
+        <span className="sr-only">{t.cheapestAt}</span>
       </div>
     </Link>
   );

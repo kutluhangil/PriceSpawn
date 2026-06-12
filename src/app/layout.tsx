@@ -3,6 +3,8 @@ import { Sora, Onest } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { CommandPalette } from "@/components/command-palette";
+import { BottomNav } from "@/components/bottom-nav";
 import { SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
     "Türkiye'deki tüm oyun mağazalarını karşılaştır: Steam, Epic, Xbox, PlayStation, GOG ve daha fazlası. Hangi oyun nerede daha ucuz, TL olarak gör.",
 };
 
-const themeInit = `(function(){try{var t=localStorage.getItem("hdu-theme");if(!t)t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t;var l=localStorage.getItem("hdu-locale");if(l)document.documentElement.lang=l;}catch(e){}})();`;
+const themeInit = `(function(){try{var p=localStorage.getItem("pricespawn-theme")||localStorage.getItem("hdu-theme")||"system";var t=(p==="system"||!p)?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):p;document.documentElement.dataset.theme=t;var l=localStorage.getItem("hdu-locale");if(l)document.documentElement.lang=l;}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -42,8 +44,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <Providers>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-16 sm:pb-0">{children}</main>
           <Footer />
+          <CommandPalette />
+          <BottomNav />
         </Providers>
       </body>
     </html>

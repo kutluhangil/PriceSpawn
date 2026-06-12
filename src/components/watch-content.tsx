@@ -1,0 +1,103 @@
+"use client";
+
+import Link from "next/link";
+import { useWatchlist } from "@/hooks/use-watchlist";
+import { useApp } from "@/components/providers";
+import { GAMES } from "@/data/games";
+import { bestPrice } from "@/lib/price";
+import { targetMet } from "@/lib/watchlist";
+import { STORES } from "@/lib/stores";
+import { CoverImage } from "@/components/cover-image";
+import { PriceTag } from "@/components/price-tag";
+import { StoreLogo } from "@/components/store-logo";
+
+export function WatchContent() {
+  const { t, locale } = useApp();
+  const { list, ready, setTargetFor, toggle } = useWatchlist();
+
+  const rows = list
+    .map((w) => ({ w, game: GAMES.find((g) => g.slug === w.slug) }))
+    .filter((r): r is { w: typeof r.w; game: NonNullable<typeof r.game> } => !!r.game);
+
+  return (
+    <div className="mx-auto w-[min(100%-2rem,52rem)] pt-8">
+      <h1 className="font-display mb-6 text-2xl font-bold text-bright sm:text-3xl">
+        {t.watchPage}
+      </h1>
+
+      {ready && rows.length === 0 && (
+        <div className="panel-strong rounded-2xl px-6 py-12 text-center">
+          <p className="text-sm text-muted">{t.emptyWatch}</p>
+          <Link
+            href="/oyunlar"
+            className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
+          >
+            {t.allGamesPage}
+          </Link>
+        </div>
+      )}
+
+      <ul className="flex flex-col gap-3">
+        {rows.map(({ w, game }) => {
+          const best = bestPrice(game)!;
+          const met = targetMet(w, game);
+          return (
+            <li
+              key={game.slug}
+              className={`panel-strong flex flex-col gap-3 rounded-2xl p-3 sm:flex-row sm:items-center ${
+                met ? "ring-2 ring-best" : ""
+              }`}
+            >
+              <Link href={`/oyun/${game.slug}`} className="flex min-w-0 flex-1 items-center gap-3">
+                <CoverImage
+                  src={game.coverUrl}
+                  title={game.title}
+                  className="aspect-[460/215] w-28 shrink-0 rounded-lg"
+                />
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-bold text-bright">
+                    {game.title}
+                  </span>
+                  <span className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+                    <StoreLogo id={best.price.store} size={14} />
+                    {STORES[best.price.store].label}
+                  </span>
+                </span>
+              </Link>
+
+              <div className="flex items-center justify-between gap-3 sm:justify-end">
+                <span className="flex flex-col items-end">
+                  {met && (
+                    <span className="mb-0.5 text-[11px] font-bold text-best">
+                      🎯 {t.targetReached}
+                    </span>
+                  )}
+                  <PriceTag rp={best} locale={locale} highlight={met} />
+                </span>
+                <label className="flex flex-col text-[10px] uppercase text-muted">
+                  {t.targetPrice}
+                  <input
+                    type="number"
+                    min={0}
+                    defaultValue={w.targetTRY ?? ""}
+                    onChange={(e) =>
+                      setTargetFor(game.slug, e.target.value ? Number(e.target.value) : null)
+                    }
+                    className="mt-0.5 w-24 rounded-md border border-border bg-bg-deep px-2 py-1 text-sm text-fg outline-none focus:border-accent"
+                  />
+                </label>
+                <button
+                  onClick={() => toggle(game.slug)}
+                  aria-label="remove"
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted transition-colors hover:text-[#fb7185]"
+                >
+                  ✕
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
