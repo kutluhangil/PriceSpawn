@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import type { Game } from "@/data/games";
+import { notFound } from "next/navigation";
+import { GAMES } from "@/data/games";
 import { sortedPrices } from "@/lib/price";
 import { formatTRY } from "@/lib/format";
 import { STORES } from "@/lib/stores";
@@ -26,10 +27,13 @@ function reviewText(score: number, t: Dict): string {
   return t.reviewMixed;
 }
 
-export function GameDetail({ game }: { game: Game }) {
+export function GameDetail({ slug }: { slug: string }) {
+  // priceVersion in useApp() makes this re-render when live prices apply.
   const { locale, t } = useApp();
-  const prices = sortedPrices(game);
   const priceListRef = useRef<HTMLElement | null>(null);
+  const game = GAMES.find((g) => g.slug === slug);
+  if (!game) notFound();
+  const prices = sortedPrices(game);
 
   return (
     <div>

@@ -5,12 +5,15 @@ import { useApp } from "@/components/providers";
 import { GAMES } from "@/data/games";
 import { STORES } from "@/lib/stores";
 import { SUBSCRIPTIONS } from "@/lib/subscriptions";
+import { currentRate } from "@/lib/exchange";
 import { BrandMark } from "@/components/brand-mark";
 
 export function Footer() {
-  const { t } = useApp();
+  const { t, liveUpdatedAt } = useApp();
   const storeCount = Object.keys(STORES).length;
   const subCount = Object.keys(SUBSCRIPTIONS).length;
+  const rateText = `$1 ≈ ₺${currentRate().toLocaleString("tr-TR", { maximumFractionDigits: 2 })}`;
+  const note = liveUpdatedAt ? `${t.liveNote} · ${rateText}` : `${t.footerNote} · ${t.demoRateNote}`;
 
   return (
     <footer className="mt-20 border-t border-border bg-bg-deep">
@@ -110,10 +113,15 @@ export function Footer() {
 
       <div className="border-t border-border">
         <div className="mx-auto flex w-[min(100%-2rem,74rem)] flex-col items-center gap-1 py-5 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
-          <p>© 2026 pricespawn</p>
           <p>
-            {t.footerNote} · {t.demoRateNote}
+            © 2026 pricespawn
+            {liveUpdatedAt && (
+              <span className="ml-2 inline-flex items-center gap-1 text-best">
+                <span className="h-1.5 w-1.5 rounded-full bg-best" /> {t.liveBadge}
+              </span>
+            )}
           </p>
+          <p>{note}</p>
         </div>
       </div>
     </footer>
