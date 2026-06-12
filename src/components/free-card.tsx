@@ -31,6 +31,7 @@ export function FreeCard({ offer }: { offer: FreeOffer }) {
   const [days, setDays] = useState<number | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDays(daysUntil(offer.freeUntil));
   }, [offer.freeUntil]);
 
