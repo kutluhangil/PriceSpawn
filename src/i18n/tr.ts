@@ -66,6 +66,8 @@ export const tr = {
   targetPrice: "Hedef fiyat",
   targetReached: "Hedefe ulaştı",
   emptyWatch: "Henüz takip ettiğin oyun yok.",
+  freeEpicNote: "Epic Games'te şu an ücretsiz olan oyunlar. Süresi dolmadan kütüphanene ekle.",
+  freeEmpty: "Şu an Epic'te ücretsiz oyun yok.",
   freeNow: "Şu An Ücretsiz",
   freeUntilLabel: "Bitişe",
   daysLeft: "gün",

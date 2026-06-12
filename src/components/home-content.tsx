@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
-import { FREE_OFFERS } from "@/data/free";
+import { useFreeGames } from "@/hooks/use-free-games";
 import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
 import { Billboard } from "@/components/billboard";
@@ -31,6 +31,8 @@ export function HomeContent() {
   const { t } = useApp();
   const [page, setPage] = useState(1);
   const popularRef = useRef<HTMLElement | null>(null);
+  const { offers: freeOffers } = useFreeGames();
+  const freeStrip = freeOffers.slice(0, 4);
 
   const withDiscount = GAMES.map((game) => ({
     game,
@@ -45,7 +47,6 @@ export function HomeContent() {
   const billboardGames = byDiscount.slice(0, 5);
   const deals = byDiscount.slice(5, 17);
   const radarGames = byDiscount.slice(0, 18);
-  const freeStrip = FREE_OFFERS.slice(0, 4);
   const newReleases = [...GAMES]
     .sort((a, b) => b.releaseYear - a.releaseYear || b.score - a.score)
     .slice(0, 12);
@@ -98,17 +99,19 @@ export function HomeContent() {
         <DealRadar games={radarGames} />
       </section>
 
-      {/* Şu An Ücretsiz — şerit */}
-      <section className="reveal pt-10" style={{ animationDelay: "0.2s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.freeNow}
-        </h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {freeStrip.map((o) => (
-            <FreeCard key={o.title} offer={o} />
-          ))}
-        </div>
-      </section>
+      {/* Şu An Ücretsiz (Epic, canlı) — şerit */}
+      {freeStrip.length > 0 && (
+        <section className="reveal pt-10" style={{ animationDelay: "0.2s" }}>
+          <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
+            {t.freeNow} <span className="text-sm font-normal text-muted">· Epic Games</span>
+          </h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {freeStrip.map((o) => (
+              <FreeCard key={o.title} offer={o} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Günün Fırsatları — ray */}
       <section id="deals" className="reveal pt-12" style={{ animationDelay: "0.24s" }}>
