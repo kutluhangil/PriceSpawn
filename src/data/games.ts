@@ -19,6 +19,7 @@ export interface Game {
   releaseYear: number;
   prices: Price[];
   subscriptions: SubscriptionId[];
+  trailerId?: string; // Steam movie id for hover microtrailer
 }
 
 const cover = (appid: number) =>
@@ -41,6 +42,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 1599, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "257081132",
   },
   {
     id: "292030",
@@ -58,6 +60,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 499, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "256927226",
   },
   {
     id: "1174180",
@@ -75,6 +78,7 @@ export const GAMES: Game[] = [
       { store: "humble", amount: 19.79, currency: "USD", originalAmount: 59.99, discountPercent: 67 },
     ],
     subscriptions: [],
+    trailerId: "256768371",
   },
   {
     id: "271590",
@@ -91,6 +95,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 799, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "257109786",
   },
   {
     id: "grand-theft-auto-vi",
@@ -121,6 +126,7 @@ export const GAMES: Game[] = [
       { store: "humble", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
     ],
     subscriptions: [],
+    trailerId: "256889456",
   },
   {
     id: "1086940",
@@ -137,6 +143,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 2599, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "256987424",
   },
   {
     id: "990080",
@@ -154,6 +161,7 @@ export const GAMES: Game[] = [
       { store: "humble", amount: 17.49, currency: "USD", originalAmount: 49.99, discountPercent: 65 },
     ],
     subscriptions: [],
+    trailerId: "256930504",
   },
   {
     id: "2322010",
@@ -241,6 +249,7 @@ export const GAMES: Game[] = [
       { store: "xbox", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
     ],
     subscriptions: ["gamepass", "luna"],
+    trailerId: "256875134",
   },
   {
     id: "2483190",
@@ -356,6 +365,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 3499, currency: "TRY" },
     ],
     subscriptions: ["gamepass"],
+    trailerId: "257065848",
   },
   {
     id: "3405690",
@@ -555,6 +565,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 2699, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "257048125",
   },
   {
     id: "814380",
@@ -631,6 +642,7 @@ export const GAMES: Game[] = [
       { store: "humble", amount: 19.99, currency: "USD", originalAmount: 39.99, discountPercent: 50 },
     ],
     subscriptions: [],
+    trailerId: "256998125",
   },
   {
     id: "1364780",
@@ -661,6 +673,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 1229, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "256969616",
   },
   {
     id: "1971870",
@@ -677,6 +690,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 749, currency: "TRY" },
     ],
     subscriptions: [],
+    trailerId: "256961704",
   },
   {
     id: "2124490",
@@ -1665,6 +1679,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 1199, currency: "TRY" },
     ],
     subscriptions: ["psplus"],
+    trailerId: "256864004",
   },
   {
     id: "1817070",
@@ -1754,6 +1769,7 @@ export const GAMES: Game[] = [
       { store: "playstation", amount: 599, currency: "TRY" },
     ],
     subscriptions: ["gamepass"],
+    trailerId: "257182101",
   },
   {
     id: "489830",
