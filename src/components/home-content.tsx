@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { FREE_OFFERS } from "@/data/free";
@@ -12,8 +13,24 @@ import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
 import { useApp } from "@/components/providers";
 
+const PER_PAGE = 16;
+
+/** Compact page list: 1 … current-1 current current+1 … last */
+function pagesToShow(current: number, total: number): (number | "…")[] {
+  const set = new Set<number>([1, total, current, current - 1, current + 1]);
+  const nums = [...set].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b);
+  const out: (number | "…")[] = [];
+  for (let i = 0; i < nums.length; i++) {
+    if (i > 0 && nums[i] - nums[i - 1] > 1) out.push("…");
+    out.push(nums[i]);
+  }
+  return out;
+}
+
 export function HomeContent() {
   const { t } = useApp();
+  const [page, setPage] = useState(1);
+  const popularRef = useRef<HTMLElement | null>(null);
 
   const withDiscount = GAMES.map((game) => ({
     game,
@@ -38,6 +55,14 @@ export function HomeContent() {
   const popular = GAMES.filter((g) => !shown.has(g.slug)).sort(
     (a, b) => b.score - a.score
   );
+  const pageCount = Math.max(1, Math.ceil(popular.length / PER_PAGE));
+  const current = Math.min(page, pageCount);
+  const pageGames = popular.slice((current - 1) * PER_PAGE, current * PER_PAGE);
+
+  function goto(p: number) {
+    setPage(p);
+    popularRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
     <div className="mx-auto w-[min(100%-2rem,74rem)]">
@@ -113,16 +138,67 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Popüler Oyunlar — grid */}
-      <section id="popular" className="reveal pt-10" style={{ animationDelay: "0.32s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.popularGames}
-        </h2>
+      {/* Popüler Oyunlar — sayfalı (16/sayfa) */}
+      <section
+        id="popular"
+        ref={popularRef}
+        className="reveal scroll-mt-20 pt-10"
+        style={{ animationDelay: "0.32s" }}
+      >
+        <div className="mb-4 flex items-baseline justify-between gap-2">
+          <h2 className="font-display text-lg font-bold text-bright sm:text-xl">
+            {t.popularGames}
+          </h2>
+          <span className="text-xs text-muted">
+            {t.page} {current}/{pageCount}
+          </span>
+        </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {popular.map((game) => (
+          {pageGames.map((game) => (
             <GameCard key={game.slug} game={game} />
           ))}
         </div>
+
+        {pageCount > 1 && (
+          <nav className="mt-8 flex items-center justify-center gap-1.5">
+            <button
+              onClick={() => goto(Math.max(1, current - 1))}
+              disabled={current === 1}
+              aria-label={t.prevPage}
+              className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card)] border border-border text-muted transition-colors enabled:hover:text-bright disabled:opacity-40 cursor-pointer disabled:cursor-default"
+            >
+              ‹
+            </button>
+            {pagesToShow(current, pageCount).map((p, i) =>
+              p === "…" ? (
+                <span key={`e${i}`} className="px-1 text-muted">
+                  …
+                </span>
+              ) : (
+                <button
+                  key={p}
+                  onClick={() => goto(p)}
+                  aria-current={p === current}
+                  className={`h-9 min-w-9 rounded-[var(--radius-card)] border px-2 text-sm font-semibold transition-colors cursor-pointer ${
+                    p === current
+                      ? "border-accent bg-accent text-white"
+                      : "border-border text-muted hover:text-bright"
+                  }`}
+                >
+                  {p}
+                </button>
+              )
+            )}
+            <button
+              onClick={() => goto(Math.min(pageCount, current + 1))}
+              disabled={current === pageCount}
+              aria-label={t.nextPage}
+              className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card)] border border-border text-muted transition-colors enabled:hover:text-bright disabled:opacity-40 cursor-pointer disabled:cursor-default"
+            >
+              ›
+            </button>
+          </nav>
+        )}
       </section>
     </div>
   );
