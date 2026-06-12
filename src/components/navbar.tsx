@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/components/providers";
-import { SearchBar } from "@/components/search-bar";
 import { BrandMark } from "@/components/brand-mark";
 
 function SunIcon() {

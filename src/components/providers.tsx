@@ -41,10 +41,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
       (localStorage.getItem(THEME_KEY) as ThemePref | null) ??
       (localStorage.getItem(LEGACY_THEME_KEY) as ThemePref | null) ??
       "system";
+    // One-time hydration sync from localStorage; deterministic SSR defaults above.
+    /* eslint-disable react-hooks/set-state-in-effect */
     setThemePref(stored);
     setTheme(resolve(stored));
     const l = (localStorage.getItem(LOCALE_KEY) as Locale) || "tr";
     setLocaleState(l);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   // Follow OS changes while in "system" mode.
