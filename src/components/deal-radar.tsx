@@ -21,7 +21,7 @@ export function DealRadar({ games }: { games: Game[] }) {
             key={g.slug}
             href={`/oyun/${g.slug}`}
             title={g.title}
-            className="group relative block overflow-hidden rounded-xl border border-border transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_14px_36px_rgba(0,0,0,0.35)]"
+            className="group relative block overflow-hidden rounded-[var(--radius-card)] border border-border transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_14px_36px_rgba(0,0,0,0.35)]"
           >
             <div className="relative aspect-[460/215] overflow-hidden">
               <CoverImage

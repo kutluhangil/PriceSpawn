@@ -42,6 +42,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body className="min-h-full flex flex-col font-sans">
+        <div className="app-bg" aria-hidden="true" />
         <Providers>
           <Navbar />
           <main className="flex-1 pb-16 sm:pb-0">{children}</main>
