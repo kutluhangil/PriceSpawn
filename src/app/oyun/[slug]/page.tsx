@@ -30,5 +30,7 @@ export default async function GamePage({
   const { slug } = await params;
   const game = GAMES.find((g) => g.slug === slug);
   if (!game) notFound();
-  return <GameDetail game={game} />;
+  // Pass slug, not the game object: GameDetail re-reads the live-patched
+  // catalog on the client so prices stay current (SSG prop would be frozen).
+  return <GameDetail slug={slug} />;
 }

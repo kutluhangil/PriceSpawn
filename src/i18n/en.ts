@@ -87,6 +87,8 @@ export const en: Record<keyof typeof tr, string> = {
   missingNote: "Note (optional) — platform, edition, etc.",
   missingSend: "Report by email",
   missingClose: "Close",
+  liveNote: "Steam prices and FX are live; other stores soon.",
+  liveBadge: "Live prices",
   openIn: "open in store",
   cmdkHint: "Quick search",
   themeSystem: "Auto",
