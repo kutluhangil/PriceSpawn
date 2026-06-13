@@ -1,23 +1,31 @@
 "use client";
 
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { GAMES } from "@/data/games";
 import { filterSortGames } from "@/lib/filters";
 import { GameCard } from "@/components/game-card";
 import { FilterBar } from "@/components/filter-bar";
 import { useGameFilters } from "@/hooks/use-game-filters";
-import { STORES, type StoreId } from "@/lib/stores";
+import { parseOpts, serializeOpts } from "@/lib/filter-url";
 import { useApp } from "@/components/providers";
 
 export function BrowseContent() {
   const { t } = useApp();
+  const router = useRouter();
+  const pathname = usePathname();
   const params = useSearchParams();
-  const storeParam = params.get("store");
-  const initialStore =
-    storeParam && storeParam in STORES ? (storeParam as StoreId) : undefined;
-  const f = useGameFilters(initialStore ? { stores: [initialStore] } : undefined);
+
+  // Initialize once from the URL (deep-link / shared filter).
+  const initial = useMemo(() => parseOpts(new URLSearchParams(params.toString())), []); // eslint-disable-line react-hooks/exhaustive-deps
+  const f = useGameFilters(initial);
   const results = useMemo(() => filterSortGames(GAMES, f.opts), [f.opts]);
+
+  // Reflect filter state back into the URL (shareable, back/forward works).
+  useEffect(() => {
+    const qs = serializeOpts(f.opts);
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }, [f.opts, pathname, router]);
 
   return (
     <div className="mx-auto w-[min(100%-2rem,74rem)] pt-8">
