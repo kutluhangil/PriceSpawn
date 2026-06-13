@@ -16,9 +16,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const game = GAMES.find((g) => g.slug === slug);
   if (!game) return {};
+  const title = `${game.title} fiyatları — ${SITE_NAME}`;
+  const description = `${game.title} hangi platformda daha ucuz? Steam, Epic, Xbox, PlayStation ve diğer mağazalardaki TL fiyatlarını karşılaştır.`;
   return {
-    title: `${game.title} fiyatları — ${SITE_NAME}`,
-    description: `${game.title} hangi platformda daha ucuz? Steam, Epic, Xbox, PlayStation ve diğer mağazalardaki TL fiyatlarını karşılaştır.`,
+    title,
+    description,
+    alternates: { canonical: `/oyun/${slug}` },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      url: `/oyun/${slug}`,
+      images: [`/oyun/${slug}/opengraph-image`],
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
