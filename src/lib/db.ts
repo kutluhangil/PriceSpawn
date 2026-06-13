@@ -72,4 +72,20 @@ export async function ensureSchema(): Promise<void> {
       data       jsonb NOT NULL,
       updated_at timestamptz NOT NULL DEFAULT now()
     )`;
+  // Web Push subscriptions + their watched price targets
+  await sql`
+    CREATE TABLE IF NOT EXISTS push_subs (
+      endpoint   text PRIMARY KEY,
+      p256dh     text NOT NULL,
+      auth       text NOT NULL,
+      updated_at timestamptz NOT NULL DEFAULT now()
+    )`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS push_watches (
+      endpoint          text NOT NULL,
+      slug              text NOT NULL,
+      target_try        numeric,
+      last_notified_day date,
+      PRIMARY KEY (endpoint, slug)
+    )`;
 }
