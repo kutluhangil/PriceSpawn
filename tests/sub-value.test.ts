@@ -28,4 +28,10 @@ describe("subscriptionValue", () => {
     expect(v.monthlyTRY).toBe(SUBSCRIPTIONS.gamepass.monthlyTRY);
     expect(v.ratio).toBeCloseTo(v.totalTRY / v.monthlyTRY, 2);
   });
+
+  it("supports the eaplaypro tier", () => {
+    const v = subscriptionValue("eaplaypro", GAMES);
+    expect(v.monthlyTRY).toBe(SUBSCRIPTIONS.eaplaypro.monthlyTRY);
+    expect(v.count).toBeGreaterThanOrEqual(0);
+  });
 });

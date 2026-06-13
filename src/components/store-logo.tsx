@@ -38,6 +38,7 @@ const SUB_BRAND: Record<SubscriptionId, string | "xbox"> = {
   gamepass: "xbox",
   psplus: "playstation",
   eaplay: "ea",
+  eaplaypro: "ea",
   ubisoftplus: "ubisoft",
   luna: "luna",
 };
