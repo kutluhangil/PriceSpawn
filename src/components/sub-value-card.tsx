@@ -49,6 +49,12 @@ export function SubValueCard({ id }: { id: SubscriptionId }) {
             {formatTRY(v.monthlyTRY, locale)}
             <span className="text-xs font-normal text-muted">{t.perMonth}</span>
           </p>
+          {sub.yearlyTRY != null && (
+            <p className="text-xs text-muted">
+              {formatTRY(sub.yearlyTRY, locale)}
+              <span className="text-[10px]"> /{locale === "tr" ? "yıl" : "yr"}</span>
+            </p>
+          )}
           <p className="text-xs font-bold" style={{ color: sub.accent }}>
             {Math.round(v.ratio)}× {t.valueWorth}
           </p>
