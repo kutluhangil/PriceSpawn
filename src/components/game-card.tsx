@@ -10,11 +10,12 @@ import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
 import { AtlBadge } from "@/components/atl-badge";
 import { StoreLogo } from "@/components/store-logo";
+import { StoreLink } from "@/components/store-link";
 import { WatchButton } from "@/components/watch-button";
 import { useApp } from "@/components/providers";
 
 export function GameCard({ game }: { game: Game }) {
-  const { locale, t } = useApp();
+  const { locale, t, priceLoaded } = useApp();
   const best = bestPrice(game);
 
   return (
@@ -67,15 +68,21 @@ export function GameCard({ game }: { game: Game }) {
           <SubBadges ids={game.subscriptions} />
           {game.unreleased ? (
             <span className="ml-auto text-xs font-semibold text-muted">{t.comingSoon}</span>
+          ) : best ? (
+            <span className="ml-auto flex shrink-0 flex-col items-end">
+              <StoreLink
+                game={game}
+                price={best.price}
+                className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted transition-colors hover:text-fg"
+              >
+                <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label} ↗
+              </StoreLink>
+              <PriceTag rp={best} locale={locale} size="sm" highlight />
+            </span>
+          ) : priceLoaded ? (
+            <span className="ml-auto text-xs text-muted">{t.noPriceFound}</span>
           ) : (
-            best && (
-              <span className="ml-auto flex shrink-0 flex-col items-end">
-                <span className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted">
-                  <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label}
-                </span>
-                <PriceTag rp={best} locale={locale} size="sm" highlight />
-              </span>
-            )
+            <span className="ml-auto h-5 w-20 animate-shimmer rounded" />
           )}
         </div>
         <span className="sr-only">{t.cheapestAt}</span>

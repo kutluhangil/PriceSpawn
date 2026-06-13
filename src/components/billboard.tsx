@@ -9,6 +9,7 @@ import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
 import { SubBadges } from "@/components/sub-badges";
 import { StoreLogo } from "@/components/store-logo";
+import { StoreLink } from "@/components/store-link";
 import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
 
@@ -78,15 +79,20 @@ export function Billboard({ games }: { games: Game[] }) {
           {/* Mağaza fiyat satırları */}
           <div className="mt-1 flex flex-col divide-y divide-border">
             {prices.map((rp, i) => (
-              <div key={rp.price.store} className="flex items-center justify-between gap-3 py-1.5 text-sm">
+              <StoreLink
+                key={rp.price.store}
+                game={game}
+                price={rp.price}
+                className="flex w-full items-center justify-between gap-3 py-1.5 text-left text-sm transition-colors hover:text-bright"
+              >
                 <span className="flex items-center gap-2 text-muted">
                   <StoreLogo id={rp.price.store} size={15} />
-                  {STORES[rp.price.store].label}
+                  {STORES[rp.price.store].label} ↗
                 </span>
                 <span className={`font-semibold tabular-nums ${i === 0 ? "text-best" : "text-muted"}`}>
                   {formatTRY(rp.tryAmount, locale)}
                 </span>
-              </div>
+              </StoreLink>
             ))}
           </div>
 
