@@ -18,6 +18,9 @@ import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
 import { PriceChart } from "@/components/price-chart";
 import { StickyCta } from "@/components/sticky-cta";
+import { GameMedia } from "@/components/game-media";
+import { GameAbout } from "@/components/game-about";
+import { useGameExtra } from "@/hooks/use-game-extra";
 import { useApp } from "@/components/providers";
 import type { Dict } from "@/i18n";
 
@@ -34,6 +37,7 @@ export function GameDetail({ slug }: { slug: string }) {
   const priceListRef = useRef<HTMLElement | null>(null);
   const game = GAMES.find((g) => g.slug === slug);
   if (!game) notFound();
+  const { extra, ready: extraReady } = useGameExtra(/^\d+$/.test(game.id) ? game.id : null);
   const prices = sortedPrices(game);
 
   return (
@@ -88,6 +92,12 @@ export function GameDetail({ slug }: { slug: string }) {
       </section>
 
       <div className="mx-auto w-[min(100%-2rem,60rem)] pb-24">
+        {!game.unreleased && /^\d+$/.test(game.id) && (
+          <>
+            <GameAbout description={extra.description} tags={extra.tags} ready={extraReady} />
+            <GameMedia screenshots={extra.screenshots} ready={extraReady} />
+          </>
+        )}
         {game.unreleased && (
           <section className="reveal panel-strong mt-8 rounded-[var(--radius-card)] px-6 py-12 text-center">
             <p className="font-display text-3xl">🕓</p>
