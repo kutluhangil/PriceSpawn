@@ -57,4 +57,10 @@ export async function ensureSchema(): Promise<void> {
       shop   text NOT NULL,
       day    text NOT NULL
     )`;
+  // appid → Steam trailer movie id ('' = checked, none)
+  await sql`
+    CREATE TABLE IF NOT EXISTS trailer_map (
+      appid    text PRIMARY KEY,
+      movie_id text NOT NULL
+    )`;
 }
