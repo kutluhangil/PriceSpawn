@@ -82,6 +82,8 @@ export const tr = {
   monthsWord: "ay",
   platforms: "Platformlar",
   dealRadar: "Fırsat Radarı",
+  comingSoon: "Çıkmadı",
+  noPriceYet: "Bu oyun henüz çıkmadı — fiyat bilgisi yok.",
   page: "Sayfa",
   prevPage: "Önceki sayfa",
   nextPage: "Sonraki sayfa",

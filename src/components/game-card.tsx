@@ -33,9 +33,14 @@ export function GameCard({ game }: { game: Game }) {
         <span className="pointer-events-none absolute left-2 top-2">
           <AtlBadge game={game} />
         </span>
-        {best?.price.discountPercent !== undefined && (
+        {!game.unreleased && best?.price.discountPercent !== undefined && (
           <span className="discount-chip absolute bottom-2 left-2 rounded-[3px] px-1.5 py-0.5 text-xs shadow-lg">
             -%{best.price.discountPercent}
+          </span>
+        )}
+        {game.unreleased && (
+          <span className="absolute bottom-2 left-2 rounded-[3px] bg-accent px-1.5 py-0.5 text-[11px] font-bold text-white shadow-lg">
+            🕓 {t.comingSoon} · {game.releaseYear}
           </span>
         )}
         <span className="absolute right-2 top-2">
@@ -60,13 +65,17 @@ export function GameCard({ game }: { game: Game }) {
 
         <div className="mt-0.5 flex items-end justify-between gap-2">
           <SubBadges ids={game.subscriptions} />
-          {best && (
-            <span className="ml-auto flex shrink-0 flex-col items-end">
-              <span className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted">
-                <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label}
+          {game.unreleased ? (
+            <span className="ml-auto text-xs font-semibold text-muted">{t.comingSoon}</span>
+          ) : (
+            best && (
+              <span className="ml-auto flex shrink-0 flex-col items-end">
+                <span className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted">
+                  <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label}
+                </span>
+                <PriceTag rp={best} locale={locale} size="sm" highlight />
               </span>
-              <PriceTag rp={best} locale={locale} size="sm" highlight />
-            </span>
+            )
           )}
         </div>
         <span className="sr-only">{t.cheapestAt}</span>
