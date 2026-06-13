@@ -63,4 +63,13 @@ export async function ensureSchema(): Promise<void> {
       appid    text PRIMARY KEY,
       movie_id text NOT NULL
     )`;
+  // store product link per price
+  await sql`ALTER TABLE game_prices ADD COLUMN IF NOT EXISTS url text`;
+  // cached Steam media (screenshots, description, tags) per appid
+  await sql`
+    CREATE TABLE IF NOT EXISTS game_meta (
+      appid      text PRIMARY KEY,
+      data       jsonb NOT NULL,
+      updated_at timestamptz NOT NULL DEFAULT now()
+    )`;
 }

@@ -7,10 +7,10 @@ import {
   targetMet,
   type WatchItem,
 } from "@/lib/watchlist";
-import { GAMES } from "@/data/games";
+import { sampleGames } from "./fixtures";
 import { bestPrice } from "@/lib/price";
 
-const g = GAMES[0];
+const g = sampleGames()[0];
 
 describe("watchlist ops", () => {
   it("adds and detects membership", () => {
