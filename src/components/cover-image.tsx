@@ -22,11 +22,13 @@ export function CoverImage({
   title,
   className = "",
   sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px",
+  quality,
 }: {
   src: string;
   title: string;
   className?: string;
   sizes?: string;
+  quality?: number;
 }) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -52,6 +54,7 @@ export function CoverImage({
         alt={title}
         fill
         sizes={sizes}
+        quality={quality}
         unoptimized={src.endsWith(".webm")}
         onError={() => setFailed(true)}
         onLoad={() => setLoaded(true)}

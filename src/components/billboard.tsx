@@ -13,10 +13,10 @@ import { StoreLink } from "@/components/store-link";
 import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
 
-/** Upgrade a Steam header.jpg to the larger, sharper capsule when possible. */
+/** Upgrade a Steam header.jpg to the large, sharp wide hero art when possible. */
 function bigCover(url: string): string {
   return /\/apps\/\d+\/header\.jpg$/.test(url)
-    ? url.replace(/header\.jpg$/, "capsule_616x353.jpg")
+    ? url.replace(/header\.jpg$/, "library_hero.jpg")
     : url;
 }
 
@@ -54,6 +54,8 @@ export function Billboard({ games }: { games: Game[] }) {
             key={game.slug}
             src={bigCover(game.coverUrl)}
             title={game.title}
+            sizes="(max-width: 768px) 100vw, 760px"
+            quality={90}
             className="billboard-fade h-full w-full transition-transform duration-700 group-hover:scale-[1.03]"
           />
           {best?.price.discountPercent !== undefined && (
