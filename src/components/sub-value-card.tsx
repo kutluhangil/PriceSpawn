@@ -11,7 +11,7 @@ import { SubLogo } from "@/components/store-logo";
 import { useApp } from "@/components/providers";
 
 export function SubValueCard({ id }: { id: SubscriptionId }) {
-  const { t, locale } = useApp();
+  const { t, locale, priceLoaded } = useApp();
   const sub = SUBSCRIPTIONS[id];
   const v = subscriptionValue(id, GAMES);
   const preview = v.games.slice(0, 8);
@@ -40,7 +40,8 @@ export function SubValueCard({ id }: { id: SubscriptionId }) {
               {sub.label} ↗
             </a>
             <p className="text-xs text-muted">
-              {v.count} {t.gamesWord} · {formatTRY(v.totalTRY, locale)} {t.valueWorth}
+              {v.count} {t.gamesWord} ·{" "}
+              {priceLoaded ? formatTRY(v.totalTRY, locale) : "—"} {t.valueWorth}
             </p>
           </div>
         </div>
@@ -56,7 +57,7 @@ export function SubValueCard({ id }: { id: SubscriptionId }) {
             </p>
           )}
           <p className="text-xs font-bold" style={{ color: sub.accent }}>
-            {Math.round(v.ratio)}× {t.valueWorth}
+            {priceLoaded ? `${Math.round(v.ratio)}×` : "—"} {t.valueWorth}
           </p>
         </div>
       </div>
