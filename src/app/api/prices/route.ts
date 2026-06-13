@@ -10,6 +10,7 @@ export interface LivePayload {
     currency: string;
     originalAmount: number | null;
     discountPercent: number | null;
+    url: string | null;
   }>>;
   lows: Record<string, { amount: number; shop: string; day: string }>;
   updatedAt: string | null;
@@ -22,7 +23,7 @@ export async function GET() {
   try {
     const fxRows = await sql!`SELECT rate FROM fx_rate WHERE base = 'USD_TRY' LIMIT 1`;
     const rows = await sql!`
-      SELECT slug, store, amount, currency, original_amount, discount_percent, updated_at
+      SELECT slug, store, amount, currency, original_amount, discount_percent, url, updated_at
       FROM game_prices`;
     const lowRows = await sql!`SELECT slug, amount, shop, day FROM all_time_low`;
 
@@ -41,6 +42,7 @@ export async function GET() {
         currency: r.currency as string,
         originalAmount: r.original_amount === null ? null : Number(r.original_amount),
         discountPercent: r.discount_percent === null ? null : Number(r.discount_percent),
+        url: (r.url as string | null) ?? null,
       };
       const u = String(r.updated_at);
       if (!latest || u > latest) latest = u;
