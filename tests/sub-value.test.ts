@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { subscriptionValue } from "@/lib/sub-value";
-import { GAMES } from "@/data/games";
+import { sampleGames } from "./fixtures";
 import { SUBSCRIPTIONS } from "@/lib/subscriptions";
 import { bestPrice } from "@/lib/price";
+
+const GAMES = sampleGames();
 
 describe("subscriptionValue", () => {
   it("counts games included in the subscription", () => {

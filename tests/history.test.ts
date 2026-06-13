@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { priceHistory, allTimeLow, isAllTimeLow, sparklinePath } from "@/lib/history";
-import { GAMES } from "@/data/games";
+import { sampleGames } from "./fixtures";
 import { priceInTRY } from "@/lib/price";
 
-const game = GAMES.find((g) => g.slug === "cyberpunk-2077")!;
+const GAMES = sampleGames();
+const game = GAMES[0];
 const store = game.prices[0].store;
 
 describe("priceHistory", () => {
