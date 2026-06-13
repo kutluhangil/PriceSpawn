@@ -68,6 +68,13 @@ export const en: Record<keyof typeof tr, string> = {
   targetPrice: "Target price",
   targetReached: "Target reached",
   emptyWatch: "You're not watching any games yet.",
+  notifyEnable: "Notify on price drop",
+  notifyOn: "Notifications on",
+  notifyUnsupported: "Browser doesn't support notifications",
+  storageNoticeTitle: "Your wishlist is stored in this browser",
+  storageNoticeBody:
+    "Your list and target prices are kept locally in this browser only. Clearing your browser data (cache) deletes the list and stops notifications. No account needed.",
+  storageNoticeOk: "Got it",
   freeEpicNote: "Games currently free on the Epic Games Store. Claim them before the offer ends.",
   freeEmpty: "No free Epic games right now.",
   freeNow: "Free Now",
