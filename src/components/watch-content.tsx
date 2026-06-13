@@ -12,7 +12,7 @@ import { PriceTag } from "@/components/price-tag";
 import { StoreLogo } from "@/components/store-logo";
 
 export function WatchContent() {
-  const { t, locale } = useApp();
+  const { t, locale, priceLoaded } = useApp();
   const { list, ready, setTargetFor, toggle } = useWatchlist();
 
   const rows = list
@@ -39,8 +39,8 @@ export function WatchContent() {
 
       <ul className="flex flex-col gap-3">
         {rows.map(({ w, game }) => {
-          const best = bestPrice(game)!;
-          const met = targetMet(w, game);
+          const best = bestPrice(game);
+          const met = best ? targetMet(w, game) : false;
           return (
             <li
               key={game.slug}
@@ -58,10 +58,16 @@ export function WatchContent() {
                   <span className="block truncate text-sm font-bold text-bright">
                     {game.title}
                   </span>
-                  <span className="mt-1 flex items-center gap-1.5 text-xs text-muted">
-                    <StoreLogo id={best.price.store} size={14} />
-                    {STORES[best.price.store].label}
-                  </span>
+                  {best ? (
+                    <span className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+                      <StoreLogo id={best.price.store} size={14} />
+                      {STORES[best.price.store].label}
+                    </span>
+                  ) : (
+                    <span className="mt-1 block text-xs text-muted">
+                      {priceLoaded ? t.noPriceFound : t.loadingPrice}
+                    </span>
+                  )}
                 </span>
               </Link>
 
@@ -72,7 +78,13 @@ export function WatchContent() {
                       🎯 {t.targetReached}
                     </span>
                   )}
-                  <PriceTag rp={best} locale={locale} highlight={met} />
+                  {best ? (
+                    <PriceTag rp={best} locale={locale} highlight={met} />
+                  ) : !priceLoaded ? (
+                    <span className="h-5 w-20 animate-pulse rounded bg-border" />
+                  ) : (
+                    <span className="text-xs text-muted">—</span>
+                  )}
                 </span>
                 <label className="flex flex-col text-[10px] uppercase text-muted">
                   {t.targetPrice}
