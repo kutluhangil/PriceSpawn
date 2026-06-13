@@ -3,7 +3,7 @@ import { GAMES } from "@/data/games";
 
 describe("catalog metadata", () => {
   it("has many games", () => {
-    expect(GAMES.length).toBeGreaterThanOrEqual(400);
+    expect(GAMES.length).toBeGreaterThanOrEqual(2000);
   });
 
   it("has unique slugs", () => {
