@@ -2437,3 +2437,38 @@ const GENERATED: GameSpec[] = [
 ];
 
 GAMES.push(...GENERATED.map(makeGame));
+
+// EA Play / EA Play Pro inclusion (curated — EA has no ITAD TR shop, so we
+// surface subscription value instead of a per-store price). EA Play Pro is the
+// premium tier and includes everything EA Play does plus day-one new releases.
+const EA_PLAY_SLUGS: string[] = [
+  "battlefield-2042",
+  "battlefield-6",
+  "dragon-age-origins-ultimate-edition",
+  "dragon-age-the-veilguard",
+  "ea-sports-fc-24",
+  "immortals-of-aveum",
+  "mass-effect-legendary-edition",
+  "need-for-speed-heat",
+  "need-for-speed-unbound",
+  "star-wars-jedi-survivor",
+  "titanfall-2",
+];
+
+function markSub(slugs: string[], sub: SubscriptionId) {
+  const set = new Set(slugs);
+  for (const g of GAMES) {
+    if (set.has(g.slug) && !g.subscriptions.includes(sub)) {
+      g.subscriptions = [...g.subscriptions, sub];
+    }
+  }
+}
+
+markSub(EA_PLAY_SLUGS, "eaplay");
+markSub(
+  EA_PLAY_SLUGS.filter((s) => {
+    const g = GAMES.find((x) => x.slug === s);
+    return g != null && g.releaseYear >= 2022;
+  }),
+  "eaplaypro"
+);
