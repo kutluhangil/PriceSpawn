@@ -19,6 +19,7 @@ interface AppContext {
   t: Dict;
   priceVersion: number; // bumps when live prices/rate are applied
   liveUpdatedAt: string | null;
+  priceLoaded: boolean; // /api/prices fetch finished (success or fail)
 }
 
 const Ctx = createContext<AppContext | null>(null);
@@ -39,8 +40,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("tr");
   const [priceVersion, setPriceVersion] = useState(0);
   const [liveUpdatedAt, setLiveUpdatedAt] = useState<string | null>(null);
+  const [priceLoaded, setPriceLoaded] = useState(false);
 
-  // Pull live prices + FX once, then patch the demo catalog and re-render.
+  // Pull live prices + FX once, inject onto the catalog, and re-render.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -55,7 +57,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
           setLiveUpdatedAt(payload.updatedAt ?? null);
         }
       } catch {
-        // keep demo data
+        // no live data available
+      } finally {
+        if (!cancelled) setPriceLoaded(true);
       }
     })();
     return () => {
@@ -119,6 +123,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         t: locale === "tr" ? tr : en,
         priceVersion,
         liveUpdatedAt,
+        priceLoaded,
       }}
     >
       {children}
