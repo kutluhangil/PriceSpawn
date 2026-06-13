@@ -37,13 +37,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Açık Dünya"],
     score: 86,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "gog", amount: 26.99, currency: "USD", originalAmount: 59.99, discountPercent: 55 },
-      { store: "epic", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
-      { store: "xbox", amount: 1499, currency: "TRY" },
-      { store: "playstation", amount: 1599, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "257081132",
   },
@@ -55,13 +49,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Açık Dünya"],
     score: 93,
     releaseYear: 2015,
-    prices: [
-      { store: "steam", amount: 7.99, currency: "USD", originalAmount: 39.99, discountPercent: 80 },
-      { store: "gog", amount: 7.49, currency: "USD", originalAmount: 39.99, discountPercent: 81 },
-      { store: "epic", amount: 399, currency: "TRY", originalAmount: 1329, discountPercent: 70 },
-      { store: "xbox", amount: 449, currency: "TRY", originalAmount: 1499, discountPercent: 70 },
-      { store: "playstation", amount: 499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256927226",
   },
@@ -73,13 +61,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 93,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 19.79, currency: "USD", originalAmount: 59.99, discountPercent: 67 },
-      { store: "epic", amount: 899, currency: "TRY", originalAmount: 2699, discountPercent: 67 },
-      { store: "xbox", amount: 999, currency: "TRY" },
-      { store: "playstation", amount: 1099, currency: "TRY" },
-      { store: "humble", amount: 19.79, currency: "USD", originalAmount: 59.99, discountPercent: 67 },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256768371",
   },
@@ -91,12 +73,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 96,
     releaseYear: 2015,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 29.99, discountPercent: 50 },
-      { store: "epic", amount: 699, currency: "TRY", originalAmount: 1399, discountPercent: 50 },
-      { store: "xbox", amount: 749, currency: "TRY" },
-      { store: "playstation", amount: 799, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "257109786",
   },
@@ -109,10 +86,7 @@ export const GAMES: Game[] = [
     score: 96,
     releaseYear: 2026,
     unreleased: true,
-    prices: [
-      { store: "xbox", amount: 3999, currency: "TRY" },
-      { store: "playstation", amount: 3999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -123,12 +97,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Souls"],
     score: 96,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
-      { store: "xbox", amount: 1799, currency: "TRY", originalAmount: 2999, discountPercent: 40 },
-      { store: "playstation", amount: 1949, currency: "TRY" },
-      { store: "humble", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256889456",
   },
@@ -140,12 +109,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Strateji"],
     score: 96,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 47.99, currency: "USD", originalAmount: 59.99, discountPercent: 20 },
-      { store: "gog", amount: 47.99, currency: "USD", originalAmount: 59.99, discountPercent: 20 },
-      { store: "xbox", amount: 2399, currency: "TRY" },
-      { store: "playstation", amount: 2599, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256987424",
   },
@@ -157,13 +121,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Macera"],
     score: 84,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 17.49, currency: "USD", originalAmount: 49.99, discountPercent: 65 },
-      { store: "epic", amount: 799, currency: "TRY", originalAmount: 2299, discountPercent: 65 },
-      { store: "xbox", amount: 899, currency: "TRY" },
-      { store: "playstation", amount: 999, currency: "TRY" },
-      { store: "humble", amount: 17.49, currency: "USD", originalAmount: 49.99, discountPercent: 65 },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256930504",
   },
@@ -175,11 +133,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 93,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 59.99, discountPercent: 30 },
-      { store: "epic", amount: 1899, currency: "TRY", originalAmount: 2699, discountPercent: 30 },
-      { store: "playstation", amount: 1999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -190,11 +144,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 90,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
-      { store: "epic", amount: 1599, currency: "TRY", originalAmount: 2699, discountPercent: 40 },
-      { store: "playstation", amount: 1799, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -205,11 +155,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 88,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "epic", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
-      { store: "playstation", amount: 1499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -220,10 +166,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 90,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 59.99, currency: "USD" },
-      { store: "playstation", amount: 2799, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -234,10 +177,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Hayatta Kalma"],
     score: 88,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "playstation", amount: 1599, currency: "TRY", originalAmount: 3199, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -248,10 +188,7 @@ export const GAMES: Game[] = [
     genres: ["Yarış", "Açık Dünya"],
     score: 92,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "xbox", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: ["gamepass", "luna"],
     trailerId: "256875134",
   },
@@ -264,10 +201,7 @@ export const GAMES: Game[] = [
     genres: ["Yarış", "Açık Dünya"],
     score: 91,
     releaseYear: 2026,
-    prices: [
-      { store: "steam", amount: 69.99, currency: "USD" },
-      { store: "xbox", amount: 3299, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -278,10 +212,7 @@ export const GAMES: Game[] = [
     genres: ["Yarış", "Simülasyon"],
     score: 84,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "xbox", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -292,10 +223,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Aksiyon"],
     score: 87,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 59.99, discountPercent: 60 },
-      { store: "xbox", amount: 1099, currency: "TRY", originalAmount: 2749, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -306,10 +234,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Uzay"],
     score: 83,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 48.99, currency: "USD", originalAmount: 69.99, discountPercent: 30 },
-      { store: "xbox", amount: 2299, currency: "TRY", originalAmount: 3299, discountPercent: 30 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -320,10 +245,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Aksiyon"],
     score: 85,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 55.99, currency: "USD", originalAmount: 69.99, discountPercent: 20 },
-      { store: "xbox", amount: 2639, currency: "TRY", originalAmount: 3299, discountPercent: 20 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -334,11 +256,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Açık Dünya"],
     score: 84,
     releaseYear: 2015,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD", originalAmount: 19.99, discountPercent: 50 },
-      { store: "gog", amount: 9.99, currency: "USD", originalAmount: 19.99, discountPercent: 50 },
-      { store: "xbox", amount: 449, currency: "TRY", originalAmount: 899, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -349,10 +267,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Aksiyon"],
     score: 86,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 24.99, currency: "USD", originalAmount: 49.99, discountPercent: 50 },
-      { store: "xbox", amount: 1199, currency: "TRY", originalAmount: 2399, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -363,11 +278,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Aksiyon"],
     score: 83,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 69.99, currency: "USD" },
-      { store: "xbox", amount: 3299, currency: "TRY" },
-      { store: "playstation", amount: 3499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
     trailerId: "257065848",
   },
@@ -380,13 +291,7 @@ export const GAMES: Game[] = [
     genres: ["Spor", "Futbol"],
     score: 80,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 13.99, currency: "USD", originalAmount: 69.99, discountPercent: 80 },
-      { store: "epic", amount: 639, currency: "TRY", originalAmount: 3199, discountPercent: 80 },
-      { store: "xbox", amount: 699, currency: "TRY" },
-      { store: "playstation", amount: 749, currency: "TRY" },
-      { store: "ea", amount: 599, currency: "TRY", originalAmount: 2999, discountPercent: 80 },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -398,12 +303,7 @@ export const GAMES: Game[] = [
     genres: ["Yarış", "Simülasyon"],
     score: 82,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "xbox", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-      { store: "playstation", amount: 2099, currency: "TRY" },
-      { store: "ea", amount: 1799, currency: "TRY", originalAmount: 2999, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -414,13 +314,7 @@ export const GAMES: Game[] = [
     genres: ["Macera", "Co-op"],
     score: 88,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD", originalAmount: 39.99, discountPercent: 75 },
-      { store: "epic", amount: 449, currency: "TRY", originalAmount: 1799, discountPercent: 75 },
-      { store: "xbox", amount: 499, currency: "TRY" },
-      { store: "playstation", amount: 549, currency: "TRY" },
-      { store: "ea", amount: 449, currency: "TRY", originalAmount: 1799, discountPercent: 75 },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -431,12 +325,7 @@ export const GAMES: Game[] = [
     genres: ["Macera", "Co-op"],
     score: 91,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 39.99, currency: "USD", originalAmount: 49.99, discountPercent: 20 },
-      { store: "xbox", amount: 1899, currency: "TRY" },
-      { store: "playstation", amount: 1999, currency: "TRY" },
-      { store: "ea", amount: 1799, currency: "TRY", originalAmount: 2249, discountPercent: 20 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -447,13 +336,7 @@ export const GAMES: Game[] = [
     genres: ["Korku", "Aksiyon"],
     score: 89,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 17.99, currency: "USD", originalAmount: 59.99, discountPercent: 70 },
-      { store: "epic", amount: 809, currency: "TRY", originalAmount: 2699, discountPercent: 70 },
-      { store: "xbox", amount: 899, currency: "TRY" },
-      { store: "playstation", amount: 949, currency: "TRY" },
-      { store: "ea", amount: 809, currency: "TRY", originalAmount: 2699, discountPercent: 70 },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -464,13 +347,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 85,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 20.99, currency: "USD", originalAmount: 69.99, discountPercent: 70 },
-      { store: "epic", amount: 944, currency: "TRY", originalAmount: 3149, discountPercent: 70 },
-      { store: "xbox", amount: 999, currency: "TRY" },
-      { store: "playstation", amount: 1049, currency: "TRY" },
-      { store: "ea", amount: 944, currency: "TRY", originalAmount: 3149, discountPercent: 70 },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -481,12 +358,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Aksiyon"],
     score: 68,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 5.99, currency: "USD", originalAmount: 39.99, discountPercent: 85 },
-      { store: "xbox", amount: 299, currency: "TRY", originalAmount: 1999, discountPercent: 85 },
-      { store: "playstation", amount: 329, currency: "TRY" },
-      { store: "ea", amount: 269, currency: "TRY", originalAmount: 1799, discountPercent: 85 },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -497,13 +369,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 77,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 16.49, currency: "USD", originalAmount: 49.99, discountPercent: 67 },
-      { store: "epic", amount: 749, currency: "TRY", originalAmount: 2269, discountPercent: 67 },
-      { store: "xbox", amount: 799, currency: "TRY" },
-      { store: "playstation", amount: 849, currency: "TRY" },
-      { store: "ubisoft", amount: 699, currency: "TRY", originalAmount: 2119, discountPercent: 67 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus", "luna"],
   },
   {
@@ -514,12 +380,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 82,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "xbox", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-      { store: "playstation", amount: 2099, currency: "TRY" },
-      { store: "ubisoft", amount: 1859, currency: "TRY", originalAmount: 3099, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus"],
   },
   {
@@ -530,13 +391,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Açık Dünya"],
     score: 73,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 59.99, discountPercent: 75 },
-      { store: "epic", amount: 674, currency: "TRY", originalAmount: 2699, discountPercent: 75 },
-      { store: "xbox", amount: 749, currency: "TRY" },
-      { store: "playstation", amount: 799, currency: "TRY" },
-      { store: "ubisoft", amount: 649, currency: "TRY", originalAmount: 2599, discountPercent: 75 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus", "luna"],
   },
   {
@@ -547,12 +402,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Taktik"],
     score: 79,
     releaseYear: 2015,
-    prices: [
-      { store: "steam", amount: 7.99, currency: "USD", originalAmount: 19.99, discountPercent: 60 },
-      { store: "xbox", amount: 359, currency: "TRY", originalAmount: 899, discountPercent: 60 },
-      { store: "playstation", amount: 399, currency: "TRY" },
-      { store: "ubisoft", amount: 319, currency: "TRY", originalAmount: 799, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus", "luna"],
   },
   {
@@ -563,11 +413,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "RPG"],
     score: 81,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 53.99, currency: "USD", originalAmount: 59.99, discountPercent: 10 },
-      { store: "epic", amount: 2429, currency: "TRY", originalAmount: 2699, discountPercent: 10 },
-      { store: "playstation", amount: 2699, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "257048125",
   },
@@ -579,11 +425,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Souls"],
     score: 90,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "xbox", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
-      { store: "playstation", amount: 1499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -594,11 +436,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Mecha"],
     score: 86,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "xbox", amount: 1399, currency: "TRY" },
-      { store: "playstation", amount: 1499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -609,11 +447,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Souls"],
     score: 84,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
-      { store: "xbox", amount: 1619, currency: "TRY", originalAmount: 2699, discountPercent: 40 },
-      { store: "playstation", amount: 1699, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -624,11 +458,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "RPG"],
     score: 88,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 55.99, currency: "USD", originalAmount: 69.99, discountPercent: 20 },
-      { store: "xbox", amount: 2639, currency: "TRY", originalAmount: 3299, discountPercent: 20 },
-      { store: "playstation", amount: 2799, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -639,12 +469,7 @@ export const GAMES: Game[] = [
     genres: ["Korku", "Aksiyon"],
     score: 93,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 39.99, discountPercent: 50 },
-      { store: "xbox", amount: 949, currency: "TRY", originalAmount: 1899, discountPercent: 50 },
-      { store: "playstation", amount: 999, currency: "TRY" },
-      { store: "humble", amount: 19.99, currency: "USD", originalAmount: 39.99, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256998125",
   },
@@ -656,11 +481,7 @@ export const GAMES: Game[] = [
     genres: ["Dövüş"],
     score: 92,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 59.99, discountPercent: 60 },
-      { store: "xbox", amount: 1079, currency: "TRY", originalAmount: 2699, discountPercent: 60 },
-      { store: "playstation", amount: 1149, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -671,11 +492,7 @@ export const GAMES: Game[] = [
     genres: ["Dövüş"],
     score: 90,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 24.49, currency: "USD", originalAmount: 69.99, discountPercent: 65 },
-      { store: "xbox", amount: 1154, currency: "TRY", originalAmount: 3299, discountPercent: 65 },
-      { store: "playstation", amount: 1229, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256969616",
   },
@@ -687,12 +504,7 @@ export const GAMES: Game[] = [
     genres: ["Dövüş"],
     score: 84,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 49.99, discountPercent: 70 },
-      { store: "epic", amount: 674, currency: "TRY", originalAmount: 2249, discountPercent: 70 },
-      { store: "xbox", amount: 699, currency: "TRY" },
-      { store: "playstation", amount: 749, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
     trailerId: "256961704",
   },
@@ -704,10 +516,7 @@ export const GAMES: Game[] = [
     genres: ["Korku"],
     score: 87,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 48.99, currency: "USD", originalAmount: 69.99, discountPercent: 30 },
-      { store: "playstation", amount: 2309, currency: "TRY", originalAmount: 3299, discountPercent: 30 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -718,11 +527,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Sıra Tabanlı"],
     score: 93,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 39.99, currency: "USD", originalAmount: 49.99, discountPercent: 20 },
-      { store: "xbox", amount: 1919, currency: "TRY", originalAmount: 2399, discountPercent: 20 },
-      { store: "playstation", amount: 1999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -733,11 +538,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Açık Dünya"],
     score: 88,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 59.99, discountPercent: 30 },
-      { store: "xbox", amount: 1889, currency: "TRY", originalAmount: 2699, discountPercent: 30 },
-      { store: "playstation", amount: 1999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -748,11 +549,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "JRPG"],
     score: 87,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 27.99, currency: "USD", originalAmount: 69.99, discountPercent: 60 },
-      { store: "xbox", amount: 1319, currency: "TRY", originalAmount: 3299, discountPercent: 60 },
-      { store: "playstation", amount: 1399, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -763,11 +560,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "JRPG"],
     score: 94,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 34.99, currency: "USD", originalAmount: 69.99, discountPercent: 50 },
-      { store: "xbox", amount: 1649, currency: "TRY", originalAmount: 3299, discountPercent: 50 },
-      { store: "playstation", amount: 1749, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -778,10 +571,7 @@ export const GAMES: Game[] = [
     genres: ["Roguelike", "Aksiyon"],
     score: 94,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD" },
-      { store: "epic", amount: 1399, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -792,11 +582,7 @@ export const GAMES: Game[] = [
     genres: ["Simülasyon", "Çiftçilik"],
     score: 89,
     releaseYear: 2016,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD" },
-      { store: "gog", amount: 14.99, currency: "USD" },
-      { store: "xbox", amount: 549, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -807,11 +593,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 85,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 39.99, discountPercent: 50 },
-      { store: "epic", amount: 899, currency: "TRY", originalAmount: 1799, discountPercent: 50 },
-      { store: "playstation", amount: 949, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -823,11 +605,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 90,
     releaseYear: 2026,
-    prices: [
-      { store: "steam", amount: 59.99, currency: "USD" },
-      { store: "epic", amount: 2699, currency: "TRY" },
-      { store: "playstation", amount: 2999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -838,11 +616,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 84,
     releaseYear: 2026,
-    prices: [
-      { store: "steam", amount: 69.99, currency: "USD" },
-      { store: "xbox", amount: 3299, currency: "TRY" },
-      { store: "playstation", amount: 3499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -853,12 +627,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Aksiyon"],
     score: 85,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 69.99, currency: "USD" },
-      { store: "xbox", amount: 3299, currency: "TRY" },
-      { store: "playstation", amount: 3499, currency: "TRY" },
-      { store: "ea", amount: 2999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["eaplay"],
   },
   {
@@ -869,12 +638,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Looter Shooter"],
     score: 84,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "epic", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-      { store: "xbox", amount: 2099, currency: "TRY" },
-      { store: "playstation", amount: 2199, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -885,11 +649,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Co-op"],
     score: 78,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 27.99, currency: "USD", originalAmount: 39.99, discountPercent: 30 },
-      { store: "xbox", amount: 1329, currency: "TRY", originalAmount: 1899, discountPercent: 30 },
-      { store: "playstation", amount: 1399, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -900,11 +660,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 79,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 34.99, currency: "USD", originalAmount: 49.99, discountPercent: 30 },
-      { store: "xbox", amount: 1679, currency: "TRY", originalAmount: 2399, discountPercent: 30 },
-      { store: "playstation", amount: 1799, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -915,11 +671,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Extraction"],
     score: 87,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 31.99, currency: "USD", originalAmount: 39.99, discountPercent: 20 },
-      { store: "xbox", amount: 1519, currency: "TRY", originalAmount: 1899, discountPercent: 20 },
-      { store: "playstation", amount: 1599, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -930,11 +682,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Korku"],
     score: 81,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 44.99, currency: "USD", originalAmount: 59.99, discountPercent: 25 },
-      { store: "xbox", amount: 2024, currency: "TRY", originalAmount: 2699, discountPercent: 25 },
-      { store: "playstation", amount: 2149, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -945,10 +693,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "FPS"],
     score: 83,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "xbox", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -960,7 +705,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 92,
     releaseYear: 2025,
-    prices: [{ store: "playstation", amount: 3499, currency: "TRY" }],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -971,10 +716,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Co-op"],
     score: 82,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 39.99, discountPercent: 40 },
-      { store: "playstation", amount: 1199, currency: "TRY", originalAmount: 1999, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -985,10 +727,7 @@ export const GAMES: Game[] = [
     genres: ["Hayatta Kalma", "Açık Dünya"],
     score: 81,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 22.49, currency: "USD", originalAmount: 29.99, discountPercent: 25 },
-      { store: "xbox", amount: 1124, currency: "TRY", originalAmount: 1499, discountPercent: 25 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -999,13 +738,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 76,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 27.99, currency: "USD", originalAmount: 69.99, discountPercent: 60 },
-      { store: "epic", amount: 1319, currency: "TRY", originalAmount: 3299, discountPercent: 60 },
-      { store: "xbox", amount: 1399, currency: "TRY" },
-      { store: "playstation", amount: 1469, currency: "TRY" },
-      { store: "ubisoft", amount: 1239, currency: "TRY", originalAmount: 3099, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus"],
   },
   {
@@ -1016,10 +749,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Fantastik"],
     score: 80,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 48.99, currency: "USD", originalAmount: 69.99, discountPercent: 30 },
-      { store: "xbox", amount: 2309, currency: "TRY", originalAmount: 3299, discountPercent: 30 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1030,11 +760,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 86,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "xbox", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-      { store: "playstation", amount: 2099, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1045,11 +771,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Hayatta Kalma"],
     score: 73,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
-      { store: "xbox", amount: 1619, currency: "TRY", originalAmount: 2699, discountPercent: 40 },
-      { store: "gog", amount: 35.99, currency: "USD", originalAmount: 59.99, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1060,11 +782,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "JRPG"],
     score: 92,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 48.99, currency: "USD", originalAmount: 69.99, discountPercent: 30 },
-      { store: "epic", amount: 2309, currency: "TRY", originalAmount: 3299, discountPercent: 30 },
-      { store: "playstation", amount: 2449, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1075,12 +793,7 @@ export const GAMES: Game[] = [
     genres: ["Strateji", "Sıra Tabanlı"],
     score: 79,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "epic", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-      { store: "xbox", amount: 2099, currency: "TRY" },
-      { store: "playstation", amount: 2199, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1091,12 +804,7 @@ export const GAMES: Game[] = [
     genres: ["Metroidvania", "Platform"],
     score: 92,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD" },
-      { store: "gog", amount: 19.99, currency: "USD" },
-      { store: "xbox", amount: 749, currency: "TRY" },
-      { store: "playstation", amount: 799, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1107,12 +815,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Co-op"],
     score: 82,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "epic", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
-      { store: "xbox", amount: 1449, currency: "TRY" },
-      { store: "playstation", amount: 1499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1123,11 +826,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Hayatta Kalma"],
     score: 90,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 49.99, discountPercent: 40 },
-      { store: "epic", amount: 1349, currency: "TRY", originalAmount: 2249, discountPercent: 40 },
-      { store: "playstation", amount: 1429, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1138,10 +837,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "RPG"],
     score: 88,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 59.99, discountPercent: 30 },
-      { store: "playstation", amount: 1999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1152,9 +848,7 @@ export const GAMES: Game[] = [
     genres: ["MMO", "Hayatta Kalma"],
     score: 79,
     releaseYear: 2025,
-    prices: [
-      { store: "steam", amount: 34.99, currency: "USD", originalAmount: 49.99, discountPercent: 30 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1165,13 +859,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 72,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 17.49, currency: "USD", originalAmount: 69.99, discountPercent: 75 },
-      { store: "epic", amount: 824, currency: "TRY", originalAmount: 3299, discountPercent: 75 },
-      { store: "xbox", amount: 874, currency: "TRY" },
-      { store: "playstation", amount: 899, currency: "TRY" },
-      { store: "ubisoft", amount: 774, currency: "TRY", originalAmount: 3099, discountPercent: 75 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus", "luna"],
   },
   {
@@ -1182,11 +870,7 @@ export const GAMES: Game[] = [
     genres: ["Roguelike", "Aksiyon"],
     score: 86,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 59.99, discountPercent: 60 },
-      { store: "epic", amount: 1079, currency: "TRY", originalAmount: 2699, discountPercent: 60 },
-      { store: "playstation", amount: 1149, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1197,11 +881,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Platform"],
     score: 88,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 59.99, discountPercent: 60 },
-      { store: "epic", amount: 1079, currency: "TRY", originalAmount: 2699, discountPercent: 60 },
-      { store: "playstation", amount: 1149, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1212,11 +892,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "RPG"],
     score: 75,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 59.99, discountPercent: 75 },
-      { store: "xbox", amount: 674, currency: "TRY", originalAmount: 2699, discountPercent: 75 },
-      { store: "playstation", amount: 749, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1227,12 +903,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Souls"],
     score: 80,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 49.99, discountPercent: 60 },
-      { store: "epic", amount: 899, currency: "TRY", originalAmount: 2249, discountPercent: 60 },
-      { store: "xbox", amount: 949, currency: "TRY" },
-      { store: "playstation", amount: 999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1243,12 +914,7 @@ export const GAMES: Game[] = [
     genres: ["Roguelike", "Aksiyon"],
     score: 93,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD", originalAmount: 24.99, discountPercent: 60 },
-      { store: "epic", amount: 449, currency: "TRY", originalAmount: 1124, discountPercent: 60 },
-      { store: "xbox", amount: 499, currency: "TRY" },
-      { store: "playstation", amount: 529, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1259,11 +925,7 @@ export const GAMES: Game[] = [
     genres: ["Metroidvania", "Platform"],
     score: 90,
     releaseYear: 2017,
-    prices: [
-      { store: "steam", amount: 7.49, currency: "USD", originalAmount: 14.99, discountPercent: 50 },
-      { store: "gog", amount: 7.49, currency: "USD", originalAmount: 14.99, discountPercent: 50 },
-      { store: "xbox", amount: 349, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1274,11 +936,7 @@ export const GAMES: Game[] = [
     genres: ["Platform", "Indie"],
     score: 92,
     releaseYear: 2018,
-    prices: [
-      { store: "steam", amount: 4.99, currency: "USD", originalAmount: 19.99, discountPercent: 75 },
-      { store: "epic", amount: 224, currency: "TRY", originalAmount: 899, discountPercent: 75 },
-      { store: "xbox", amount: 249, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1289,11 +947,7 @@ export const GAMES: Game[] = [
     genres: ["Sandbox", "Macera"],
     score: 81,
     releaseYear: 2011,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD" },
-      { store: "gog", amount: 9.99, currency: "USD" },
-      { store: "xbox", amount: 449, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1304,9 +958,7 @@ export const GAMES: Game[] = [
     genres: ["Bulmaca", "Co-op"],
     score: 95,
     releaseYear: 2011,
-    prices: [
-      { store: "steam", amount: 1.49, currency: "USD", originalAmount: 9.99, discountPercent: 85 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1317,9 +969,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "VR"],
     score: 93,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 59.99, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1330,11 +980,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Dedektif"],
     score: 91,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD", originalAmount: 39.99, discountPercent: 75 },
-      { store: "gog", amount: 9.99, currency: "USD", originalAmount: 39.99, discountPercent: 75 },
-      { store: "playstation", amount: 499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1345,10 +991,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Strateji"],
     score: 93,
     releaseYear: 2017,
-    prices: [
-      { store: "steam", amount: 17.99, currency: "USD", originalAmount: 44.99, discountPercent: 60 },
-      { store: "gog", amount: 17.99, currency: "USD", originalAmount: 44.99, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1359,10 +1002,7 @@ export const GAMES: Game[] = [
     genres: ["Roguelike", "Kart"],
     score: 89,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 8.49, currency: "USD", originalAmount: 24.99, discountPercent: 66 },
-      { store: "gog", amount: 8.49, currency: "USD", originalAmount: 24.99, discountPercent: 66 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1373,10 +1013,7 @@ export const GAMES: Game[] = [
     genres: ["Roguelike", "Aksiyon"],
     score: 87,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 3.99, currency: "USD", originalAmount: 4.99, discountPercent: 20 },
-      { store: "xbox", amount: 199, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1387,11 +1024,7 @@ export const GAMES: Game[] = [
     genres: ["Platform", "Aksiyon"],
     score: 88,
     releaseYear: 2017,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 19.99, discountPercent: 25 },
-      { store: "gog", amount: 14.99, currency: "USD", originalAmount: 19.99, discountPercent: 25 },
-      { store: "xbox", amount: 549, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1402,10 +1035,7 @@ export const GAMES: Game[] = [
     genres: ["Metroidvania", "Platform"],
     score: 90,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 8.99, currency: "USD", originalAmount: 29.99, discountPercent: 70 },
-      { store: "xbox", amount: 419, currency: "TRY", originalAmount: 1399, discountPercent: 70 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1416,12 +1046,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 84,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 59.99, discountPercent: 75 },
-      { store: "epic", amount: 674, currency: "TRY", originalAmount: 2699, discountPercent: 75 },
-      { store: "xbox", amount: 699, currency: "TRY" },
-      { store: "playstation", amount: 749, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1432,12 +1057,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Doğaüstü"],
     score: 85,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD", originalAmount: 39.99, discountPercent: 75 },
-      { store: "gog", amount: 9.99, currency: "USD", originalAmount: 39.99, discountPercent: 75 },
-      { store: "epic", amount: 449, currency: "TRY", originalAmount: 1799, discountPercent: 75 },
-      { store: "playstation", amount: 499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1448,11 +1068,7 @@ export const GAMES: Game[] = [
     genres: ["Macera", "Hikâye"],
     score: 80,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 15.99, currency: "USD", originalAmount: 39.99, discountPercent: 60 },
-      { store: "epic", amount: 719, currency: "TRY", originalAmount: 1799, discountPercent: 60 },
-      { store: "playstation", amount: 779, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1463,11 +1079,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Gizlilik"],
     score: 86,
     releaseYear: 2016,
-    prices: [
-      { store: "steam", amount: 7.99, currency: "USD", originalAmount: 39.99, discountPercent: 80 },
-      { store: "gog", amount: 7.99, currency: "USD", originalAmount: 39.99, discountPercent: 80 },
-      { store: "xbox", amount: 359, currency: "TRY", originalAmount: 1799, discountPercent: 80 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1478,11 +1090,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Bilim Kurgu"],
     score: 82,
     releaseYear: 2017,
-    prices: [
-      { store: "steam", amount: 7.49, currency: "USD", originalAmount: 29.99, discountPercent: 75 },
-      { store: "gog", amount: 7.49, currency: "USD", originalAmount: 29.99, discountPercent: 75 },
-      { store: "xbox", amount: 339, currency: "TRY", originalAmount: 1349, discountPercent: 75 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1493,11 +1101,7 @@ export const GAMES: Game[] = [
     genres: ["Strateji", "Şehir Kurma"],
     score: 81,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 59.99, discountPercent: 75 },
-      { store: "epic", amount: 674, currency: "TRY", originalAmount: 2699, discountPercent: 75 },
-      { store: "ubisoft", amount: 649, currency: "TRY", originalAmount: 2599, discountPercent: 75 },
-    ],
+    prices: [],
     subscriptions: ["ubisoftplus"],
   },
   {
@@ -1508,11 +1112,7 @@ export const GAMES: Game[] = [
     genres: ["Strateji", "Hayatta Kalma"],
     score: 84,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 22.49, currency: "USD", originalAmount: 44.99, discountPercent: 50 },
-      { store: "gog", amount: 22.49, currency: "USD", originalAmount: 44.99, discountPercent: 50 },
-      { store: "epic", amount: 1012, currency: "TRY", originalAmount: 2024, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1523,11 +1123,7 @@ export const GAMES: Game[] = [
     genres: ["Strateji", "Şehir Kurma"],
     score: 77,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 23.99, currency: "USD", originalAmount: 39.99, discountPercent: 40 },
-      { store: "gog", amount: 23.99, currency: "USD", originalAmount: 39.99, discountPercent: 40 },
-      { store: "xbox", amount: 1139, currency: "TRY", originalAmount: 1899, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1538,9 +1134,7 @@ export const GAMES: Game[] = [
     genres: ["Hayatta Kalma", "RPG"],
     score: 80,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 22.49, currency: "USD", originalAmount: 29.99, discountPercent: 25 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1551,10 +1145,7 @@ export const GAMES: Game[] = [
     genres: ["Simülasyon", "Fabrika"],
     score: 91,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 31.99, currency: "USD", originalAmount: 39.99, discountPercent: 20 },
-      { store: "epic", amount: 1439, currency: "TRY", originalAmount: 1799, discountPercent: 20 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1565,7 +1156,7 @@ export const GAMES: Game[] = [
     genres: ["Simülasyon", "Fabrika"],
     score: 90,
     releaseYear: 2020,
-    prices: [{ store: "steam", amount: 35.0, currency: "USD" }],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1576,10 +1167,7 @@ export const GAMES: Game[] = [
     genres: ["Simülasyon", "Koloni"],
     score: 87,
     releaseYear: 2018,
-    prices: [
-      { store: "steam", amount: 34.99, currency: "USD" },
-      { store: "gog", amount: 34.99, currency: "USD" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1590,10 +1178,7 @@ export const GAMES: Game[] = [
     genres: ["Simülasyon", "Şehir Kurma"],
     score: 70,
     releaseYear: 2023,
-    prices: [
-      { store: "steam", amount: 24.99, currency: "USD", originalAmount: 49.99, discountPercent: 50 },
-      { store: "xbox", amount: 1199, currency: "TRY", originalAmount: 2399, discountPercent: 50 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1604,11 +1189,7 @@ export const GAMES: Game[] = [
     genres: ["Macera", "Co-op"],
     score: 80,
     releaseYear: 2018,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 39.99, discountPercent: 50 },
-      { store: "xbox", amount: 949, currency: "TRY", originalAmount: 1899, discountPercent: 50 },
-      { store: "playstation", amount: 999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1619,11 +1200,7 @@ export const GAMES: Game[] = [
     genres: ["Hayatta Kalma", "Co-op"],
     score: 83,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 39.99, discountPercent: 50 },
-      { store: "xbox", amount: 949, currency: "TRY", originalAmount: 1899, discountPercent: 50 },
-      { store: "playstation", amount: 999, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1634,11 +1211,7 @@ export const GAMES: Game[] = [
     genres: ["Platform", "Macera"],
     score: 89,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 14.99, currency: "USD", originalAmount: 59.99, discountPercent: 75 },
-      { store: "xbox", amount: 674, currency: "TRY", originalAmount: 2699, discountPercent: 75 },
-      { store: "playstation", amount: 749, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1649,10 +1222,7 @@ export const GAMES: Game[] = [
     genres: ["Strateji", "RTS"],
     score: 81,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 15.99, currency: "USD", originalAmount: 39.99, discountPercent: 60 },
-      { store: "xbox", amount: 759, currency: "TRY", originalAmount: 1899, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1663,10 +1233,7 @@ export const GAMES: Game[] = [
     genres: ["Simülasyon", "Uçuş"],
     score: 80,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 41.99, currency: "USD", originalAmount: 69.99, discountPercent: 40 },
-      { store: "xbox", amount: 1979, currency: "TRY", originalAmount: 3299, discountPercent: 40 },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1677,11 +1244,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 93,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 24.99, currency: "USD", originalAmount: 49.99, discountPercent: 50 },
-      { store: "epic", amount: 1124, currency: "TRY", originalAmount: 2249, discountPercent: 50 },
-      { store: "playstation", amount: 1199, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
     trailerId: "256864004",
   },
@@ -1693,11 +1256,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 87,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 29.99, currency: "USD", originalAmount: 59.99, discountPercent: 50 },
-      { store: "epic", amount: 1349, currency: "TRY", originalAmount: 2699, discountPercent: 50 },
-      { store: "playstation", amount: 1429, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1708,11 +1267,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 85,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 24.99, currency: "USD", originalAmount: 49.99, discountPercent: 50 },
-      { store: "epic", amount: 1124, currency: "TRY", originalAmount: 2249, discountPercent: 50 },
-      { store: "playstation", amount: 1199, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1723,11 +1278,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Macera"],
     score: 88,
     releaseYear: 2022,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 49.99, discountPercent: 60 },
-      { store: "epic", amount: 899, currency: "TRY", originalAmount: 2249, discountPercent: 60 },
-      { store: "playstation", amount: 949, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1738,11 +1289,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Hayatta Kalma"],
     score: 71,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 19.99, currency: "USD", originalAmount: 49.99, discountPercent: 60 },
-      { store: "epic", amount: 899, currency: "TRY", originalAmount: 2249, discountPercent: 60 },
-      { store: "playstation", amount: 949, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["psplus"],
   },
   {
@@ -1753,10 +1300,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Souls"],
     score: 85,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 24.99, currency: "USD", originalAmount: 49.99, discountPercent: 50 },
-      { store: "playstation", amount: 1199, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1767,11 +1311,7 @@ export const GAMES: Game[] = [
     genres: ["FPS", "Aksiyon"],
     score: 88,
     releaseYear: 2020,
-    prices: [
-      { store: "steam", amount: 11.99, currency: "USD", originalAmount: 39.99, discountPercent: 70 },
-      { store: "xbox", amount: 539, currency: "TRY", originalAmount: 1799, discountPercent: 70 },
-      { store: "playstation", amount: 599, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
     trailerId: "257182101",
   },
@@ -1783,11 +1323,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Açık Dünya"],
     score: 84,
     releaseYear: 2016,
-    prices: [
-      { store: "steam", amount: 13.99, currency: "USD", originalAmount: 39.99, discountPercent: 65 },
-      { store: "xbox", amount: 629, currency: "TRY", originalAmount: 1799, discountPercent: 65 },
-      { store: "playstation", amount: 699, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: ["gamepass"],
   },
   {
@@ -1798,11 +1334,7 @@ export const GAMES: Game[] = [
     genres: ["RPG", "Açık Dünya"],
     score: 87,
     releaseYear: 2024,
-    prices: [
-      { store: "steam", amount: 34.99, currency: "USD", originalAmount: 69.99, discountPercent: 50 },
-      { store: "xbox", amount: 1649, currency: "TRY", originalAmount: 3299, discountPercent: 50 },
-      { store: "playstation", amount: 1749, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1813,11 +1345,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon"],
     score: 88,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 9.89, currency: "USD", originalAmount: 29.99, discountPercent: 67 },
-      { store: "xbox", amount: 445, currency: "TRY", originalAmount: 1349, discountPercent: 67 },
-      { store: "playstation", amount: 469, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1828,12 +1356,7 @@ export const GAMES: Game[] = [
     genres: ["Korku", "Aksiyon"],
     score: 84,
     releaseYear: 2021,
-    prices: [
-      { store: "steam", amount: 15.99, currency: "USD", originalAmount: 39.99, discountPercent: 60 },
-      { store: "xbox", amount: 759, currency: "TRY", originalAmount: 1899, discountPercent: 60 },
-      { store: "playstation", amount: 799, currency: "TRY" },
-      { store: "humble", amount: 15.99, currency: "USD", originalAmount: 39.99, discountPercent: 60 },
-    ],
+    prices: [],
     subscriptions: [],
   },
   {
@@ -1844,11 +1367,7 @@ export const GAMES: Game[] = [
     genres: ["Korku", "Aksiyon"],
     score: 91,
     releaseYear: 2019,
-    prices: [
-      { store: "steam", amount: 9.99, currency: "USD", originalAmount: 39.99, discountPercent: 75 },
-      { store: "xbox", amount: 474, currency: "TRY", originalAmount: 1899, discountPercent: 75 },
-      { store: "playstation", amount: 499, currency: "TRY" },
-    ],
+    prices: [],
     subscriptions: [],
   },
 ];
@@ -1887,6 +1406,7 @@ function makeGame(s: GameSpec): Game {
       ? { store, amount: r2(full * (1 - s.disc / 100)), currency: "USD", originalAmount: full, discountPercent: s.disc }
       : { store, amount: full, currency: "USD" };
   });
+  void prices; // prices now come from the live API; catalog is metadata-only
   return {
     id: String(s.appid),
     slug: s.slug,
@@ -1895,7 +1415,7 @@ function makeGame(s: GameSpec): Game {
     genres: s.genres,
     score: s.score,
     releaseYear: s.year,
-    prices,
+    prices: [],
     subscriptions: s.subs,
   };
 }
