@@ -13,6 +13,7 @@ import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
 import { StoreLogo, SubLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
+import { SavingsBadge } from "@/components/savings-badge";
 import { AtlBadge } from "@/components/atl-badge";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
@@ -156,9 +157,10 @@ export function GameDetail({ slug }: { slug: string }) {
                       <span className="flex shrink-0 flex-col items-end gap-0.5">
                         {isBest ? (
                           <span className="inline-flex items-center gap-2">
-                            {rp.price.discountPercent !== undefined && (
-                              <span className="discount-chip rounded px-1.5 py-0.5 text-xs">
-                                -%{rp.price.discountPercent}
+                            <SavingsBadge rp={rp} />
+                            {rp.tryOriginal !== undefined && (
+                              <span className="text-xs text-muted line-through">
+                                {formatTRY(rp.tryOriginal, locale)}
                               </span>
                             )}
                             <CountUp
