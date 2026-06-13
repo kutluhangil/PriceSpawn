@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { CommandPalette } from "@/components/command-palette";
 import { BottomNav } from "@/components/bottom-nav";
 import { ConstellationBg } from "@/components/constellation-bg";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const sora = Sora({
@@ -20,9 +20,19 @@ const onest = Onest({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: `${SITE_NAME} — Oyun Fiyat Karşılaştırma`,
   description:
     "Türkiye'deki tüm oyun mağazalarını karşılaştır: Steam, Epic, Xbox, PlayStation, GOG ve daha fazlası. Hangi oyun nerede daha ucuz, TL olarak gör.",
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "tr_TR",
+    title: `${SITE_NAME} — Oyun Fiyat Karşılaştırma`,
+    description:
+      "Steam, Epic, Xbox, PlayStation ve daha fazlasında TL fiyatlarını karşılaştır.",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 const themeInit = `(function(){try{var p=localStorage.getItem("pricespawn-theme")||localStorage.getItem("hdu-theme")||"system";var t=(p==="system"||!p)?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):p;document.documentElement.dataset.theme=t;var l=localStorage.getItem("hdu-locale");if(l)document.documentElement.lang=l;}catch(e){}})();`;
