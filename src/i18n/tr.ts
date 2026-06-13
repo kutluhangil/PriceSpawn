@@ -66,6 +66,13 @@ export const tr = {
   targetPrice: "Hedef fiyat",
   targetReached: "Hedefe ulaştı",
   emptyWatch: "Henüz takip ettiğin oyun yok.",
+  notifyEnable: "Fiyat düşünce bildir",
+  notifyOn: "Bildirim açık",
+  notifyUnsupported: "Tarayıcı bildirimi desteklemiyor",
+  storageNoticeTitle: "İstek listen bu tarayıcıda saklanır",
+  storageNoticeBody:
+    "Listen ve hedef fiyatların yalnızca bu tarayıcıda yerel olarak tutulur. Tarayıcı verilerini (önbellek) silersen liste kaybolur ve bildirimler durur. Hesap gerekmez.",
+  storageNoticeOk: "Anladım",
   freeEpicNote: "Epic Games'te şu an ücretsiz olan oyunlar. Süresi dolmadan kütüphanene ekle.",
   freeEmpty: "Şu an Epic'te ücretsiz oyun yok.",
   freeNow: "Şu An Ücretsiz",

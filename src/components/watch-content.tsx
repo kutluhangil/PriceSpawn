@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useWatchlist } from "@/hooks/use-watchlist";
+import { usePush } from "@/hooks/use-push";
 import { useApp } from "@/components/providers";
 import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
@@ -10,10 +12,22 @@ import { STORES } from "@/lib/stores";
 import { CoverImage } from "@/components/cover-image";
 import { PriceTag } from "@/components/price-tag";
 import { StoreLogo } from "@/components/store-logo";
+import { StorageNotice } from "@/components/storage-notice";
 
 export function WatchContent() {
   const { t, locale, priceLoaded } = useApp();
   const { list, ready, setTargetFor, toggle } = useWatchlist();
+  const { enabled, supported, enable, disable } = usePush(list);
+  const [notice, setNotice] = useState(false);
+
+  const onToggleNotify = async () => {
+    if (enabled) {
+      await disable();
+      return;
+    }
+    setNotice(true);
+    await enable();
+  };
 
   const rows = list
     .map((w) => ({ w, game: GAMES.find((g) => g.slug === w.slug) }))
@@ -24,6 +38,21 @@ export function WatchContent() {
       <h1 className="font-display mb-6 text-2xl font-bold text-bright sm:text-3xl">
         {t.watchPage}
       </h1>
+
+      {ready && rows.length > 0 && (
+        <div className="mb-5">
+          <button
+            onClick={onToggleNotify}
+            disabled={!supported}
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
+              enabled ? "border-best text-best" : "border-border text-muted hover:text-bright"
+            }`}
+          >
+            🔔 {!supported ? t.notifyUnsupported : enabled ? t.notifyOn : t.notifyEnable}
+          </button>
+        </div>
+      )}
+      <StorageNotice show={notice} onClose={() => setNotice(false)} />
 
       {ready && rows.length === 0 && (
         <div className="panel-strong rounded-2xl px-6 py-12 text-center">
