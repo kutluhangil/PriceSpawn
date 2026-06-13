@@ -8,6 +8,7 @@ export interface Price {
   currency: "TRY" | "USD";
   originalAmount?: number; // pre-discount, same currency
   discountPercent?: number; // 1-99
+  url?: string; // live store product link
 }
 
 export interface Game {
