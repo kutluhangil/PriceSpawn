@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CommandPalette } from "@/components/command-palette";
 import { BottomNav } from "@/components/bottom-nav";
+import { ConstellationBg } from "@/components/constellation-bg";
 import { SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <div className="app-bg" aria-hidden="true" />
+        <ConstellationBg />
         <Providers>
           <Navbar />
           <main className="flex-1 pb-16 sm:pb-0">{children}</main>
