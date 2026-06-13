@@ -120,6 +120,30 @@ footer {
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
+/* ── Premium cila: tutarlı odak halkası + akıcı etkileşim ──────────── */
+:where(a, button):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+:where(a, button) {
+  -webkit-tap-highlight-color: transparent;
+}
+/* en-ucuz satırına ince sol vurgu şeridi */
+.spectrum-ring {
+  position: relative;
+}
+.spectrum-ring::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12%;
+  bottom: 12%;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4ade80, #38bdf8);
+}
+
 /* ── Yüzeyler ─────────────────────────────────────────────────────── */
 .panel {
   background: var(--panel);
