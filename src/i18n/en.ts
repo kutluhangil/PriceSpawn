@@ -84,6 +84,8 @@ export const en: Record<keyof typeof tr, string> = {
   monthsWord: "mo",
   platforms: "Platforms",
   dealRadar: "Deal Radar",
+  comingSoon: "Unreleased",
+  noPriceYet: "This game isn't out yet — no price available.",
   page: "Page",
   prevPage: "Previous page",
   nextPage: "Next page",

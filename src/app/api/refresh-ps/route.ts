@@ -6,10 +6,12 @@ import { psSearch, mapLimit } from "@/lib/fetchers";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
+// All games (PS search is by title, so a Steam appid isn't required).
+// Skip unreleased titles — they have no real price to find.
 function catalog() {
-  return GAMES.filter((g) => /^\d+$/.test(g.id)).map((g) => ({
+  return GAMES.filter((g) => !g.unreleased).map((g) => ({
     slug: g.slug,
-    appid: g.id,
+    appid: g.id, // ps_map key (appid or slug)
     title: g.title,
   }));
 }

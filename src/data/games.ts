@@ -21,6 +21,7 @@ export interface Game {
   prices: Price[];
   subscriptions: SubscriptionId[];
   trailerId?: string; // Steam movie id for hover microtrailer
+  unreleased?: boolean; // no real price yet (unreleased / not on any store)
 }
 
 const cover = (appid: number) =>
@@ -106,6 +107,7 @@ export const GAMES: Game[] = [
     genres: ["Aksiyon", "Açık Dünya"],
     score: 96,
     releaseYear: 2026,
+    unreleased: true,
     prices: [
       { store: "xbox", amount: 3999, currency: "TRY" },
       { store: "playstation", amount: 3999, currency: "TRY" },

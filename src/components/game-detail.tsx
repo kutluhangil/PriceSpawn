@@ -87,7 +87,17 @@ export function GameDetail({ slug }: { slug: string }) {
       </section>
 
       <div className="mx-auto w-[min(100%-2rem,60rem)] pb-24">
+        {game.unreleased && (
+          <section className="reveal panel-strong mt-8 rounded-[var(--radius-card)] px-6 py-12 text-center">
+            <p className="font-display text-3xl">🕓</p>
+            <p className="mt-2 font-display text-lg font-bold text-bright">
+              {t.comingSoon} · {game.releaseYear}
+            </p>
+            <p className="mt-1 text-sm text-muted">{t.noPriceYet}</p>
+          </section>
+        )}
         {/* Fiyatlar */}
+        {!game.unreleased && (
         <section ref={priceListRef} className="reveal mt-8" style={{ animationDelay: "0.1s" }}>
           <h2 className="font-display mb-4 text-lg font-bold text-bright">
             {t.allPrices}{" "}
@@ -144,11 +154,14 @@ export function GameDetail({ slug }: { slug: string }) {
             })}
           </ul>
         </section>
+        )}
 
         {/* Fiyat geçmişi */}
+        {!game.unreleased && (
         <section className="reveal mt-8" style={{ animationDelay: "0.16s" }}>
           <PriceChart game={game} />
         </section>
+        )}
 
         {/* Abonelikler */}
         {game.subscriptions.length > 0 && (
@@ -177,7 +190,7 @@ export function GameDetail({ slug }: { slug: string }) {
         )}
       </div>
 
-      <StickyCta game={game} watchRef={priceListRef} />
+      {!game.unreleased && <StickyCta game={game} watchRef={priceListRef} />}
     </div>
   );
 }
