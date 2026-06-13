@@ -41,6 +41,7 @@ export function applyLive(payload: LivePayload): boolean {
         currency: p.currency === "USD" ? "USD" : "TRY",
         ...(p.originalAmount != null ? { originalAmount: p.originalAmount } : {}),
         ...(p.discountPercent != null ? { discountPercent: p.discountPercent } : {}),
+        ...(p.url ? { url: p.url } : {}),
       };
       const idx = game.prices.findIndex((x) => x.store === store);
       if (idx >= 0) game.prices[idx] = next;
