@@ -1,6 +1,7 @@
 {
   "crons": [
     { "path": "/api/refresh", "schedule": "0 6 * * *" },
-    { "path": "/api/refresh-ps", "schedule": "30 6 * * *" }
+    { "path": "/api/refresh-ps", "schedule": "30 6 * * *" },
+    { "path": "/api/notify", "schedule": "0 7 * * *" }
   ]
 }
