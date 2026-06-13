@@ -40,6 +40,9 @@ export default function RootLayout({
       className={`${sora.variable} ${onest.variable} h-full antialiased`}
     >
       <head>
+        <link rel="preconnect" href="https://shared.fastly.steamstatic.com" crossOrigin="" />
+        <link rel="preconnect" href="https://shared.akamai.steamstatic.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://shared.fastly.steamstatic.com" />
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body className="min-h-full flex flex-col font-sans">

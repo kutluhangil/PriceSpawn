@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 const FALLBACK_GRADIENTS = [
@@ -20,10 +21,12 @@ export function CoverImage({
   src,
   title,
   className = "",
+  sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px",
 }: {
   src: string;
   title: string;
   className?: string;
+  sizes?: string;
 }) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -44,14 +47,15 @@ export function CoverImage({
   return (
     <span className={`relative block overflow-hidden ${className}`}>
       {!loaded && <span className="animate-shimmer absolute inset-0" aria-hidden="true" />}
-      {/* eslint-disable-next-line @next/next/no-img-element -- demo external covers need onError fallback */}
-      <img
+      <Image
         src={src}
         alt={title}
-        loading="lazy"
+        fill
+        sizes={sizes}
+        unoptimized={src.endsWith(".webm")}
         onError={() => setFailed(true)}
         onLoad={() => setLoaded(true)}
-        className={`h-full w-full object-cover transition-opacity duration-300 ${
+        className={`object-cover transition-opacity duration-300 ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
       />
