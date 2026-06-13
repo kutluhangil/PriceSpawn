@@ -9,6 +9,7 @@ import { GameCard } from "@/components/game-card";
 import { Billboard } from "@/components/billboard";
 import { PlatformTiles } from "@/components/platform-tiles";
 import { DealRadar } from "@/components/deal-radar";
+import { BiggestDiscounts } from "@/components/biggest-discounts";
 import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
 import { useApp } from "@/components/providers";
@@ -89,6 +90,14 @@ export function HomeContent() {
           {t.platforms}
         </h2>
         <PlatformTiles />
+      </section>
+
+      {/* En Büyük İndirimler */}
+      <section className="reveal pt-12" style={{ animationDelay: "0.16s" }}>
+        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
+          {t.biggestDiscounts}
+        </h2>
+        <BiggestDiscounts />
       </section>
 
       {/* Fırsat Radarı */}
