@@ -12,11 +12,16 @@ import { CoverImage } from "@/components/cover-image";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
 import { StoreLogo, SubLogo } from "@/components/store-logo";
+import { StoreLink } from "@/components/store-link";
+import { SavingsBadge } from "@/components/savings-badge";
 import { AtlBadge } from "@/components/atl-badge";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
 import { PriceChart } from "@/components/price-chart";
 import { StickyCta } from "@/components/sticky-cta";
+import { GameMedia } from "@/components/game-media";
+import { GameAbout } from "@/components/game-about";
+import { useGameExtra } from "@/hooks/use-game-extra";
 import { useApp } from "@/components/providers";
 import type { Dict } from "@/i18n";
 
@@ -29,10 +34,11 @@ function reviewText(score: number, t: Dict): string {
 
 export function GameDetail({ slug }: { slug: string }) {
   // priceVersion in useApp() makes this re-render when live prices apply.
-  const { locale, t } = useApp();
+  const { locale, t, priceLoaded } = useApp();
   const priceListRef = useRef<HTMLElement | null>(null);
   const game = GAMES.find((g) => g.slug === slug);
   if (!game) notFound();
+  const { extra, ready: extraReady } = useGameExtra(/^\d+$/.test(game.id) ? game.id : null);
   const prices = sortedPrices(game);
 
   return (
@@ -87,6 +93,12 @@ export function GameDetail({ slug }: { slug: string }) {
       </section>
 
       <div className="mx-auto w-[min(100%-2rem,60rem)] pb-24">
+        {!game.unreleased && /^\d+$/.test(game.id) && (
+          <>
+            <GameAbout description={extra.description} tags={extra.tags} ready={extraReady} />
+            <GameMedia screenshots={extra.screenshots} ready={extraReady} />
+          </>
+        )}
         {game.unreleased && (
           <section className="reveal panel-strong mt-8 rounded-[var(--radius-card)] px-6 py-12 text-center">
             <p className="font-display text-3xl">🕓</p>
@@ -105,54 +117,73 @@ export function GameDetail({ slug }: { slug: string }) {
               ({prices.length} {t.storesCount})
             </span>
           </h2>
-          <ul className="flex flex-col gap-2.5">
-            {prices.map((rp, i) => {
-              const store = STORES[rp.price.store];
-              const isBest = i === 0;
-              return (
-                <li
-                  key={rp.price.store}
-                  className={`flex items-center justify-between gap-4 rounded-[var(--radius-card)] px-4 py-4 sm:px-5 ${
-                    isBest ? "spectrum-ring shadow-lg" : "panel"
-                  }`}
-                >
-                  <span className="flex min-w-0 items-center gap-3">
-                    <StoreLogo id={rp.price.store} size={20} />
-                    <span className="truncate text-sm font-bold text-bright">{store.label}</span>
-                    {isBest && (
-                      <span className="discount-chip shrink-0 rounded-full px-2 py-0.5 text-[10px]">
-                        {t.cheapest}
-                      </span>
-                    )}
-                  </span>
-
-                  <span className="flex shrink-0 flex-col items-end gap-0.5">
-                    {isBest ? (
-                      <span className="inline-flex items-center gap-2">
-                        {rp.price.discountPercent !== undefined && (
-                          <span className="discount-chip rounded px-1.5 py-0.5 text-xs">
-                            -%{rp.price.discountPercent}
+          {prices.length === 0 ? (
+            priceLoaded ? (
+              <div className="panel rounded-[var(--radius-card)] px-5 py-8 text-center text-sm text-muted">
+                {t.noPriceFound}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="animate-shimmer h-[60px] rounded-[var(--radius-card)]" />
+                ))}
+              </div>
+            )
+          ) : (
+            <ul className="flex flex-col gap-2.5">
+              {prices.map((rp, i) => {
+                const store = STORES[rp.price.store];
+                const isBest = i === 0;
+                return (
+                  <li key={rp.price.store}>
+                    <StoreLink
+                      game={game}
+                      price={rp.price}
+                      className={`flex w-full items-center justify-between gap-4 rounded-[var(--radius-card)] px-4 py-4 text-left transition-transform hover:scale-[1.005] sm:px-5 ${
+                        isBest ? "spectrum-ring shadow-lg" : "panel"
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-3">
+                        <StoreLogo id={rp.price.store} size={20} />
+                        <span className="truncate text-sm font-bold text-bright">{store.label}</span>
+                        {isBest && (
+                          <span className="discount-chip shrink-0 rounded-full px-2 py-0.5 text-[10px]">
+                            {t.cheapest}
                           </span>
                         )}
-                        <CountUp
-                          value={rp.tryAmount}
-                          locale={locale}
-                          className="text-lg font-bold tabular-nums text-best"
-                        />
+                        <span className="text-xs text-muted">↗</span>
                       </span>
-                    ) : (
-                      <PriceTag rp={rp} locale={locale} />
-                    )}
-                    {rp.price.currency === "USD" && (
-                      <span className="text-[11px] text-muted">
-                        ${rp.price.amount.toFixed(2)} · {t.steamNote}
+
+                      <span className="flex shrink-0 flex-col items-end gap-0.5">
+                        {isBest ? (
+                          <span className="inline-flex items-center gap-2">
+                            <SavingsBadge rp={rp} />
+                            {rp.tryOriginal !== undefined && (
+                              <span className="text-xs text-muted line-through">
+                                {formatTRY(rp.tryOriginal, locale)}
+                              </span>
+                            )}
+                            <CountUp
+                              value={rp.tryAmount}
+                              locale={locale}
+                              className="text-lg font-bold tabular-nums text-best"
+                            />
+                          </span>
+                        ) : (
+                          <PriceTag rp={rp} locale={locale} />
+                        )}
+                        {rp.price.currency === "USD" && (
+                          <span className="text-[11px] text-muted">
+                            ${rp.price.amount.toFixed(2)} · {t.steamNote}
+                          </span>
+                        )}
                       </span>
-                    )}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
+                    </StoreLink>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </section>
         )}
 

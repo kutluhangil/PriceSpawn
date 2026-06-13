@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { filterSortGames, type FilterOpts } from "@/lib/filters";
-import { GAMES } from "@/data/games";
+import { sampleGames } from "./fixtures";
 import { bestPrice } from "@/lib/price";
 
+const GAMES = sampleGames();
 const base: FilterOpts = {
   genres: [],
   stores: [],

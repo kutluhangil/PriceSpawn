@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { GAMES } from "@/data/games";
 
-describe("demo catalog", () => {
-  it("has at least 40 games", () => {
-    expect(GAMES.length).toBeGreaterThanOrEqual(40);
+describe("catalog metadata", () => {
+  it("has many games", () => {
+    expect(GAMES.length).toBeGreaterThanOrEqual(400);
   });
 
   it("has unique slugs", () => {
@@ -11,36 +11,16 @@ describe("demo catalog", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
-  it("every game has at least one price, all positive", () => {
+  it("scores in range and genres present", () => {
     for (const g of GAMES) {
-      expect(g.prices.length, g.slug).toBeGreaterThan(0);
-      for (const p of g.prices) {
-        expect(p.amount, `${g.slug}/${p.store}`).toBeGreaterThan(0);
-        if (p.originalAmount !== undefined) {
-          expect(p.originalAmount, `${g.slug}/${p.store}`).toBeGreaterThan(p.amount);
-        }
-        if (p.discountPercent !== undefined) {
-          expect(p.discountPercent, `${g.slug}/${p.store}`).toBeGreaterThan(0);
-          expect(p.discountPercent, `${g.slug}/${p.store}`).toBeLessThan(100);
-        }
-      }
+      expect(g.score, g.slug).toBeGreaterThanOrEqual(0);
+      expect(g.score, g.slug).toBeLessThanOrEqual(100);
+      expect(g.genres.length, g.slug).toBeGreaterThan(0);
     }
   });
 
-  it("has no duplicate store within a game", () => {
-    for (const g of GAMES) {
-      const ids = g.prices.map((p) => p.store);
-      expect(new Set(ids).size, g.slug).toBe(ids.length);
-    }
-  });
-
-  it("uses USD only for steam, gog and humble", () => {
-    for (const g of GAMES) {
-      for (const p of g.prices) {
-        if (p.currency === "USD") {
-          expect(["steam", "gog", "humble"], `${g.slug}/${p.store}`).toContain(p.store);
-        }
-      }
-    }
+  it("ships no hardcoded prices (prices come from the live API)", () => {
+    const leaked = GAMES.filter((g) => g.prices.length > 0 && !g.unreleased);
+    expect(leaked.map((g) => g.slug)).toEqual([]);
   });
 });
