@@ -16,14 +16,16 @@ function catalog() {
   }));
 }
 
-async function writePrice(slug: string, amount: number, cut: number, today: string) {
+async function writePrice(slug: string, amount: number, cut: number, productId: string, today: string) {
   const original = cut > 0 ? Math.round((amount / (1 - cut / 100)) * 100) / 100 : null;
+  const url = `https://store.playstation.com/tr-tr/product/${productId}`;
   await sql!`
-    INSERT INTO game_prices (slug, store, amount, currency, original_amount, discount_percent, updated_at)
-    VALUES (${slug}, 'playstation', ${amount}, 'TRY', ${original}, ${cut > 0 ? cut : null}, now())
+    INSERT INTO game_prices (slug, store, amount, currency, original_amount, discount_percent, url, updated_at)
+    VALUES (${slug}, 'playstation', ${amount}, 'TRY', ${original}, ${cut > 0 ? cut : null}, ${url}, now())
     ON CONFLICT (slug, store) DO UPDATE
       SET amount = ${amount}, currency = 'TRY',
-          original_amount = ${original}, discount_percent = ${cut > 0 ? cut : null}, updated_at = now()`;
+          original_amount = ${original}, discount_percent = ${cut > 0 ? cut : null},
+          url = ${url}, updated_at = now()`;
   await sql!`
     INSERT INTO price_history (slug, store, day, try_amount)
     VALUES (${slug}, 'playstation', ${today}, ${amount})
@@ -59,7 +61,7 @@ export async function GET(req: Request) {
       ON CONFLICT (appid) DO UPDATE SET product_id = ${pid}`;
     if (hit) {
       found++;
-      await writePrice(g.slug, hit.amount, hit.cut, today);
+      await writePrice(g.slug, hit.amount, hit.cut, hit.productId, today);
       pricedNow++;
     }
   }, 150);
@@ -71,7 +73,7 @@ export async function GET(req: Request) {
   await mapLimit(onPs, 3, async (g) => {
     const hit = await psSearch(g.title);
     if (hit) {
-      await writePrice(g.slug, hit.amount, hit.cut, today);
+      await writePrice(g.slug, hit.amount, hit.cut, hit.productId, today);
       pricedNow++;
     }
   }, 150);

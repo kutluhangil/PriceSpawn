@@ -66,7 +66,7 @@ export async function GET(req: Request) {
   // whole refresh stays well within the 60s function limit.
   const allIds = [...slugByItad.keys()];
   const today = new Date().toISOString().slice(0, 10);
-  const ops: { slug: string; store: string; amount: number; original: number | null; cut: number | null }[] = [];
+  const ops: { slug: string; store: string; amount: number; original: number | null; cut: number | null; url: string }[] = [];
   const pricedSlugs = new Set<string>();
 
   for (const ids of chunk(allIds, 100)) {
@@ -77,18 +77,19 @@ export async function GET(req: Request) {
       pricedSlugs.add(slug);
       for (const d of deals) {
         const original = d.cut > 0 ? Math.round((d.amount / (1 - d.cut / 100)) * 100) / 100 : null;
-        ops.push({ slug, store: d.store, amount: d.amount, original, cut: d.cut > 0 ? d.cut : null });
+        ops.push({ slug, store: d.store, amount: d.amount, original, cut: d.cut > 0 ? d.cut : null, url: d.url });
       }
     }
   }
 
   await mapLimit(ops, 24, async (o) => {
     await sql!`
-      INSERT INTO game_prices (slug, store, amount, currency, original_amount, discount_percent, updated_at)
-      VALUES (${o.slug}, ${o.store}, ${o.amount}, 'TRY', ${o.original}, ${o.cut}, now())
+      INSERT INTO game_prices (slug, store, amount, currency, original_amount, discount_percent, url, updated_at)
+      VALUES (${o.slug}, ${o.store}, ${o.amount}, 'TRY', ${o.original}, ${o.cut}, ${o.url || null}, now())
       ON CONFLICT (slug, store) DO UPDATE
         SET amount = ${o.amount}, currency = 'TRY',
-            original_amount = ${o.original}, discount_percent = ${o.cut}, updated_at = now()`;
+            original_amount = ${o.original}, discount_percent = ${o.cut},
+            url = ${o.url || null}, updated_at = now()`;
     await sql!`
       INSERT INTO price_history (slug, store, day, try_amount)
       VALUES (${o.slug}, ${o.store}, ${today}, ${o.amount})

@@ -130,6 +130,7 @@ export interface ItadDeal {
   store: string;
   amount: number; // TRY
   cut: number; // discount %
+  url: string; // store product link (itad.link redirect)
 }
 
 /** Current TR prices for a batch of ITAD ids, mapped to our stores. */
@@ -147,14 +148,14 @@ export async function itadPrices(
     if (!res.ok) return {};
     const data = (await res.json()) as Array<{
       id: string;
-      deals: Array<{ shop: { id: number }; price: { amount: number }; cut: number }>;
+      deals: Array<{ shop: { id: number }; price: { amount: number }; cut: number; url?: string }>;
     }>;
     const out: Record<string, ItadDeal[]> = {};
     for (const g of data) {
       const deals: ItadDeal[] = [];
       for (const d of g.deals) {
         const store = ITAD_SHOP_TO_STORE[d.shop.id];
-        if (store) deals.push({ store, amount: d.price.amount, cut: d.cut || 0 });
+        if (store) deals.push({ store, amount: d.price.amount, cut: d.cut || 0, url: d.url ?? "" });
       }
       if (deals.length) out[g.id] = deals;
     }
