@@ -126,6 +126,37 @@ export async function itadLookup(appid: string, key: string): Promise<string> {
   }
 }
 
+export interface ItadBundle {
+  title: string;
+  page: string; // bundle provider, e.g. "Humble Bundle", "Fanatical"
+  url: string;
+  expiry: string | null; // ISO; null = ongoing
+}
+
+/** Currently-active bundles that include this ITAD game id (TR region). */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function itadBundles(id: string, key: string): Promise<ItadBundle[]> {
+  try {
+    const res = await fetch(`${ITAD}/games/bundles/v2?key=${key}&id=${id}&country=TR`);
+    if (!res.ok) return [];
+    const data = (await res.json()) as any[];
+    const now = Date.now();
+    return (Array.isArray(data) ? data : [])
+      .filter((b) => !b.expiry || Date.parse(b.expiry) > now)
+      .map((b) => ({
+        title: String(b.title ?? ""),
+        page: String(b.page?.name ?? ""),
+        url: String(b.url ?? b.page?.url ?? ""),
+        expiry: b.expiry ?? null,
+      }))
+      .filter((b) => b.title && b.url)
+      .slice(0, 5);
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 export interface ItadDeal {
   store: string;
   amount: number; // TRY

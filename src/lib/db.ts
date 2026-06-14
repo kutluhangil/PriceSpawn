@@ -88,4 +88,20 @@ export async function ensureSchema(): Promise<void> {
       last_notified_day date,
       PRIMARY KEY (endpoint, slug)
     )`;
+  // Email price alerts (double opt-in): token used for verify + unsubscribe
+  await sql`
+    CREATE TABLE IF NOT EXISTS email_subs (
+      email      text PRIMARY KEY,
+      token      text NOT NULL,
+      verified   boolean NOT NULL DEFAULT false,
+      created_at timestamptz NOT NULL DEFAULT now()
+    )`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS email_watches (
+      email             text NOT NULL,
+      slug              text NOT NULL,
+      target_try        numeric,
+      last_notified_day date,
+      PRIMARY KEY (email, slug)
+    )`;
 }
