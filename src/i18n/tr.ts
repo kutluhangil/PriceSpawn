@@ -71,6 +71,8 @@ export const tr = {
   installApp: "Uygulamayı yükle",
   installHint: "Tek dokunuşla fırsatlara eriş",
   installDismiss: "Şimdi değil",
+  // benzer oyunlar
+  relatedGames: "Benzer Oyunlar",
   // v5
   allGamesPage: "Tüm Oyunlar",
   freePage: "Ücretsiz Oyunlar",
