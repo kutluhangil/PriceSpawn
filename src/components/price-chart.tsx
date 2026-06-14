@@ -38,8 +38,9 @@ export function PriceChart({ game }: { game: Game }) {
   const atl = realAtl(game.slug);
 
   const vals = points.map((p) => p.amount);
-  const min = vals.length ? Math.min(...vals) : 0;
-  const max = vals.length ? Math.max(...vals) : 1;
+  // Pull the all-time low into the y-domain so its reference line is on-canvas.
+  const min = vals.length ? Math.min(...vals, atl?.amount ?? Infinity) : 0;
+  const max = vals.length ? Math.max(...vals, atl?.amount ?? -Infinity) : 1;
   const span = max - min || 1;
   const x = (i: number) => PAD + (i / Math.max(1, points.length - 1)) * (W - 2 * PAD);
   const y = (v: number) => PAD + (1 - (v - min) / span) * (H - 2 * PAD);
@@ -77,6 +78,25 @@ export function PriceChart({ game }: { game: Game }) {
       {enough ? (
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full" onMouseMove={onMove} onMouseLeave={() => setHover(null)} role="img">
           <path d={area} fill="var(--accent)" opacity="0.12" />
+          {/* Tüm zamanların en düşüğü referans çizgisi */}
+          {atl && y(atl.amount) >= PAD && y(atl.amount) <= H - PAD && (
+            <>
+              <line
+                x1={PAD}
+                y1={y(atl.amount)}
+                x2={W - PAD}
+                y2={y(atl.amount)}
+                stroke="var(--best)"
+                strokeWidth="1.5"
+                strokeDasharray="5 4"
+                vectorEffect="non-scaling-stroke"
+                opacity="0.9"
+              />
+              <text x={W - PAD} y={y(atl.amount) - 5} textAnchor="end" fontSize="11" fontWeight="700" fill="var(--best)">
+                ATL
+              </text>
+            </>
+          )}
           <path d={line} fill="none" stroke="var(--accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
           {hp && (
             <>

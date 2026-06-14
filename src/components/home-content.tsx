@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { GAMES } from "@/data/games";
+import { GAMES, type Game } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { useFreeGames } from "@/hooks/use-free-games";
 import { SearchBar } from "@/components/search-bar";
 import { GameCard } from "@/components/game-card";
 import { Billboard } from "@/components/billboard";
+import { PriceDropTicker } from "@/components/price-drop-ticker";
 import { PlatformTiles } from "@/components/platform-tiles";
 import { DealRadar } from "@/components/deal-radar";
 import { BiggestDiscounts } from "@/components/biggest-discounts";
@@ -16,6 +17,21 @@ import { BrandMark } from "@/components/brand-mark";
 import { useApp } from "@/components/providers";
 
 const PER_PAGE = 16;
+
+/**
+ * Billboard headliners — the buzziest titles, not whatever indie happens to be
+ * 100%-off. Curated so the showcase always has sharp cover art and recognizable
+ * names (newest blockbusters first). No free/giveaway titles here.
+ */
+const FEATURED_SLUGS = [
+  "grand-theft-auto-vi",
+  "forza-horizon-6",
+  "cyberpunk-2077",
+  "elden-ring",
+  "baldurs-gate-3",
+  "red-dead-redemption-2",
+  "the-witcher-3-wild-hunt",
+];
 
 /** Compact page list: 1 … current-1 current current+1 … last */
 function pagesToShow(current: number, total: number): (number | "…")[] {
@@ -46,9 +62,13 @@ export function HomeContent() {
     .sort((a, b) => b.discount - a.discount)
     .map((x) => x.game);
 
-  const billboardGames = byDiscount.slice(0, 5);
-  const deals = byDiscount.slice(5, 17);
-  const radarGames = byDiscount.slice(0, 18);
+  const featuredSet = new Set(FEATURED_SLUGS);
+  const billboardGames = FEATURED_SLUGS
+    .map((s) => GAMES.find((g) => g.slug === s))
+    .filter((g): g is Game => Boolean(g));
+  const dealPool = byDiscount.filter((g) => !featuredSet.has(g.slug));
+  const deals = dealPool.slice(0, 12);
+  const radarGames = dealPool.slice(0, 18);
   const newReleases = [...GAMES]
     .sort((a, b) => b.releaseYear - a.releaseYear || b.score - a.score)
     .slice(0, 12);
@@ -79,6 +99,11 @@ export function HomeContent() {
           <SearchBar variant="hero" />
         </div>
       </section>
+
+      {/* Canlı fiyat düşüşü şeridi */}
+      <div className="reveal relative z-0 mb-6" style={{ animationDelay: "0.1s" }}>
+        <PriceDropTicker games={dealPool} />
+      </div>
 
       {/* Sinematik vitrin */}
       <div className="reveal relative z-0" style={{ animationDelay: "0.12s" }}>
