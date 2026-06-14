@@ -8,6 +8,18 @@ import { SUBSCRIPTIONS } from "@/lib/subscriptions";
 import { currentRate } from "@/lib/exchange";
 import { BrandMark } from "@/components/brand-mark";
 
+function ColHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-bright">
+      <span className="h-3 w-[3px] rounded-full bg-gradient-to-b from-accent to-best" aria-hidden="true" />
+      {children}
+    </h3>
+  );
+}
+
+const linkClass =
+  "inline-flex items-center gap-2 text-muted transition-all hover:translate-x-0.5 hover:text-bright";
+
 export function Footer() {
   const { t, liveUpdatedAt } = useApp();
   const storeCount = Object.keys(STORES).length;
@@ -16,35 +28,40 @@ export function Footer() {
   const note = liveUpdatedAt ? `${t.liveNote} · ${rateText}` : `${t.footerNote} · ${t.demoRateNote}`;
 
   return (
-    <footer className="mt-20 border-t border-border bg-bg-deep">
-      <div className="mx-auto grid w-[min(100%-2rem,74rem)] gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative mt-24 overflow-hidden border-t border-border bg-bg-deep">
+      {/* Spektrum marka ipliği */}
+      <div
+        className="h-px w-full bg-gradient-to-r from-transparent via-accent to-transparent opacity-60"
+        aria-hidden="true"
+      />
+
+      <div className="mx-auto grid w-[min(100%-2rem,74rem)] gap-x-8 gap-y-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
         {/* Marka */}
-        <div className="flex flex-col gap-3">
-          <BrandMark className="text-lg font-bold" />
+        <div className="flex flex-col gap-4">
+          <BrandMark className="text-xl font-bold" />
           <p className="max-w-xs text-sm leading-relaxed text-muted">{t.footerTagline}</p>
-          <p className="text-xs font-semibold text-fg">
-            <span className="text-best">{GAMES.length}</span> {t.gamesWord} ·{" "}
-            <span className="text-accent">{storeCount}</span> {t.storesCount} ·{" "}
-            <span className="text-accent">{subCount}</span> {t.subsWord}
-          </p>
+          <div className="mt-1 flex flex-wrap gap-2">
+            <span className="rounded-full border border-border bg-(--row) px-3 py-1 text-xs font-semibold text-fg">
+              <span className="text-best">{GAMES.length}</span> {t.gamesWord}
+            </span>
+            <span className="rounded-full border border-border bg-(--row) px-3 py-1 text-xs font-semibold text-fg">
+              <span className="text-accent">{storeCount}</span> {t.storesCount}
+            </span>
+            <span className="rounded-full border border-border bg-(--row) px-3 py-1 text-xs font-semibold text-fg">
+              <span className="text-accent">{subCount}</span> {t.subsWord}
+            </span>
+          </div>
         </div>
 
         {/* Mağazalar */}
         <div>
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-bright">
-            {t.footerStores}
-          </h3>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted">
+          <ColHeading>{t.footerStores}</ColHeading>
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm sm:grid-cols-1">
             {Object.values(STORES).map((store) => (
               <li key={store.id}>
-                <a
-                  href={store.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 transition-colors hover:text-bright"
-                >
+                <a href={store.url} target="_blank" rel="noopener noreferrer" className={linkClass}>
                   <span
-                    className="h-1.5 w-1.5 rounded-full"
+                    className="h-1.5 w-1.5 shrink-0 rounded-full"
                     style={{ background: store.accent }}
                     aria-hidden="true"
                   />
@@ -57,20 +74,13 @@ export function Footer() {
 
         {/* Abonelikler */}
         <div>
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-bright">
-            {t.footerSubs}
-          </h3>
-          <ul className="flex flex-col gap-2 text-sm text-muted">
+          <ColHeading>{t.footerSubs}</ColHeading>
+          <ul className="flex flex-col gap-2.5 text-sm">
             {Object.values(SUBSCRIPTIONS).map((sub) => (
               <li key={sub.id}>
-                <a
-                  href={sub.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 transition-colors hover:text-bright"
-                >
+                <a href={sub.url} target="_blank" rel="noopener noreferrer" className={linkClass}>
                   <span
-                    className="h-1.5 w-1.5 rounded-full"
+                    className="h-1.5 w-1.5 shrink-0 rounded-full"
                     style={{ background: sub.accent }}
                     aria-hidden="true"
                   />
@@ -83,27 +93,25 @@ export function Footer() {
 
         {/* Keşfet */}
         <div>
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-bright">
-            {t.footerSite}
-          </h3>
-          <ul className="flex flex-col gap-2 text-sm">
+          <ColHeading>{t.footerSite}</ColHeading>
+          <ul className="flex flex-col gap-2.5 text-sm">
             <li>
-              <Link href="/" className="text-muted transition-colors hover:text-bright">
+              <Link href="/" className={linkClass}>
                 {t.footerHome}
               </Link>
             </li>
             <li>
-              <Link href="/#deals" className="text-muted transition-colors hover:text-bright">
+              <Link href="/#deals" className={linkClass}>
                 {t.todaysDeals}
               </Link>
             </li>
             <li>
-              <Link href="/#new" className="text-muted transition-colors hover:text-bright">
+              <Link href="/#new" className={linkClass}>
                 {t.tabNew}
               </Link>
             </li>
             <li>
-              <Link href="/#popular" className="text-muted transition-colors hover:text-bright">
+              <Link href="/#popular" className={linkClass}>
                 {t.popularGames}
               </Link>
             </li>
@@ -112,12 +120,16 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex w-[min(100%-2rem,74rem)] flex-col items-center gap-1 py-5 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
-          <p>
-            © 2026 pricespawn
+        <div className="mx-auto flex w-[min(100%-2rem,74rem)] flex-col items-center gap-2 py-6 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
+          <p className="inline-flex items-center gap-2">
+            <span>© 2026 pricespawn</span>
             {liveUpdatedAt && (
-              <span className="ml-2 inline-flex items-center gap-1 text-best">
-                <span className="h-1.5 w-1.5 rounded-full bg-best" /> {t.liveBadge}
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-(--best-soft) px-2 py-0.5 font-semibold text-best">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-best opacity-60" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-best" />
+                </span>
+                {t.liveBadge}
               </span>
             )}
           </p>
