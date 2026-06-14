@@ -8,7 +8,7 @@ import { CoverImage } from "@/components/cover-image";
 import { HoverTrailer } from "@/components/hover-trailer";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
-import { AtlBadge } from "@/components/atl-badge";
+import { DealVerdict } from "@/components/deal-verdict";
 import { StoreLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
 import { WatchButton } from "@/components/watch-button";
@@ -32,7 +32,7 @@ export function GameCard({ game }: { game: Game }) {
           />
         </HoverTrailer>
         <span className="pointer-events-none absolute left-2 top-2">
-          <AtlBadge game={game} />
+          <DealVerdict game={game} variant="compact" />
         </span>
         {!game.unreleased && best?.price.discountPercent !== undefined && (
           <span className="discount-chip absolute bottom-2 left-2 rounded-[3px] px-1.5 py-0.5 text-xs shadow-lg">

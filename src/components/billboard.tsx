@@ -65,11 +65,16 @@ export function Billboard({ games }: { games: Game[] }) {
             />
           </Link>
 
-          {best?.price.discountPercent !== undefined && (
+          {best?.price.discountPercent !== undefined ? (
             <span className="discount-chip pointer-events-none absolute left-4 top-4 rounded-lg px-2.5 py-1 text-sm shadow-lg">
               -%{best.price.discountPercent}
             </span>
-          )}
+          ) : game.unreleased ? (
+            <span className="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-lg bg-bg/75 px-2.5 py-1 text-xs font-bold text-bright shadow-lg backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              {t.comingSoon} · {game.releaseYear}
+            </span>
+          ) : null}
 
           {/* Premium gezinme okları — görselin içinde, dikey ortalı */}
           {games.length > 1 && (
@@ -105,28 +110,39 @@ export function Billboard({ games }: { games: Game[] }) {
           </p>
           <SubBadges ids={game.subscriptions} size="md" />
 
-          {/* Mağaza fiyat satırları */}
-          <div className="mt-1 flex flex-col divide-y divide-border">
-            {prices.map((rp, i) => (
-              <StoreLink
-                key={rp.price.store}
-                game={game}
-                price={rp.price}
-                className="flex w-full items-center justify-between gap-3 py-1.5 text-left text-sm transition-colors hover:text-bright"
-              >
-                <span className="flex items-center gap-2 text-muted">
-                  <StoreLogo id={rp.price.store} size={15} />
-                  {STORES[rp.price.store].label} ↗
-                </span>
-                <span className={`font-semibold tabular-nums ${i === 0 ? "text-best" : "text-muted"}`}>
-                  {formatTRY(rp.tryAmount, locale)}
-                </span>
-              </StoreLink>
-            ))}
-          </div>
+          {/* Mağaza fiyat satırları (yayımlanmamış oyunlarda gizli) */}
+          {prices.length > 0 ? (
+            <div className="mt-1 flex flex-col divide-y divide-border">
+              {prices.map((rp, i) => (
+                <StoreLink
+                  key={rp.price.store}
+                  game={game}
+                  price={rp.price}
+                  className="flex w-full items-center justify-between gap-3 py-1.5 text-left text-sm transition-colors hover:text-bright"
+                >
+                  <span className="flex items-center gap-2 text-muted">
+                    <StoreLogo id={rp.price.store} size={15} />
+                    {STORES[rp.price.store].label} ↗
+                  </span>
+                  <span className={`font-semibold tabular-nums ${i === 0 ? "text-best" : "text-muted"}`}>
+                    {formatTRY(rp.tryAmount, locale)}
+                  </span>
+                </StoreLink>
+              ))}
+            </div>
+          ) : game.unreleased ? (
+            <p className="mt-1 text-sm leading-relaxed text-muted">{t.unreleasedNote}</p>
+          ) : null}
 
           <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
-            {best && <PriceTag rp={best} locale={locale} size="lg" highlight />}
+            {best ? (
+              <PriceTag rp={best} locale={locale} size="lg" highlight />
+            ) : (
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-bright">
+                <span className="h-2 w-2 rounded-full bg-accent" />
+                {t.comingSoon}
+              </span>
+            )}
             <Link
               href={`/oyun/${game.slug}`}
               className="shrink-0 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.03]"

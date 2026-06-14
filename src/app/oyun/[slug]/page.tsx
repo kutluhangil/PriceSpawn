@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { GAMES } from "@/data/games";
 import { GameDetail } from "@/components/game-detail";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export function generateStaticParams() {
   return GAMES.map((game) => ({ slug: game.slug }));
@@ -41,7 +41,40 @@ export default async function GamePage({
   const { slug } = await params;
   const game = GAMES.find((g) => g.slug === slug);
   if (!game) notFound();
+
+  const url = `${SITE_URL}/oyun/${slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "VideoGame",
+        "@id": `${url}#game`,
+        name: game.title,
+        url,
+        ...(game.coverUrl ? { image: game.coverUrl } : {}),
+        genre: game.genres,
+        ...(game.releaseYear ? { datePublished: String(game.releaseYear) } : {}),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Oyunlar", item: `${SITE_URL}/oyunlar` },
+          { "@type": "ListItem", position: 3, name: game.title, item: url },
+        ],
+      },
+    ],
+  };
+
   // Pass slug, not the game object: GameDetail re-reads the live-patched
   // catalog on the client so prices stay current (SSG prop would be frozen).
-  return <GameDetail slug={slug} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+      <GameDetail slug={slug} />
+    </>
+  );
 }

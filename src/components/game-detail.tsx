@@ -15,6 +15,7 @@ import { StoreLogo, SubLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
 import { SavingsBadge } from "@/components/savings-badge";
 import { AtlBadge } from "@/components/atl-badge";
+import { DealVerdict } from "@/components/deal-verdict";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
 import { PriceChart } from "@/components/price-chart";
@@ -117,6 +118,11 @@ export function GameDetail({ slug }: { slug: string }) {
               ({prices.length} {t.storesCount})
             </span>
           </h2>
+          {prices.length > 0 && (
+            <div className="mb-4">
+              <DealVerdict game={game} variant="full" />
+            </div>
+          )}
           {prices.length === 0 ? (
             priceLoaded ? (
               <div className="panel rounded-[var(--radius-card)] px-5 py-8 text-center text-sm text-muted">

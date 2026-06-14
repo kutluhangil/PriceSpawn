@@ -120,7 +120,18 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex w-[min(100%-2rem,74rem)] flex-col items-center gap-2 py-6 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
+        <nav className="mx-auto flex w-[min(100%-2rem,74rem)] flex-wrap items-center justify-center gap-x-5 gap-y-2 pt-5 text-xs font-medium sm:justify-start">
+          <Link href="/hakkinda" className="text-muted transition-colors hover:text-bright">
+            {t.footerAbout}
+          </Link>
+          <Link href="/gizlilik" className="text-muted transition-colors hover:text-bright">
+            {t.footerPrivacy}
+          </Link>
+          <Link href="/kullanim-sartlari" className="text-muted transition-colors hover:text-bright">
+            {t.footerTerms}
+          </Link>
+        </nav>
+        <div className="mx-auto flex w-[min(100%-2rem,74rem)] flex-col items-center gap-2 py-5 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
           <p className="inline-flex items-center gap-2">
             <span>© 2026 pricespawn</span>
             {liveUpdatedAt && (
