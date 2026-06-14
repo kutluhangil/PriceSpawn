@@ -73,6 +73,8 @@ export const en: Record<keyof typeof tr, string> = {
   installApp: "Install app",
   installHint: "One-tap access to deals",
   installDismiss: "Not now",
+  // similar games
+  relatedGames: "Similar Games",
   // v5
   allGamesPage: "All Games",
   freePage: "Free Games",

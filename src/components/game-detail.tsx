@@ -16,6 +16,7 @@ import { StoreLink } from "@/components/store-link";
 import { SavingsBadge } from "@/components/savings-badge";
 import { AtlBadge } from "@/components/atl-badge";
 import { DealVerdict } from "@/components/deal-verdict";
+import { RelatedGames } from "@/components/related-games";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
 import { PriceChart } from "@/components/price-chart";
@@ -225,6 +226,9 @@ export function GameDetail({ slug }: { slug: string }) {
             </ul>
           </section>
         )}
+
+        {/* Benzer oyunlar — katalog içi keşif */}
+        <RelatedGames game={game} />
       </div>
 
       {!game.unreleased && <StickyCta game={game} watchRef={priceListRef} />}
