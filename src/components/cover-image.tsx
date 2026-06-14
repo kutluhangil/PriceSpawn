@@ -19,21 +19,30 @@ function gradientFor(title: string): string {
 
 export function CoverImage({
   src,
+  fallbackSrc,
   title,
   className = "",
   sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px",
   quality,
 }: {
   src: string;
+  /** Tried in order if `src` fails to load, before showing the gradient. */
+  fallbackSrc?: string | string[];
   title: string;
   className?: string;
   sizes?: string;
   quality?: number;
 }) {
-  const [failed, setFailed] = useState(false);
+  // Build the candidate chain once: primary src, then any fallbacks, de-duped.
+  const chain = [src, ...(Array.isArray(fallbackSrc) ? fallbackSrc : fallbackSrc ? [fallbackSrc] : [])]
+    .filter(Boolean)
+    .filter((u, i, a) => a.indexOf(u) === i);
+  const [step, setStep] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const active = chain[step];
+  const failed = step >= chain.length;
 
-  if (!src || failed) {
+  if (!active || failed) {
     return (
       <div
         className={`flex items-center justify-center ${className}`}
@@ -50,13 +59,17 @@ export function CoverImage({
     <span className={`relative block overflow-hidden ${className}`}>
       {!loaded && <span className="animate-shimmer absolute inset-0" aria-hidden="true" />}
       <Image
-        src={src}
+        key={active}
+        src={active}
         alt={title}
         fill
         sizes={sizes}
         quality={quality}
-        unoptimized={src.endsWith(".webm")}
-        onError={() => setFailed(true)}
+        unoptimized={active.endsWith(".webm")}
+        onError={() => {
+          setLoaded(false);
+          setStep((s) => s + 1);
+        }}
         onLoad={() => setLoaded(true)}
         className={`object-cover transition-opacity duration-300 ${
           loaded ? "opacity-100" : "opacity-0"
