@@ -75,6 +75,20 @@ export const en: Record<keyof typeof tr, string> = {
   installDismiss: "Not now",
   // similar games
   relatedGames: "Similar Games",
+  reviewsWord: "reviews",
+  // bundle tracking
+  inBundles: "In a Bundle Now",
+  bundleEnds: "ends:",
+  bundleOngoing: "ongoing",
+  // email alerts
+  emailAlertTitle: "Get email alerts",
+  emailAlertHint: "We'll email you when a game on your list hits its target price.",
+  emailPlaceholder: "you@email.com",
+  emailSave: "Save",
+  emailSaved: "Saved. Check your inbox to confirm.",
+  emailError: "Something went wrong, try again.",
+  emailVerified: "Email verified ✓ You'll now get price drops.",
+  emailUnsubscribed: "Email alerts stopped.",
   // v5
   allGamesPage: "All Games",
   freePage: "Free Games",

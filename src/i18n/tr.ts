@@ -73,6 +73,20 @@ export const tr = {
   installDismiss: "Şimdi değil",
   // benzer oyunlar
   relatedGames: "Benzer Oyunlar",
+  reviewsWord: "değerlendirme",
+  // bundle takibi
+  inBundles: "Şu An Pakette",
+  bundleEnds: "bitiş:",
+  bundleOngoing: "devam ediyor",
+  // e-posta alarmı
+  emailAlertTitle: "E-posta ile haber al",
+  emailAlertHint: "Takip listendeki oyunlar hedef fiyata düşünce sana e-posta gönderelim.",
+  emailPlaceholder: "ornek@eposta.com",
+  emailSave: "Kaydet",
+  emailSaved: "Kaydedildi. Onay için gelen kutunu kontrol et.",
+  emailError: "Olmadı, tekrar dene.",
+  emailVerified: "E-posta doğrulandı ✓ Artık fiyat düşüşlerini alacaksın.",
+  emailUnsubscribed: "E-posta bildirimleri durduruldu.",
   // v5
   allGamesPage: "Tüm Oyunlar",
   freePage: "Ücretsiz Oyunlar",

@@ -17,6 +17,8 @@ import { SavingsBadge } from "@/components/savings-badge";
 import { AtlBadge } from "@/components/atl-badge";
 import { DealVerdict } from "@/components/deal-verdict";
 import { RelatedGames } from "@/components/related-games";
+import { ReviewScores } from "@/components/review-scores";
+import { GameBundles } from "@/components/game-bundles";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
 import { PriceChart } from "@/components/price-chart";
@@ -85,6 +87,7 @@ export function GameDetail({ slug }: { slug: string }) {
                 <span className="font-semibold text-accent">{reviewText(game.score, t)}</span>{" "}
                 <span className="text-muted">· {game.score}/100</span>
               </p>
+              <ReviewScores reviews={extra.reviews} />
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <SubBadges ids={game.subscriptions} size="md" />
                 <WatchButton slug={game.slug} />
@@ -226,6 +229,9 @@ export function GameDetail({ slug }: { slug: string }) {
             </ul>
           </section>
         )}
+
+        {/* Şu an dahil olduğu paketler (ITAD) */}
+        {!game.unreleased && <GameBundles game={game} />}
 
         {/* Benzer oyunlar — katalog içi keşif */}
         <RelatedGames game={game} />
