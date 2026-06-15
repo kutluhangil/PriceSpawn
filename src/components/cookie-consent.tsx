@@ -12,11 +12,17 @@ export function CookieConsent() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    let timer: number | undefined;
     try {
-      if (!localStorage.getItem(CONSENT_KEY)) setShow(true);
+      if (!localStorage.getItem(CONSENT_KEY)) {
+        timer = window.setTimeout(() => setShow(true), 0);
+      }
     } catch {
       /* storage blocked — stay hidden */
     }
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, []);
 
   function choose(value: "all" | "essential") {

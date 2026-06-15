@@ -6,6 +6,8 @@ const SORTS: SortKey[] = ["discount", "priceAsc", "priceDesc", "score", "year", 
 
 export function serializeOpts(o: FilterOpts): string {
   const p = new URLSearchParams();
+  const q = o.query.trim();
+  if (q) p.set("q", q);
   if (o.genres.length) p.set("g", o.genres.join(","));
   if (o.stores.length) p.set("s", o.stores.join(","));
   if (o.subscriptions.length) p.set("sub", o.subscriptions.join(","));
@@ -18,6 +20,8 @@ export function serializeOpts(o: FilterOpts): string {
 
 export function parseOpts(params: URLSearchParams): Partial<FilterOpts> {
   const out: Partial<FilterOpts> = {};
+  const q = params.get("q")?.trim();
+  if (q) out.query = q;
   const g = params.get("g");
   if (g) out.genres = g.split(",").filter(Boolean);
   const s = params.get("s") ?? params.get("store");

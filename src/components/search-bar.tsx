@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GAMES } from "@/data/games";
@@ -20,14 +20,37 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listboxId = useId();
 
   const results = useMemo(() => searchGames(query, GAMES, 8), [query]);
   const showDropdown = open && query.trim().length > 0;
   const isHero = variant === "hero";
+  const trimmedQuery = query.trim();
+
+  function browseHref() {
+    const params = new URLSearchParams({ q: trimmedQuery });
+    return `/oyunlar?${params.toString()}`;
+  }
+
+  function goToResults() {
+    if (!trimmedQuery) return;
+    setOpen(false);
+    router.push(browseHref());
+  }
+
+  function goToGame(slug: string) {
+    setOpen(false);
+    router.push(`/oyun/${slug}`);
+  }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Escape") {
       setOpen(false);
+      return;
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      goToResults();
       return;
     }
     if (!showDropdown || results.length === 0) return;
@@ -37,13 +60,6 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setHighlight((h) => (h - 1 + results.length) % results.length);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      const target = results[highlight] ?? results[0];
-      if (target) {
-        setOpen(false);
-        router.push(`/oyun/${target.slug}`);
-      }
     }
   }
 
@@ -91,8 +107,16 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
             }}
             onFocus={() => setOpen(true)}
             onKeyDown={onKeyDown}
+            enterKeyHint="search"
+            autoComplete="off"
             placeholder={t.searchPlaceholder}
             aria-label={t.searchPlaceholder}
+            role="combobox"
+            aria-expanded={showDropdown}
+            aria-controls={showDropdown ? listboxId : undefined}
+            aria-activedescendant={
+              showDropdown && results[highlight] ? `${listboxId}-${results[highlight].slug}` : undefined
+            }
             className={`no-focus-ring w-full bg-transparent text-fg outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden ${
               isHero ? "text-base sm:text-lg" : "text-xs"
             }`}
@@ -102,33 +126,55 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
 
       {showDropdown && (
         <div
-          className={`panel-strong absolute top-full z-50 mt-2.5 overflow-hidden rounded-2xl ${
+          className={`panel-strong absolute top-full z-50 mt-2.5 max-h-[min(62dvh,32rem)] overflow-y-auto overscroll-contain rounded-2xl ${
             isHero ? "left-0 right-0" : "right-0 w-[min(92vw,26rem)]"
           }`}
         >
+          <button
+            type="button"
+            onPointerDown={(e) => {
+              e.preventDefault();
+              goToResults();
+            }}
+            onClick={goToResults}
+            className="flex min-h-12 w-full items-center justify-between gap-3 border-b border-border px-4 py-3 text-left text-sm font-semibold text-bright transition-colors hover:bg-(--row-hover)"
+          >
+            <span className="min-w-0 truncate">{t.listResults}</span>
+            <span className="shrink-0 text-xs text-muted">↵</span>
+          </button>
           {results.length === 0 ? (
             <div className="p-2">
               <p className="px-3 py-2 text-sm text-muted">{t.noResults}</p>
               <MissingGame query={query.trim()} />
             </div>
           ) : (
-            <ul className="divide-y divide-border">
+            <ul id={listboxId} role="listbox" className="divide-y divide-border">
               {results.map((game, i) => {
                 const best = bestPrice(game);
                 return (
-                  <li key={game.slug}>
+                  <li
+                    id={`${listboxId}-${game.slug}`}
+                    key={game.slug}
+                    role="option"
+                    aria-selected={i === highlight}
+                  >
                     <Link
                       href={`/oyun/${game.slug}`}
+                      onPointerDown={(e) => {
+                        if (e.button !== 0) return;
+                        e.preventDefault();
+                        goToGame(game.slug);
+                      }}
                       onClick={() => setOpen(false)}
                       onMouseEnter={() => setHighlight(i)}
-                      className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${
+                      className={`flex min-h-[4.5rem] items-center gap-3 px-3 py-3 transition-colors sm:min-h-0 sm:px-4 sm:py-2.5 ${
                         i === highlight ? "bg-(--row-hover)" : ""
                       }`}
                     >
                       <CoverImage
                         src={game.coverUrl}
                         title={game.title}
-                        className="h-9 w-[78px] shrink-0 rounded-md"
+                        className="h-12 w-[84px] shrink-0 rounded-md sm:h-9 sm:w-[78px]"
                       />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold text-bright">
