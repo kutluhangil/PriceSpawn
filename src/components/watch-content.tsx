@@ -21,17 +21,21 @@ export function WatchContent() {
   const { enabled, supported, enable, disable } = usePush(list);
   const { email, status, save } = useEmailAlerts(list);
   const [notice, setNotice] = useState(false);
-  const [emailInput, setEmailInput] = useState("");
+  const [emailInput, setEmailInput] = useState<string | null>(null);
   const [flash, setFlash] = useState<string | null>(null);
+  const emailValue = emailInput ?? email;
 
   useEffect(() => {
-    if (email) setEmailInput(email);
-  }, [email]);
-
-  useEffect(() => {
+    let timer: number | undefined;
     const p = new URLSearchParams(window.location.search).get("email");
-    if (p === "verified") setFlash(t.emailVerified);
-    else if (p === "unsubscribed") setFlash(t.emailUnsubscribed);
+    if (p === "verified") {
+      timer = window.setTimeout(() => setFlash(t.emailVerified), 0);
+    } else if (p === "unsubscribed") {
+      timer = window.setTimeout(() => setFlash(t.emailUnsubscribed), 0);
+    }
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, [t]);
 
   const onToggleNotify = async () => {
@@ -78,14 +82,14 @@ export function WatchContent() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (emailInput.trim()) save(emailInput);
+                if (emailValue.trim()) save(emailValue);
               }}
               className="mt-3 flex flex-col gap-2 sm:flex-row"
             >
               <input
                 type="email"
                 required
-                value={emailInput}
+                value={emailValue}
                 onChange={(e) => setEmailInput(e.target.value)}
                 placeholder={t.emailPlaceholder}
                 className="flex-1 rounded-full border border-border bg-bg-deep px-4 py-2 text-sm text-fg outline-none focus:border-accent"

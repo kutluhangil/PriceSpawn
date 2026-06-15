@@ -15,6 +15,7 @@ export function FilterBar({
   toggleGenre,
   toggleStore,
   toggleSub,
+  setQuery,
   setOnlyDiscounted,
   setMin,
   setMax,
@@ -25,6 +26,7 @@ export function FilterBar({
   toggleGenre: (g: string) => void;
   toggleStore: (s: StoreId) => void;
   toggleSub: (s: SubscriptionId) => void;
+  setQuery: (query: string) => void;
   setOnlyDiscounted: (v: boolean) => void;
   setMin: (v: number | null) => void;
   setMax: (v: number | null) => void;
@@ -43,7 +45,7 @@ export function FilterBar({
   ];
 
   const chip = (active: boolean) =>
-    `flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
+    `flex min-h-10 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer ${
       active ? "bg-accent text-white" : "border border-border text-muted hover:text-fg"
     }`;
 
@@ -56,14 +58,53 @@ export function FilterBar({
         </button>
       </div>
 
+      <label className="flex flex-col gap-2 text-xs font-semibold text-muted">
+        {t.navSearch}
+        <div className="flex min-h-11 items-center gap-2 rounded-xl border border-border bg-bg-deep px-3 transition-colors focus-within:border-accent">
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            className="shrink-0"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            type="search"
+            value={opts.query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t.searchPlaceholder}
+            enterKeyHint="search"
+            autoComplete="off"
+            className="no-focus-ring min-h-11 w-full bg-transparent text-base font-medium text-fg outline-none placeholder:text-muted sm:text-sm"
+          />
+          {opts.query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label={t.clearFilters}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-(--row-hover) hover:text-bright"
+            >
+              ×
+            </button>
+          )}
+        </div>
+      </label>
+
       {/* Sort + onlyDiscounted */}
       <div className="flex flex-wrap items-center gap-3">
-        <label className="flex items-center gap-2 text-xs font-semibold text-muted">
+        <label className="flex min-h-10 items-center gap-2 text-xs font-semibold text-muted">
           {t.sortBy}
           <select
             value={opts.sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-md border border-border bg-bg-deep px-2 py-1.5 text-fg outline-none focus:border-accent"
+            className="min-h-10 rounded-md border border-border bg-bg-deep px-2 py-2 text-base text-fg outline-none focus:border-accent sm:text-sm"
           >
             {sorts.map((s) => (
               <option key={s.key} value={s.key}>
@@ -78,7 +119,7 @@ export function FilterBar({
         >
           {t.onlyDiscounted}
         </button>
-        <label className="flex items-center gap-1.5 text-xs font-semibold text-muted">
+        <label className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-muted">
           {t.priceRange}
           <input
             type="number"
@@ -86,7 +127,8 @@ export function FilterBar({
             min={0}
             value={opts.minTRY ?? ""}
             onChange={(e) => setMin(e.target.value ? Number(e.target.value) : null)}
-            className="w-20 rounded-md border border-border bg-bg-deep px-2 py-1.5 text-fg outline-none focus:border-accent"
+            inputMode="numeric"
+            className="min-h-10 w-24 rounded-md border border-border bg-bg-deep px-2 py-2 text-base text-fg outline-none focus:border-accent sm:w-20 sm:text-sm"
           />
           <span>–</span>
           <input
@@ -95,7 +137,8 @@ export function FilterBar({
             min={0}
             value={opts.maxTRY ?? ""}
             onChange={(e) => setMax(e.target.value ? Number(e.target.value) : null)}
-            className="w-20 rounded-md border border-border bg-bg-deep px-2 py-1.5 text-fg outline-none focus:border-accent"
+            inputMode="numeric"
+            className="min-h-10 w-24 rounded-md border border-border bg-bg-deep px-2 py-2 text-base text-fg outline-none focus:border-accent sm:w-20 sm:text-sm"
           />
         </label>
       </div>

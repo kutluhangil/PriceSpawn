@@ -19,7 +19,7 @@ export function BrowseContent() {
   // Initialize once from the URL (deep-link / shared filter).
   const initial = useMemo(() => parseOpts(new URLSearchParams(params.toString())), []); // eslint-disable-line react-hooks/exhaustive-deps
   const f = useGameFilters(initial);
-  const results = useMemo(() => filterSortGames(GAMES, f.opts), [f.opts]);
+  const results = filterSortGames(GAMES, f.opts);
 
   // Reflect filter state back into the URL (shareable, back/forward works).
   useEffect(() => {
@@ -38,6 +38,7 @@ export function BrowseContent() {
         toggleGenre={f.toggleGenre}
         toggleStore={f.toggleStore}
         toggleSub={f.toggleSub}
+        setQuery={f.setQuery}
         setOnlyDiscounted={f.setOnlyDiscounted}
         setMin={f.setMin}
         setMax={f.setMax}

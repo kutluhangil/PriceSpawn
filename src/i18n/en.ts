@@ -5,6 +5,7 @@ export const en: Record<keyof typeof tr, string> = {
   heroTitleB: "cheaper?",
   tagline: "Compare every game store available in Türkiye at a glance. TL prices, live exchange rate.",
   searchPlaceholder: "Search a game…",
+  listResults: "List results",
   noResults: "No results found",
   todaysDeals: "Today's Deals",
   popularGames: "Popular Games",

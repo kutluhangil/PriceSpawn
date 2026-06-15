@@ -3,6 +3,7 @@ export const tr = {
   heroTitleB: "daha ucuz?",
   tagline: "Türkiye'deki tüm oyun mağazalarını tek bakışta karşılaştır. TL fiyatlar, güncel kurla.",
   searchPlaceholder: "Oyun ara…",
+  listResults: "Sonuçları listele",
   noResults: "Sonuç bulunamadı",
   todaysDeals: "Günün Fırsatları",
   popularGames: "Popüler Oyunlar",

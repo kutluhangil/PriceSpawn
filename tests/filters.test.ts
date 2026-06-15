@@ -5,6 +5,7 @@ import { bestPrice } from "@/lib/price";
 
 const GAMES = sampleGames();
 const base: FilterOpts = {
+  query: "",
   genres: [],
   stores: [],
   subscriptions: [],
@@ -33,6 +34,11 @@ describe("filterSortGames", () => {
   it("filters by genre", () => {
     const r = filterSortGames(GAMES, { ...base, genres: ["RPG"] });
     expect(r.every((g) => g.genres.includes("RPG"))).toBe(true);
+  });
+
+  it("filters by search query tokens", () => {
+    const r = filterSortGames(GAMES, { ...base, query: "alpha rpg" });
+    expect(r.map((g) => g.slug)).toEqual(["alpha-rpg"]);
   });
 
   it("onlyDiscounted keeps only discounted best prices", () => {

@@ -7,6 +7,7 @@ import type { SubscriptionId } from "@/lib/subscriptions";
 
 function emptyOpts(): FilterOpts {
   return {
+    query: "",
     genres: [],
     stores: [],
     subscriptions: [],
@@ -32,6 +33,7 @@ export function useGameFilters(initial?: Partial<FilterOpts>) {
     toggleGenre: (g: string) => toggleIn("genres", g),
     toggleStore: (s: StoreId) => toggleIn("stores", s),
     toggleSub: (s: SubscriptionId) => toggleIn("subscriptions", s),
+    setQuery: (query: string) => setOpts((o) => ({ ...o, query })),
     setOnlyDiscounted: (v: boolean) => setOpts((o) => ({ ...o, onlyDiscounted: v })),
     setMin: (v: number | null) => setOpts((o) => ({ ...o, minTRY: v })),
     setMax: (v: number | null) => setOpts((o) => ({ ...o, maxTRY: v })),
