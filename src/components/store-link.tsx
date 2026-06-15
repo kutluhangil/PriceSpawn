@@ -4,34 +4,51 @@ import type { Game, Price } from "@/data/games";
 import { storeUrl } from "@/lib/store-url";
 
 /**
- * Opens the game's page in a store. Rendered as a <button> + window.open so it
- * can live inside the card's <Link> without nesting anchors. Falls back to a
- * plain <span> when there's no resolvable URL.
+ * Opens the game's page in a store. Defaults to a real <a target="_blank"> so
+ * it never trips popup blockers. When `nested` (rendered inside another <a>,
+ * e.g. a game card), falls back to a button + window.open to avoid invalid
+ * nested anchors.
  */
 export function StoreLink({
   game,
   price,
   className = "",
+  nested = false,
   children,
 }: {
   game: Game;
   price: Price;
   className?: string;
+  nested?: boolean;
   children: React.ReactNode;
 }) {
   const url = storeUrl(game, price);
-  if (!url) return <span className={className}>{children}</span>;
+
+  if (nested) {
+    return (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(url, "_blank", "noopener,noreferrer");
+        }}
+        className={className}
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        window.open(url, "_blank", "noopener,noreferrer");
-      }}
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
       className={className}
     >
       {children}
-    </button>
+    </a>
   );
 }
