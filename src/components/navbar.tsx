@@ -44,6 +44,7 @@ export function Navbar() {
     { href: "/oyunlar", label: t.allGamesPage },
     { href: "/ucretsiz", label: t.freePage },
     { href: "/abonelikler", label: t.subsPage },
+    { href: "/paketler", label: t.bundlesPage },
     { href: "/takip", label: t.watchPage },
   ];
 

@@ -11,6 +11,8 @@ import { PriceDropTicker } from "@/components/price-drop-ticker";
 import { PlatformTiles } from "@/components/platform-tiles";
 import { DealRadar } from "@/components/deal-radar";
 import { BiggestDiscounts } from "@/components/biggest-discounts";
+import { LiveDeals } from "@/components/live-deals";
+import { Anticipated } from "@/components/anticipated";
 import { SaleCalendar } from "@/components/sale-calendar";
 import { NextSaleCountdown } from "@/components/next-sale-countdown";
 import { FreeCard } from "@/components/free-card";
@@ -126,6 +128,12 @@ export function HomeContent() {
         </h2>
         <BiggestDiscounts />
       </section>
+
+      {/* Canlı indirim feed'i (ITAD, tüm mağazalar) */}
+      <LiveDeals />
+
+      {/* En çok beklenenler (ITAD most-waitlisted) */}
+      <Anticipated />
 
       {/* Fırsat Radarı */}
       <section className="reveal pt-12" style={{ animationDelay: "0.18s" }}>

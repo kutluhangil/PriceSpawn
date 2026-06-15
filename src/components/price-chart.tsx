@@ -18,7 +18,10 @@ export function PriceChart({ game }: { game: Game }) {
   const { t, locale } = useApp();
   const [hist, setHist] = useState<HistoryPayload>({ byStore: {}, days: 0 });
   const stores = sortedPrices(game).map((rp) => rp.price.store);
-  const [store, setStore] = useState<StoreId>(stores[0]);
+  // Default to the first store that actually has recorded history (some stores,
+  // e.g. PlayStation, aren't tracked by ITAD); user can still pick any tab.
+  const [picked, setPicked] = useState<StoreId | null>(null);
+  const store = picked ?? stores.find((s) => (hist.byStore[s]?.length ?? 0) >= 2) ?? stores[0];
   const [hover, setHover] = useState<number | null>(null);
 
   useEffect(() => {
@@ -64,7 +67,7 @@ export function PriceChart({ game }: { game: Game }) {
           {stores.map((s) => (
             <button
               key={s}
-              onClick={() => setStore(s)}
+              onClick={() => setPicked(s)}
               className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer ${
                 s === store ? "bg-accent text-white" : "border border-border text-muted hover:text-fg"
               }`}
