@@ -2,6 +2,8 @@
   "crons": [
     { "path": "/api/refresh", "schedule": "0 6 * * *" },
     { "path": "/api/refresh-ps", "schedule": "30 6 * * *" },
+    { "path": "/api/refresh-subs", "schedule": "45 6 * * *" },
+    { "path": "/api/refresh-psplus", "schedule": "50 6 * * *" },
     { "path": "/api/notify", "schedule": "0 7 * * *" }
   ]
 }

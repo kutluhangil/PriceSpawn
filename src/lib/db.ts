@@ -104,4 +104,11 @@ export async function ensureSchema(): Promise<void> {
       last_notified_day date,
       PRIMARY KEY (email, slug)
     )`;
+  // Real subscription membership per game (from ITAD games/subs), sub_id = our SubscriptionId
+  await sql`
+    CREATE TABLE IF NOT EXISTS game_subs (
+      slug   text NOT NULL,
+      sub_id text NOT NULL,
+      PRIMARY KEY (slug, sub_id)
+    )`;
 }

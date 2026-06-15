@@ -62,6 +62,24 @@ export function SubValueCard({ id }: { id: SubscriptionId }) {
         </div>
       </div>
 
+      {/* Planlar / kademeler */}
+      {sub.plans && (
+        <div className="flex flex-wrap gap-2 border-t border-border px-4 py-3">
+          {sub.plans.map((plan) => (
+            <span
+              key={plan.name}
+              className="inline-flex items-baseline gap-1.5 rounded-full border border-border bg-(--row) px-3 py-1 text-xs"
+            >
+              <span className="font-bold text-bright">{plan.name}</span>
+              <span className="font-semibold tabular-nums" style={{ color: sub.accent }}>
+                {formatTRY(plan.monthlyTRY, locale)}
+              </span>
+              <span className="text-muted">· {plan.games}</span>
+            </span>
+          ))}
+        </div>
+      )}
+
       <div className="grid grid-cols-4 gap-1.5 p-3 sm:grid-cols-8">
         {preview.map((g) => (
           <Link
