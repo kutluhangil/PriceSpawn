@@ -45,7 +45,18 @@ export const SUBSCRIPTIONS: Record<SubscriptionId, SubscriptionMeta> = {
       { name: "Deluxe", monthlyTRY: 700, games: "450+" },
     ],
   },
-  eaplay: { id: "eaplay", label: "EA Play", monthlyTRY: 219.99, yearlyTRY: 1499.99, accent: "#ff5c5c", url: "https://www.ea.com/ea-play" },
+  eaplay: {
+    id: "eaplay",
+    label: "EA Play",
+    monthlyTRY: 219.99, // EA Play (entry tier) — headline
+    yearlyTRY: 1499.99,
+    accent: "#ff5c5c",
+    url: "https://www.ea.com/ea-play",
+    plans: [
+      { name: "EA Play", monthlyTRY: 219.99, games: "Vault" },
+      { name: "EA Play Pro", monthlyTRY: 619, games: "Gün-1" },
+    ],
+  },
   eaplaypro: { id: "eaplaypro", label: "EA Play Pro", monthlyTRY: 619, accent: "#ff8a4c", url: "https://www.ea.com/ea-play/pro" },
   ubisoftplus: {
     id: "ubisoftplus",

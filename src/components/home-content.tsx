@@ -12,6 +12,7 @@ import { PlatformTiles } from "@/components/platform-tiles";
 import { DealRadar } from "@/components/deal-radar";
 import { BiggestDiscounts } from "@/components/biggest-discounts";
 import { SaleCalendar } from "@/components/sale-calendar";
+import { NextSaleCountdown } from "@/components/next-sale-countdown";
 import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
 import { useApp } from "@/components/providers";
@@ -134,12 +135,15 @@ export function HomeContent() {
         <DealRadar games={radarGames} />
       </section>
 
-      {/* İndirim Takvimi */}
+      {/* İndirim Takvimi + sıradaki büyük indirim */}
       <section className="reveal pt-12" style={{ animationDelay: "0.22s" }}>
         <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
           {t.saleCalendar}
         </h2>
-        <SaleCalendar />
+        <div className="grid gap-4 lg:grid-cols-[19rem_1fr]">
+          <NextSaleCountdown />
+          <SaleCalendar />
+        </div>
       </section>
 
       {/* Şu An Ücretsiz (Epic, canlı) — şerit */}

@@ -129,6 +129,16 @@ footer {
 :where(a, button) {
   -webkit-tap-highlight-color: transparent;
 }
+/* Dokunma cilası: çift-dokunma zoom gecikmesini kaldır */
+a, button, [role="button"], input, label, select {
+  touch-action: manipulation;
+}
+/* iOS: küçük yazı tipli girdilere odakta otomatik yakınlaştırmayı engelle (≥16px) */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
 /* en-ucuz satırına ince sol vurgu şeridi */
 .spectrum-ring {
   position: relative;

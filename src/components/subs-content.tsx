@@ -6,7 +6,8 @@ import { useApp } from "@/components/providers";
 
 export function SubsContent() {
   const { t } = useApp();
-  const ids = Object.keys(SUBSCRIPTIONS) as SubscriptionId[];
+  // EA Play Pro is shown as a tier inside the EA Play card, not as its own card.
+  const ids = (Object.keys(SUBSCRIPTIONS) as SubscriptionId[]).filter((id) => id !== "eaplaypro");
 
   return (
     <div className="mx-auto w-[min(100%-2rem,64rem)] pt-8">
@@ -15,9 +16,13 @@ export function SubsContent() {
       </h1>
       <p className="mb-6 max-w-2xl text-sm text-muted">{t.tagline}</p>
       <div className="flex flex-col gap-4">
-        {ids.map((id) => (
-          <SubValueCard key={id} id={id} />
-        ))}
+        {ids.map((id) =>
+          id === "eaplay" ? (
+            <SubValueCard key="ea" id="eaplay" mergeIds={["eaplay", "eaplaypro"]} />
+          ) : (
+            <SubValueCard key={id} id={id} />
+          )
+        )}
       </div>
     </div>
   );
