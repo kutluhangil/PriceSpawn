@@ -14,13 +14,20 @@ import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
 
 /**
- * Steam serves a `capsule_616x353.jpg` next to every `header.jpg` — it matches
- * the billboard's exact aspect ratio and is far more reliable than
- * `library_hero.jpg` (which 404s for many older/indie titles). We fall back to
- * the original header art if the capsule is missing.
+ * The billboard renders ~760 CSS px wide (≈1520px on retina), so the 460px
+ * `header.jpg` / 616px capsule look soft. Steam's 1920px `library_hero.jpg`
+ * lives at the canonical app path (`apps/<appid>/library_hero.jpg`) — note the
+ * hash-dir cover URLs in our data DON'T carry it, so we build it from the
+ * Steam appid (game.id) directly. Falls back to the stored cover, then gradient.
  */
-function bigCover(url: string): string {
-  return url.replace(/header\.jpg(\?.*)?$/, "capsule_616x353.jpg$1");
+function heroArt(game: Game): { src: string; fallback: string[] } {
+  if (/^\d+$/.test(game.id)) {
+    return {
+      src: `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${game.id}/library_hero.jpg`,
+      fallback: [game.coverUrl],
+    };
+  }
+  return { src: game.coverUrl, fallback: [] };
 }
 
 /** Steam-style featured showcase: large clear image left, info panel right. */
@@ -56,10 +63,10 @@ export function Billboard({ games }: { games: Game[] }) {
           <Link href={`/oyun/${game.slug}`} className="block h-full w-full">
             <CoverImage
               key={game.slug}
-              src={bigCover(game.coverUrl)}
-              fallbackSrc={game.coverUrl}
+              src={heroArt(game).src}
+              fallbackSrc={heroArt(game).fallback}
               title={game.title}
-              sizes="(max-width: 768px) 100vw, 760px"
+              sizes="(max-width: 768px) 100vw, 800px"
               quality={90}
               className="billboard-fade h-full w-full transition-transform duration-700 group-hover/img:scale-[1.04]"
             />
