@@ -1,5 +1,6 @@
 import { GAMES, type Price } from "@/data/games";
 import type { StoreId } from "@/lib/stores";
+import type { SubscriptionId } from "@/lib/subscriptions";
 import { setRate } from "@/lib/exchange";
 import type { LivePayload } from "@/app/api/prices/route";
 
@@ -31,6 +32,17 @@ export function applyLive(payload: LivePayload): boolean {
       changed = true;
     }
   }
+  // Real subscription membership (ITAD). Once populated, it is authoritative for
+  // every PC service; PlayStation Plus is kept from the curated tags (ITAD has no PS).
+  if (payload.subs && Object.keys(payload.subs).length > 0) {
+    for (const game of GAMES) {
+      const real = (payload.subs[game.slug] ?? []) as SubscriptionId[];
+      const keepPs = game.subscriptions.filter((s) => s === "psplus");
+      game.subscriptions = [...new Set([...real, ...keepPs])];
+    }
+    changed = true;
+  }
+
   for (const [slug, stores] of Object.entries(payload.prices)) {
     const game = bySlug.get(slug);
     if (!game) continue;

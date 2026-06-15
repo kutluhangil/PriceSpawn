@@ -126,6 +126,47 @@ export async function itadLookup(appid: string, key: string): Promise<string> {
   }
 }
 
+// ITAD subscription service id → our SubscriptionId. (PlayStation Plus is console-
+// only and not tracked by ITAD; handled via a PS-specific source.)
+export const ITAD_SUB_TO_ID: Record<number, string> = {
+  1: "luna", // Prime Gaming (our Luna/Prime bucket)
+  2: "eaplay",
+  3: "eaplaypro",
+  4: "ubisoftplus", // Ubisoft+ Premium
+  5: "ubisoftplus", // Ubisoft+ Classics
+  6: "gamepass",
+};
+
+/**
+ * Real subscription membership for a batch of ITAD ids. Queries country=US so
+ * all PC services surface (EA/Ubisoft/Prime only appear there); the catalogs
+ * are global. Returns itad id → set of our SubscriptionIds.
+ */
+export async function itadSubs(ids: string[], key: string): Promise<Record<string, string[]>> {
+  if (ids.length === 0) return {};
+  try {
+    const res = await fetch(`${ITAD}/games/subs/v1?key=${key}&country=US`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ids),
+    });
+    if (!res.ok) return {};
+    const data = (await res.json()) as Array<{ id: string; subs: Array<{ id: number }> }>;
+    const out: Record<string, string[]> = {};
+    for (const g of data) {
+      const set = new Set<string>();
+      for (const s of g.subs ?? []) {
+        const mapped = ITAD_SUB_TO_ID[s.id];
+        if (mapped) set.add(mapped);
+      }
+      if (set.size) out[g.id] = [...set];
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 export interface ItadBundle {
   title: string;
   page: string; // bundle provider, e.g. "Humble Bundle", "Fanatical"

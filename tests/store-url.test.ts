@@ -24,13 +24,20 @@ describe("storeUrl", () => {
   });
   it("falls back to the Steam app page for steam when no live url and numeric id", () => {
     expect(storeUrl(game("1091500"), price("steam"))).toBe(
-      "https://store.steampowered.com/app/1091500"
+      "https://store.steampowered.com/app/1091500/"
     );
   });
-  it("returns null for steam fallback when id is not numeric", () => {
-    expect(storeUrl(game("ghost-of-yotei"), price("steam"))).toBeNull();
+  it("falls back to a Steam title search when id is not numeric", () => {
+    expect(storeUrl(game("ghost-of-yotei"), price("steam"))).toBe(
+      "https://store.steampowered.com/search/?term=X"
+    );
   });
-  it("returns null when no url and not steam", () => {
-    expect(storeUrl(game("1091500"), price("epic"))).toBeNull();
+  it("falls back to a store title search for non-steam stores", () => {
+    expect(storeUrl(game("1091500"), price("epic"))).toBe(
+      "https://store.epicgames.com/en-US/browse?q=X"
+    );
+    expect(storeUrl(game("1091500"), price("gog"))).toBe(
+      "https://www.gog.com/en/games?query=X"
+    );
   });
 });

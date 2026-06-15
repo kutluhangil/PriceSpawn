@@ -13,12 +13,14 @@ export interface LivePayload {
     url: string | null;
   }>>;
   lows: Record<string, { amount: number; shop: string; day: string }>;
+  /** Real subscription membership per slug (from ITAD): slug → sub ids. */
+  subs: Record<string, string[]>;
   updatedAt: string | null;
 }
 
 export async function GET() {
   if (!hasDb()) {
-    return NextResponse.json({ fx: null, prices: {}, lows: {}, updatedAt: null } satisfies LivePayload);
+    return NextResponse.json({ fx: null, prices: {}, lows: {}, subs: {}, updatedAt: null } satisfies LivePayload);
   }
   try {
     const fxRows = await sql!`SELECT rate FROM fx_rate WHERE base = 'USD_TRY' LIMIT 1`;
@@ -26,6 +28,7 @@ export async function GET() {
       SELECT slug, store, amount, currency, original_amount, discount_percent, url, updated_at
       FROM game_prices`;
     const lowRows = await sql!`SELECT slug, amount, shop, day FROM all_time_low`;
+    const subRows = await sql!`SELECT slug, sub_id FROM game_subs`;
 
     const lows: LivePayload["lows"] = {};
     for (const r of lowRows as Record<string, unknown>[]) {
@@ -48,12 +51,17 @@ export async function GET() {
       if (!latest || u > latest) latest = u;
     }
 
+    const subs: LivePayload["subs"] = {};
+    for (const r of subRows as Record<string, unknown>[]) {
+      (subs[r.slug as string] ??= []).push(r.sub_id as string);
+    }
+
     const fx = fxRows.length ? Number((fxRows[0] as { rate: unknown }).rate) : null;
-    const payload: LivePayload = { fx, prices, lows, updatedAt: latest };
+    const payload: LivePayload = { fx, prices, lows, subs, updatedAt: latest };
     return NextResponse.json(payload, {
       headers: { "Cache-Control": "public, s-maxage=900, stale-while-revalidate=3600" },
     });
   } catch {
-    return NextResponse.json({ fx: null, prices: {}, lows: {}, updatedAt: null } satisfies LivePayload);
+    return NextResponse.json({ fx: null, prices: {}, lows: {}, subs: {}, updatedAt: null } satisfies LivePayload);
   }
 }
