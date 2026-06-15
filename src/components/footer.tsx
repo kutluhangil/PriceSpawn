@@ -106,6 +106,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/paketler" className={linkClass}>
+                {t.bundlesPage}
+              </Link>
+            </li>
+            <li>
               <Link href="/#new" className={linkClass}>
                 {t.tabNew}
               </Link>

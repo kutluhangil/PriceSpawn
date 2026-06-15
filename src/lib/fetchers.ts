@@ -114,6 +114,45 @@ export const ITAD_SHOP_TO_STORE: Record<number, string> = {
   48: "xbox", // Microsoft Store
 };
 
+export interface ItadHistoryPoint {
+  day: string; // YYYY-MM-DD
+  store: string; // our StoreId
+  amount: number; // TRY
+}
+
+/**
+ * Real recorded price history for one ITAD id (TR), mapped to our stores.
+ * Some shops (Steam, GOG) report Turkey prices in USD — convert those to TRY
+ * with `fx` so every point shares one currency.
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function itadHistory(
+  id: string,
+  key: string,
+  sinceISO: string,
+  fx: number,
+): Promise<ItadHistoryPoint[]> {
+  try {
+    const res = await fetch(
+      `${ITAD}/games/history/v2?key=${key}&id=${id}&country=TR&since=${encodeURIComponent(sinceISO)}`,
+    );
+    if (!res.ok) return [];
+    const data = (await res.json()) as any[];
+    const out: ItadHistoryPoint[] = [];
+    for (const p of Array.isArray(data) ? data : []) {
+      const store = ITAD_SHOP_TO_STORE[p?.shop?.id];
+      const raw = p?.deal?.price?.amount;
+      if (!store || typeof raw !== "number") continue;
+      const tryAmount = p?.deal?.price?.currency === "USD" ? Math.round(raw * fx * 100) / 100 : raw;
+      out.push({ day: String(p.timestamp).slice(0, 10), store, amount: tryAmount });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 /** Look up the ITAD game id for a Steam appid. "" when not found. */
 export async function itadLookup(appid: string, key: string): Promise<string> {
   try {
@@ -166,6 +205,111 @@ export async function itadSubs(ids: string[], key: string): Promise<Record<strin
     return {};
   }
 }
+
+export interface ItadRankItem {
+  id: string;
+  slug: string;
+  title: string;
+  count: number;
+}
+
+/** Most-waitlisted games (anticipated), ranked. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function itadMostWaitlisted(key: string, limit = 16): Promise<ItadRankItem[]> {
+  try {
+    const res = await fetch(`${ITAD}/stats/most-waitlisted/v1?key=${key}&limit=${limit}&offset=0`);
+    if (!res.ok) return [];
+    const d = (await res.json()) as any;
+    const list: any[] = Array.isArray(d) ? d : (d?.list ?? []);
+    return list
+      .filter((x) => x.type === "game" && x.slug && x.title)
+      .map((x) => ({ id: String(x.id), slug: String(x.slug), title: String(x.title), count: Number(x.count ?? 0) }));
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export interface ItadDealItem {
+  id: string;
+  title: string;
+  cover: string; // landscape banner
+  store: string | null; // our StoreId when mapped
+  shopName: string;
+  priceTRY: number;
+  regularTRY: number;
+  cut: number;
+  url: string;
+}
+
+/** Live deals feed (TR), sorted by biggest cut. USD shop prices → TRY via fx. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function itadDeals(key: string, fx: number, limit = 48): Promise<ItadDealItem[]> {
+  try {
+    const res = await fetch(
+      `${ITAD}/deals/v2?key=${key}&country=TR&limit=${limit}&sort=-cut&nondeals=false&mature=false`,
+    );
+    if (!res.ok) return [];
+    const d = (await res.json()) as any;
+    const list: any[] = d?.list ?? [];
+    const toTRY = (p: any) => (p?.currency === "USD" ? Math.round((p.amount ?? 0) * fx * 100) / 100 : (p?.amount ?? 0));
+    const out: ItadDealItem[] = [];
+    for (const it of list) {
+      const deal = it.deal;
+      if (it.type !== "game" || !deal || !(deal.cut > 0)) continue;
+      out.push({
+        id: String(it.id),
+        title: String(it.title ?? ""),
+        cover: it.assets?.banner400 || it.assets?.banner300 || it.assets?.boxart || "",
+        store: ITAD_SHOP_TO_STORE[deal.shop?.id] ?? null,
+        shopName: String(deal.shop?.name ?? ""),
+        priceTRY: toTRY(deal.price),
+        regularTRY: toTRY(deal.regular),
+        cut: Number(deal.cut),
+        url: String(deal.url || `https://isthereanydeal.com/game/${it.slug}/info/`),
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export interface ItadActiveBundle {
+  id: number;
+  title: string;
+  page: string; // provider, e.g. "Humble Bundle", "Fanatical"
+  url: string;
+  expiry: string | null;
+  games: number;
+}
+
+/** All currently-active bundles (TR), newest first. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function itadBundleList(key: string, limit = 50): Promise<ItadActiveBundle[]> {
+  try {
+    const res = await fetch(`${ITAD}/bundles/v1?key=${key}&country=TR&limit=${limit}&sort=-publish`);
+    if (!res.ok) return [];
+    const d = (await res.json()) as any;
+    const list: any[] = Array.isArray(d) ? d : (d?.list ?? []);
+    const now = Date.now();
+    return list
+      .filter((b) => !b.expiry || Date.parse(b.expiry) > now)
+      .map((b) => ({
+        id: Number(b.id),
+        title: String(b.title ?? ""),
+        page: String(b.page?.name ?? ""),
+        url: String(b.url ?? b.details ?? ""),
+        expiry: b.expiry ?? null,
+        games: Number(b.counts?.games ?? 0),
+      }))
+      .filter((b) => b.title && b.url);
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface ItadBundle {
   title: string;
