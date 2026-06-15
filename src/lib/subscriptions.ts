@@ -69,5 +69,8 @@ export const SUBSCRIPTIONS: Record<SubscriptionId, SubscriptionMeta> = {
       { name: "Classics", monthlyTRY: 139, games: "~60" },
     ],
   },
-  luna: { id: "luna", label: "Amazon Luna", monthlyTRY: 430, accent: "#9146ff", url: "https://luna.amazon.com" },
+  // Prime Gaming: bundled with Amazon Prime, NOT a standalone monthly sub in TR —
+  // no real standalone price, so it's not shown on the value page (filtered out).
+  // Kept for game tagging/badges only. monthlyTRY is a non-displayed placeholder.
+  luna: { id: "luna", label: "Prime Gaming", monthlyTRY: 0, accent: "#00a8e1", url: "https://gaming.amazon.com" },
 };

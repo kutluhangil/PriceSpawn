@@ -6,8 +6,10 @@ import { useApp } from "@/components/providers";
 
 export function SubsContent() {
   const { t } = useApp();
-  // EA Play Pro is shown as a tier inside the EA Play card, not as its own card.
-  const ids = (Object.keys(SUBSCRIPTIONS) as SubscriptionId[]).filter((id) => id !== "eaplaypro");
+  // EA Play Pro is a tier inside the EA Play card. Prime Gaming is bundled with
+  // Amazon Prime (no standalone TR price) so it isn't a value card.
+  const HIDDEN: SubscriptionId[] = ["eaplaypro", "luna"];
+  const ids = (Object.keys(SUBSCRIPTIONS) as SubscriptionId[]).filter((id) => !HIDDEN.includes(id));
 
   return (
     <div className="mx-auto w-[min(100%-2rem,64rem)] pt-8">

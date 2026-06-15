@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import type { FreeOffer } from "@/data/free";
-import { LUNA_FREE } from "@/data/luna";
-import { activeLunaGames } from "@/lib/luna";
 
 interface EpicFree {
   title: string;
@@ -13,20 +11,12 @@ interface EpicFree {
   url: string;
 }
 
-function lunaOffers(): FreeOffer[] {
-  return activeLunaGames(LUNA_FREE, new Date()).map((g) => ({
-    title: g.title,
-    coverUrl: g.coverUrl,
-    platform: "prime",
-    freeUntil: g.validUntil,
-    normalTRY: 0,
-    url: g.claimUrl,
-  }));
-}
-
-/** Live Epic free games (Türkiye) + curated Amazon Luna monthly games. */
+/**
+ * Live Epic Games free titles (Türkiye), straight from /api/free. Only real
+ * data — no curated lists. (Prime Gaming has no public API, so we don't fake it.)
+ */
 export function useFreeGames() {
-  const [offers, setOffers] = useState<FreeOffer[]>(lunaOffers());
+  const [offers, setOffers] = useState<FreeOffer[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -44,9 +34,9 @@ export function useFreeGames() {
           normalTRY: e.originalTRY || 0,
           url: e.url,
         }));
-        setOffers([...epic, ...lunaOffers()]);
+        setOffers(epic);
       } catch {
-        // keep Luna-only offers
+        // no live data — show nothing rather than stale/fake offers
       } finally {
         if (!cancelled) setReady(true);
       }

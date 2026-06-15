@@ -73,6 +73,7 @@ export function GameCard({ game }: { game: Game }) {
               <StoreLink
                 game={game}
                 price={best.price}
+                nested
                 className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted transition-colors hover:text-fg"
               >
                 <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label} ↗
