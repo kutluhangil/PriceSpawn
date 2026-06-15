@@ -4,16 +4,16 @@ import Link from "next/link";
 import type { SubscriptionId } from "@/lib/subscriptions";
 import { SUBSCRIPTIONS } from "@/lib/subscriptions";
 import { GAMES } from "@/data/games";
-import { subscriptionValue } from "@/lib/sub-value";
+import { subscriptionValueMerged } from "@/lib/sub-value";
 import { formatTRY } from "@/lib/format";
 import { CoverImage } from "@/components/cover-image";
 import { SubLogo } from "@/components/store-logo";
 import { useApp } from "@/components/providers";
 
-export function SubValueCard({ id }: { id: SubscriptionId }) {
+export function SubValueCard({ id, mergeIds }: { id: SubscriptionId; mergeIds?: SubscriptionId[] }) {
   const { t, locale, priceLoaded } = useApp();
   const sub = SUBSCRIPTIONS[id];
-  const v = subscriptionValue(id, GAMES);
+  const v = subscriptionValueMerged(mergeIds ?? [id], GAMES);
   const preview = v.games.slice(0, 8);
 
   return (
