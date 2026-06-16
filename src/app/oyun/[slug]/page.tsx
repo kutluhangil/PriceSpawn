@@ -1,8 +1,10 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { GAMES } from "@/data/games";
 import { GameDetail } from "@/components/game-detail";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+
+// Pre-render the bundled catalog; DB-only (bulk-imported) games render on demand.
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return GAMES.map((game) => ({ slug: game.slug }));
@@ -40,7 +42,8 @@ export default async function GamePage({
 }) {
   const { slug } = await params;
   const game = GAMES.find((g) => g.slug === slug);
-  if (!game) notFound();
+  // DB-only game: render the shell; GameDetail fetches it (and 404s if missing).
+  if (!game) return <GameDetail slug={slug} />;
 
   const url = `${SITE_URL}/oyun/${slug}`;
   const jsonLd = {
