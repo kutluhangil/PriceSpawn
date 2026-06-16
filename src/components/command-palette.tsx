@@ -3,13 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GAMES } from "@/data/games";
-import { searchGames } from "@/lib/search";
-import { bestPrice } from "@/lib/price";
-import { STORES } from "@/lib/stores";
+import type { SearchResult } from "@/app/api/search/route";
+import { formatTRY } from "@/lib/format";
 import { CoverImage } from "@/components/cover-image";
-import { PriceTag } from "@/components/price-tag";
-import { StoreLogo } from "@/components/store-logo";
 import { MissingGame } from "@/components/missing-game";
 import { useApp } from "@/components/providers";
 
@@ -18,6 +14,7 @@ export function CommandPalette() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [highlight, setHighlight] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,9 +28,33 @@ export function CommandPalette() {
     [t]
   );
 
-  const results = useMemo(() => searchGames(query, GAMES, 7), [query]);
   const showNav = query.trim().length === 0;
   const rows = showNav ? navItems.length : results.length;
+
+  // Debounced server-side catalog search.
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      setResults([]);
+      return;
+    }
+    let cancelled = false;
+    const id = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}&limit=8`)
+        .then((r) => r.json())
+        .then((d: { results: SearchResult[] }) => {
+          if (!cancelled) {
+            setResults(d.results ?? []);
+            setHighlight(0);
+          }
+        })
+        .catch(() => {});
+    }, 160);
+    return () => {
+      cancelled = true;
+      clearTimeout(id);
+    };
+  }, [query]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -89,12 +110,7 @@ export function CommandPalette() {
       className="spotlight-overlay fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[16vh]"
       onClick={() => setOpen(false)}
     >
-      {/* Apple Spotlight: buzlu cam, kenarsız, yumuşak */}
-      <div
-        className="spotlight-panel w-full max-w-[34rem] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Arama satırı — büyük, çerçevesiz */}
+      <div className="spotlight-panel w-full max-w-[34rem] overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-3.5 px-5 py-4">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-muted" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
@@ -103,10 +119,7 @@ export function CommandPalette() {
           <input
             ref={inputRef}
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setHighlight(0);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={t.searchPlaceholder}
             className="no-focus-ring w-full bg-transparent text-lg text-fg outline-none placeholder:text-muted"
@@ -114,11 +127,8 @@ export function CommandPalette() {
           <kbd className="rounded-md bg-(--row-hover) px-1.5 py-0.5 text-[10px] font-semibold text-muted">esc</kbd>
         </div>
 
-        {(showNav || results.length > 0 || query.trim().length > 0) && (
-          <div className="mx-3 h-px bg-border" />
-        )}
+        {(showNav || results.length > 0 || query.trim().length > 0) && <div className="mx-3 h-px bg-border" />}
 
-        {/* Sonuçlar */}
         <div className="max-h-[54vh] overflow-y-auto px-2 py-2">
           <p className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-wider text-muted">
             {showNav ? t.footerSite : `${results.length} ${t.resultCount}`}
@@ -149,7 +159,6 @@ export function CommandPalette() {
           ) : (
             <ul>
               {results.map((g, i) => {
-                const best = bestPrice(g);
                 const active = i === highlight;
                 return (
                   <li key={g.slug}>
@@ -157,32 +166,20 @@ export function CommandPalette() {
                       href={`/oyun/${g.slug}`}
                       onClick={() => setOpen(false)}
                       onMouseEnter={() => setHighlight(i)}
-                      className={`flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors ${
-                        active ? "bg-accent" : ""
-                      }`}
+                      className={`flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors ${active ? "bg-accent" : ""}`}
                     >
-                      <CoverImage src={g.coverUrl} title={g.title} className="h-9 w-[78px] shrink-0 rounded-md" />
+                      <CoverImage src={g.cover} title={g.title} className="h-9 w-[78px] shrink-0 rounded-md" />
                       <span className="min-w-0 flex-1">
                         <span className={`block truncate text-sm font-semibold ${active ? "text-white" : "text-bright"}`}>
                           {g.title}
                         </span>
-                        <span className={`block truncate text-[11px] ${active ? "text-white/70" : "text-muted"}`}>
-                          {g.genres.join(", ")}
-                        </span>
+                        {g.year > 0 && (
+                          <span className={`block text-[11px] ${active ? "text-white/70" : "text-muted"}`}>{g.year}</span>
+                        )}
                       </span>
-                      {best && (
-                        <span className="flex shrink-0 flex-col items-end">
-                          {active ? (
-                            <span className="text-sm font-bold tabular-nums text-white">
-                              {/* keep price readable on accent */}
-                              <PriceTag rp={best} locale={locale} size="sm" />
-                            </span>
-                          ) : (
-                            <PriceTag rp={best} locale={locale} size="sm" />
-                          )}
-                          <span className={`flex items-center gap-1 text-[10px] ${active ? "text-white/70" : "text-muted"}`}>
-                            <StoreLogo id={best.price.store} size={11} /> {STORES[best.price.store].label}
-                          </span>
+                      {g.priceTRY !== null && (
+                        <span className={`shrink-0 text-sm font-bold tabular-nums ${active ? "text-white" : "text-best"}`}>
+                          {formatTRY(g.priceTRY, locale)}
                         </span>
                       )}
                     </Link>

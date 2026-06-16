@@ -111,4 +111,20 @@ export async function ensureSchema(): Promise<void> {
       sub_id text NOT NULL,
       PRIMARY KEY (slug, sub_id)
     )`;
+  // Full catalog (seed of GAMES + bulk imports) — powers server-side search and
+  // on-demand detail pages so the catalog can grow without bloating the client.
+  await sql`
+    CREATE TABLE IF NOT EXISTS catalog (
+      slug       text PRIMARY KEY,
+      appid      text NOT NULL DEFAULT '',
+      title      text NOT NULL,
+      norm       text NOT NULL DEFAULT '',
+      cover      text NOT NULL DEFAULT '',
+      genres     jsonb NOT NULL DEFAULT '[]',
+      score      int  NOT NULL DEFAULT 0,
+      year       int  NOT NULL DEFAULT 0,
+      unreleased boolean NOT NULL DEFAULT false,
+      updated_at timestamptz NOT NULL DEFAULT now()
+    )`;
+  await sql`CREATE INDEX IF NOT EXISTS catalog_norm_idx ON catalog (norm text_pattern_ops)`;
 }
