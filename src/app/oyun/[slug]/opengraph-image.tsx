@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { GAMES } from "@/data/games";
+import { catalogMetaBySlug } from "@/lib/catalog";
 import { SITE_NAME } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -10,9 +11,11 @@ export const alt = "PriceSpawn";
 export default async function OgImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const game = GAMES.find((g) => g.slug === slug);
-  const title = game?.title ?? SITE_NAME;
-  const cover = game?.coverUrl;
-  const meta = game ? `${game.genres.slice(0, 3).join(" · ")}  ·  ${game.score}/100` : "";
+  const db = game ? null : await catalogMetaBySlug(slug);
+  const title = game?.title ?? db?.title ?? SITE_NAME;
+  const cover = game?.coverUrl ?? db?.cover;
+  const genres = game?.genres ?? db?.genres ?? [];
+  const meta = game ? `${genres.slice(0, 3).join(" · ")}  ·  ${game.score}/100` : genres.slice(0, 3).join(" · ");
 
   return new ImageResponse(
     (

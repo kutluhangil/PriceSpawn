@@ -90,6 +90,7 @@ export function CommandPalette() {
   }
 
   function onKeyDown(e: React.KeyboardEvent) {
+    if (rows === 0) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setHighlight((h) => (h + 1) % Math.max(1, rows));
