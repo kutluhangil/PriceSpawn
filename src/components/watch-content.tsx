@@ -7,7 +7,7 @@ import { usePush } from "@/hooks/use-push";
 import { useEmailAlerts } from "@/hooks/use-email-alerts";
 import { SteamImport } from "@/components/steam-import";
 import { useApp } from "@/components/providers";
-import { GAMES } from "@/data/games";
+import { GAMES, type Game } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { targetMet } from "@/lib/watchlist";
 import { STORES } from "@/lib/stores";
@@ -48,8 +48,32 @@ export function WatchContent() {
     await enable();
   };
 
+  // DB-only watched games (not in bundled GAMES) are fetched from the catalog.
+  const [dbGames, setDbGames] = useState<Record<string, Game>>({});
+  useEffect(() => {
+    const missing = list.filter((w) => !GAMES.some((g) => g.slug === w.slug) && !dbGames[w.slug]);
+    if (missing.length === 0) return;
+    let cancelled = false;
+    Promise.all(
+      missing.map((w) =>
+        fetch(`/api/catalog-game?slug=${encodeURIComponent(w.slug)}`)
+          .then((r) => r.json())
+          .then((d) => (d.found && d.game ? ([w.slug, d.game] as const) : null))
+          .catch(() => null)
+      )
+    ).then((pairs) => {
+      if (cancelled) return;
+      const add: Record<string, Game> = {};
+      for (const p of pairs) if (p) add[p[0]] = p[1];
+      if (Object.keys(add).length) setDbGames((prev) => ({ ...prev, ...add }));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [list, dbGames]);
+
   const rows = list
-    .map((w) => ({ w, game: GAMES.find((g) => g.slug === w.slug) }))
+    .map((w) => ({ w, game: GAMES.find((g) => g.slug === w.slug) ?? dbGames[w.slug] }))
     .filter((r): r is { w: typeof r.w; game: NonNullable<typeof r.game> } => !!r.game);
 
   return (
