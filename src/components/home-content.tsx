@@ -17,6 +17,10 @@ import { SaleCalendar } from "@/components/sale-calendar";
 import { NextSaleCountdown } from "@/components/next-sale-countdown";
 import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
+import { StatBar } from "@/components/stat-bar";
+import { GenreChips } from "@/components/genre-chips";
+import { DealOfTheDay } from "@/components/deal-of-the-day";
+import { SectionHeading } from "@/components/section-heading";
 import { useApp } from "@/components/providers";
 
 const PER_PAGE = 16;
@@ -48,7 +52,7 @@ function pagesToShow(current: number, total: number): (number | "…")[] {
   return out;
 }
 
-export function HomeContent() {
+export function HomeContent({ catalogTotal = 0 }: { catalogTotal?: number }) {
   const { t } = useApp();
   const [page, setPage] = useState(1);
   const popularRef = useRef<HTMLElement | null>(null);
@@ -101,6 +105,12 @@ export function HomeContent() {
         <div className="w-full pt-4">
           <SearchBar variant="hero" />
         </div>
+        <div className="pt-1">
+          <StatBar catalogTotal={catalogTotal} dealCount={byDiscount.length} />
+        </div>
+        <div className="pt-1">
+          <GenreChips />
+        </div>
       </section>
 
       {/* Canlı fiyat düşüşü şeridi */}
@@ -113,19 +123,20 @@ export function HomeContent() {
         <Billboard games={billboardGames} />
       </div>
 
+      {/* Günün Fırsatı — editöryel hero (canlı feed) */}
+      <div className="reveal pt-6" style={{ animationDelay: "0.13s" }}>
+        <DealOfTheDay />
+      </div>
+
       {/* Platformlar */}
       <section className="reveal pt-12" style={{ animationDelay: "0.14s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.platforms}
-        </h2>
+        <SectionHeading title={t.platforms} />
         <PlatformTiles />
       </section>
 
       {/* En Büyük İndirimler */}
       <section className="reveal pt-12" style={{ animationDelay: "0.16s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.biggestDiscounts}
-        </h2>
+        <SectionHeading title={t.biggestDiscounts} href="/oyunlar?disc=1" />
         <BiggestDiscounts />
       </section>
 
@@ -137,17 +148,13 @@ export function HomeContent() {
 
       {/* Fırsat Radarı */}
       <section className="reveal pt-12" style={{ animationDelay: "0.18s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.dealRadar}
-        </h2>
+        <SectionHeading title={t.dealRadar} />
         <DealRadar games={radarGames} />
       </section>
 
       {/* İndirim Takvimi + sıradaki büyük indirim */}
       <section className="reveal pt-12" style={{ animationDelay: "0.22s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.saleCalendar}
-        </h2>
+        <SectionHeading title={t.saleCalendar} />
         <div className="grid gap-4 lg:grid-cols-[19rem_1fr]">
           <NextSaleCountdown />
           <SaleCalendar />
@@ -157,9 +164,7 @@ export function HomeContent() {
       {/* Şu An Ücretsiz (Epic, canlı) — şerit */}
       {freeStrip.length > 0 && (
         <section className="reveal pt-10" style={{ animationDelay: "0.2s" }}>
-          <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-            {t.freeNow} <span className="text-sm font-normal text-muted">· Epic Games</span>
-          </h2>
+          <SectionHeading title={t.freeNow} sub="· Epic Games" href="/ucretsiz" />
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {freeStrip.map((o) => (
               <FreeCard key={o.title} offer={o} />
@@ -170,9 +175,7 @@ export function HomeContent() {
 
       {/* Günün Fırsatları — ray */}
       <section id="deals" className="reveal pt-12" style={{ animationDelay: "0.24s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.todaysDeals}
-        </h2>
+        <SectionHeading title={t.todaysDeals} href="/oyunlar?disc=1" id="deals-h" />
         <div className="row-scroll -mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3">
           {deals.map((game) => (
             <div key={game.slug} className="w-[280px] shrink-0 snap-start">
@@ -184,9 +187,7 @@ export function HomeContent() {
 
       {/* Yeni Çıkanlar — ray */}
       <section id="new" className="reveal pt-10" style={{ animationDelay: "0.26s" }}>
-        <h2 className="font-display mb-4 text-lg font-bold text-bright sm:text-xl">
-          {t.tabNew}
-        </h2>
+        <SectionHeading title={t.tabNew} />
         <div className="row-scroll -mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3">
           {newReleases.map((game) => (
             <div key={game.slug} className="w-[280px] shrink-0 snap-start">

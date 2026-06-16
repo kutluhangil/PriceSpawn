@@ -80,6 +80,17 @@ export async function catalogMetaBySlug(
   }
 }
 
+/** Total games in the catalog (for the home stat bar). 0 if DB unavailable. */
+export async function catalogCount(): Promise<number> {
+  if (!hasDb()) return 0;
+  try {
+    const rows = (await sql!`SELECT COUNT(*)::int AS c FROM catalog`) as { c: number }[];
+    return rows[0]?.c ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 /** All catalog slugs (for the sitemap). */
 export async function catalogSlugs(): Promise<{ slug: string; updatedAt: Date }[]> {
   if (!hasDb()) return [];
