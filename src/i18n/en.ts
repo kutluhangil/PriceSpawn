@@ -199,4 +199,27 @@ export const en: Record<keyof typeof tr, string> = {
   navDeals: "Deals",
   navFree: "Free",
   navWatch: "Watch",
+  // Explorer — game companies
+  explorerPage: "Explorer",
+  explorerTitle: "Game Companies",
+  explorerNote:
+    "The studios and publishers behind the games. Tap a card for founding year, founders, CEO, games and platforms.",
+  explorerAll: "All",
+  companyFounded: "Founded",
+  companyHQ: "HQ",
+  companyCEO: "CEO / Head",
+  companyEmployees: "Employees",
+  companyMarketCap: "Market cap",
+  companyParent: "Parent",
+  companyIndependent: "Independent",
+  companyFounders: "Founders",
+  companyPlatforms: "Platforms",
+  companyGames: "Notable games",
+  companySite: "Official site",
+  companyDisclaimer:
+    "Figures are based on public sources. Employee counts and market caps are approximate and change over time.",
+  // bundles explainer
+  bundlesIntroTitle: "What is an active bundle?",
+  bundlesIntroBody:
+    "Bundles are limited-time discounted game packs from stores — usually far cheaper than buying titles individually, sometimes with pick-and-mix or pay-what-you-want pricing. The bundles below are live right now; head to the store before they expire.",
 };

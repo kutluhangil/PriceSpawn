@@ -1,6 +1,26 @@
 // Live data fetchers. Keyless public endpoints; structured for later expansion
 // to Epic/GOG/Xbox (see docs/LIVE_API_INTEGRATION.md).
 
+/**
+ * ITAD bundle/deal links are affiliate redirects (awin1.com, *.sjv.io, etc).
+ * Ad-blockers and tracking-protection kill those tabs the instant they open
+ * ("opens then closes"). The true store URL is carried in a query param
+ * (u / ued / url / murl / p), so unwrap it and link straight to the store.
+ */
+export function unwrapAffiliate(raw: string): string {
+  if (!raw) return raw;
+  try {
+    const u = new URL(raw);
+    for (const k of ["u", "ued", "url", "murl", "p", "r"]) {
+      const v = u.searchParams.get(k);
+      if (v && /^https?:\/\//i.test(v)) return v;
+    }
+  } catch {
+    /* not a URL — leave as is */
+  }
+  return raw;
+}
+
 export interface SteamPrice {
   amount: number; // USD (Steam returns USD from non-TR egress; app converts to TL)
   currency: "USD";
@@ -300,7 +320,7 @@ export async function itadBundleList(key: string, limit = 50): Promise<ItadActiv
         id: Number(b.id),
         title: String(b.title ?? ""),
         page: String(b.page?.name ?? ""),
-        url: String(b.url ?? b.details ?? ""),
+        url: unwrapAffiliate(String(b.url ?? "")) || String(b.details ?? ""),
         expiry: b.expiry ?? null,
         games: Number(b.counts?.games ?? 0),
       }))
@@ -331,7 +351,7 @@ export async function itadBundles(id: string, key: string): Promise<ItadBundle[]
       .map((b) => ({
         title: String(b.title ?? ""),
         page: String(b.page?.name ?? ""),
-        url: String(b.url ?? b.page?.url ?? ""),
+        url: unwrapAffiliate(String(b.url ?? "")) || String(b.page?.url ?? ""),
         expiry: b.expiry ?? null,
       }))
       .filter((b) => b.title && b.url)

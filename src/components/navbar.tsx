@@ -45,6 +45,7 @@ export function Navbar() {
     { href: "/ucretsiz", label: t.freePage },
     { href: "/abonelikler", label: t.subsPage },
     { href: "/paketler", label: t.bundlesPage },
+    { href: "/explorer", label: t.explorerPage },
     { href: "/takip", label: t.watchPage },
   ];
 
