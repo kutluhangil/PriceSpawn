@@ -197,4 +197,27 @@ export const tr = {
   navDeals: "Fırsatlar",
   navFree: "Ücretsiz",
   navWatch: "Takip",
+  // Explorer — oyun şirketleri
+  explorerPage: "Explorer",
+  explorerTitle: "Oyun Şirketleri",
+  explorerNote:
+    "Oyun dünyasının stüdyo ve yayıncıları. Bir karta dokun; kuruluş, kurucular, CEO, oyunlar ve platformlar açılsın.",
+  explorerAll: "Tümü",
+  companyFounded: "Kuruluş",
+  companyHQ: "Merkez",
+  companyCEO: "CEO / Başkan",
+  companyEmployees: "Çalışan",
+  companyMarketCap: "Piyasa değeri",
+  companyParent: "Ana şirket",
+  companyIndependent: "Bağımsız",
+  companyFounders: "Kurucular",
+  companyPlatforms: "Platformlar",
+  companyGames: "Öne çıkan oyunlar",
+  companySite: "Resmi site",
+  companyDisclaimer:
+    "Bilgiler kamuya açık kaynaklara dayanır. Çalışan sayısı ve piyasa değeri yaklaşıktır ve zamanla değişir.",
+  // paketler açıklaması
+  bundlesIntroTitle: "Aktif paket nedir?",
+  bundlesIntroBody:
+    "Paketler, mağazaların sınırlı süreyle sunduğu indirimli oyun demetleridir — çoğu zaman tek tek almaktan çok daha ucuza, bazılarında istediğin kadarını seç (pick & mix) ya da ödediğin kadar (pay-what-you-want) modeliyle. Aşağıdaki paketler şu an canlı; süreleri dolmadan mağazaya gidersin.",
 } as const;

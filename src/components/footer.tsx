@@ -111,6 +111,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/explorer" className={linkClass}>
+                {t.explorerPage}
+              </Link>
+            </li>
+            <li>
               <Link href="/#new" className={linkClass}>
                 {t.tabNew}
               </Link>
