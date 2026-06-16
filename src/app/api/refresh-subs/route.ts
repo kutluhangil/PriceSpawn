@@ -20,8 +20,10 @@ export async function GET(req: Request) {
 
   await ensureSchema();
 
-  // appid → slug, and the itad ids we'll query.
+  // appid → slug, from the bundled GAMES + the full DB catalog (imported games).
   const slugByAppid = new Map(GAMES.filter((g) => /^\d+$/.test(g.id)).map((g) => [g.id, g.slug]));
+  const catRows = (await sql!`SELECT appid, slug FROM catalog WHERE appid <> ''`) as { appid: string; slug: string }[];
+  for (const r of catRows) if (!slugByAppid.has(r.appid)) slugByAppid.set(r.appid, r.slug);
   const mapRows = (await sql!`SELECT appid, itad_id FROM itad_map WHERE itad_id <> ''`) as {
     appid: string;
     itad_id: string;
