@@ -1,15 +1,11 @@
 "use client";
 
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GAMES } from "@/data/games";
-import { searchGames } from "@/lib/search";
-import { bestPrice } from "@/lib/price";
-import { STORES } from "@/lib/stores";
+import type { SearchResult } from "@/app/api/search/route";
+import { formatTRY } from "@/lib/format";
 import { CoverImage } from "@/components/cover-image";
-import { SubBadges } from "@/components/sub-badges";
-import { PriceTag } from "@/components/price-tag";
 import { MissingGame } from "@/components/missing-game";
 import { useApp } from "@/components/providers";
 
@@ -17,41 +13,59 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
   const { locale, t } = useApp();
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
 
-  const results = useMemo(() => searchGames(query, GAMES, 8), [query]);
-  const showDropdown = open && query.trim().length > 0;
-  const isHero = variant === "hero";
   const trimmedQuery = query.trim();
+  const showDropdown = open && trimmedQuery.length > 0;
+  const isHero = variant === "hero";
+
+  // Debounced server-side catalog search (covers the full DB catalog).
+  useEffect(() => {
+    const q = trimmedQuery;
+    if (!q) {
+      setResults([]);
+      return;
+    }
+    let cancelled = false;
+    const id = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}`)
+        .then((r) => r.json())
+        .then((d: { results: SearchResult[] }) => {
+          if (!cancelled) {
+            setResults(d.results ?? []);
+            setHighlight(0);
+          }
+        })
+        .catch(() => {});
+    }, 180);
+    return () => {
+      cancelled = true;
+      clearTimeout(id);
+    };
+  }, [trimmedQuery]);
 
   function browseHref() {
-    const params = new URLSearchParams({ q: trimmedQuery });
-    return `/oyunlar?${params.toString()}`;
+    return `/oyunlar?q=${encodeURIComponent(trimmedQuery)}`;
   }
-
   function goToResults() {
     if (!trimmedQuery) return;
     setOpen(false);
     router.push(browseHref());
   }
-
   function goToGame(slug: string) {
     setOpen(false);
     router.push(`/oyun/${slug}`);
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Escape") {
-      setOpen(false);
-      return;
-    }
+    if (e.key === "Escape") return setOpen(false);
     if (e.key === "Enter") {
       e.preventDefault();
-      goToResults();
-      return;
+      return goToResults();
     }
     if (!showDropdown || results.length === 0) return;
     if (e.key === "ArrowDown") {
@@ -78,11 +92,7 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
             : "rounded-full border border-border transition-shadow focus-within:shadow-[0_0_0_3px_var(--accent-soft)]"
         }
       >
-        <div
-          className={`flex items-center gap-3 rounded-full bg-bg-deep ${
-            isHero ? "px-5 py-4 sm:px-6" : "px-3.5 py-1.5"
-          }`}
-        >
+        <div className={`flex items-center gap-3 rounded-full bg-bg-deep ${isHero ? "px-5 py-4 sm:px-6" : "px-3.5 py-1.5"}`}>
           <svg
             width={isHero ? 19 : 14}
             height={isHero ? 19 : 14}
@@ -103,7 +113,6 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
             onChange={(e) => {
               setQuery(e.target.value);
               setOpen(true);
-              setHighlight(0);
             }}
             onFocus={() => setOpen(true)}
             onKeyDown={onKeyDown}
@@ -145,57 +154,38 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
           {results.length === 0 ? (
             <div className="p-2">
               <p className="px-3 py-2 text-sm text-muted">{t.noResults}</p>
-              <MissingGame query={query.trim()} />
+              <MissingGame query={trimmedQuery} />
             </div>
           ) : (
             <ul id={listboxId} role="listbox" className="divide-y divide-border">
-              {results.map((game, i) => {
-                const best = bestPrice(game);
-                return (
-                  <li
-                    id={`${listboxId}-${game.slug}`}
-                    key={game.slug}
-                    role="option"
-                    aria-selected={i === highlight}
+              {results.map((game, i) => (
+                <li id={`${listboxId}-${game.slug}`} key={game.slug} role="option" aria-selected={i === highlight}>
+                  <Link
+                    href={`/oyun/${game.slug}`}
+                    onPointerDown={(e) => {
+                      if (e.button !== 0) return;
+                      e.preventDefault();
+                      goToGame(game.slug);
+                    }}
+                    onClick={() => setOpen(false)}
+                    onMouseEnter={() => setHighlight(i)}
+                    className={`flex min-h-[4.5rem] items-center gap-3 px-3 py-3 transition-colors sm:min-h-0 sm:px-4 sm:py-2.5 ${
+                      i === highlight ? "bg-(--row-hover)" : ""
+                    }`}
                   >
-                    <Link
-                      href={`/oyun/${game.slug}`}
-                      onPointerDown={(e) => {
-                        if (e.button !== 0) return;
-                        e.preventDefault();
-                        goToGame(game.slug);
-                      }}
-                      onClick={() => setOpen(false)}
-                      onMouseEnter={() => setHighlight(i)}
-                      className={`flex min-h-[4.5rem] items-center gap-3 px-3 py-3 transition-colors sm:min-h-0 sm:px-4 sm:py-2.5 ${
-                        i === highlight ? "bg-(--row-hover)" : ""
-                      }`}
-                    >
-                      <CoverImage
-                        src={game.coverUrl}
-                        title={game.title}
-                        className="h-12 w-[84px] shrink-0 rounded-md sm:h-9 sm:w-[78px]"
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-bright">
-                          {game.title}
-                        </span>
-                        <span className="mt-0.5 block">
-                          <SubBadges ids={game.subscriptions} />
-                        </span>
+                    <CoverImage src={game.cover} title={game.title} className="h-12 w-[84px] shrink-0 rounded-md sm:h-9 sm:w-[78px]" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-bright">{game.title}</span>
+                      {game.year > 0 && <span className="text-xs text-muted">{game.year}</span>}
+                    </span>
+                    {game.priceTRY !== null && (
+                      <span className="shrink-0 text-sm font-bold tabular-nums text-best">
+                        {formatTRY(game.priceTRY, locale)}
                       </span>
-                      {best && (
-                        <span className="flex shrink-0 flex-col items-end">
-                          <PriceTag rp={best} locale={locale} size="sm" />
-                          <span className="text-[10px] text-muted">
-                            {STORES[best.price.store].label}
-                          </span>
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
+                    )}
+                  </Link>
+                </li>
+              ))}
             </ul>
           )}
         </div>
