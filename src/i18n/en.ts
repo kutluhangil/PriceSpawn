@@ -93,6 +93,17 @@ export const en: Record<keyof typeof tr, string> = {
   emailError: "Something went wrong, try again.",
   emailVerified: "Email verified ✓ You'll now get price drops.",
   emailUnsubscribed: "Email alerts stopped.",
+  // Steam wishlist import
+  steamImportTitle: "Import your Steam wishlist",
+  steamImportHint: "Paste your Steam profile URL or SteamID64 — wishlist games get added to your watchlist.",
+  steamImportPlaceholder: "steamcommunity.com/id/username",
+  steamImportBtn: "Import",
+  steamImportSaving: "Importing…",
+  steamImportNotFound: "Profile not found. Check the URL.",
+  steamImportPrivate: "Wishlist is empty or private. Set it to 'Public' on Steam.",
+  steamImportAddedSuffix: "games added to your watchlist",
+  steamImportNoneNew: "Your wishlist games are already watched.",
+  steamImportInCatalog: "in catalog",
   // v5
   allGamesPage: "All Games",
   freePage: "Free Games",

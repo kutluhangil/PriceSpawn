@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useWatchlist } from "@/hooks/use-watchlist";
 import { usePush } from "@/hooks/use-push";
 import { useEmailAlerts } from "@/hooks/use-email-alerts";
+import { SteamImport } from "@/components/steam-import";
 import { useApp } from "@/components/providers";
 import { GAMES } from "@/data/games";
 import { bestPrice } from "@/lib/price";
@@ -17,7 +18,7 @@ import { StorageNotice } from "@/components/storage-notice";
 
 export function WatchContent() {
   const { t, locale, priceLoaded } = useApp();
-  const { list, ready, setTargetFor, toggle } = useWatchlist();
+  const { list, ready, setTargetFor, toggle, addMany } = useWatchlist();
   const { enabled, supported, enable, disable } = usePush(list);
   const { email, status, save } = useEmailAlerts(list);
   const [notice, setNotice] = useState(false);
@@ -60,6 +61,12 @@ export function WatchContent() {
       {flash && (
         <div className="mb-4 rounded-xl border border-best px-4 py-3 text-sm font-semibold text-best">
           {flash}
+        </div>
+      )}
+
+      {ready && (
+        <div className="mb-5">
+          <SteamImport addMany={addMany} />
         </div>
       )}
 

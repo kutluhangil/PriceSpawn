@@ -91,6 +91,17 @@ export const tr = {
   emailError: "Olmadı, tekrar dene.",
   emailVerified: "E-posta doğrulandı ✓ Artık fiyat düşüşlerini alacaksın.",
   emailUnsubscribed: "E-posta bildirimleri durduruldu.",
+  // Steam istek listesi içe aktarma
+  steamImportTitle: "Steam istek listeni içe aktar",
+  steamImportHint: "Steam profil URL'in veya SteamID64'ünü yapıştır — istek listendeki oyunlar takibe eklenir.",
+  steamImportPlaceholder: "steamcommunity.com/id/kullanici",
+  steamImportBtn: "İçe aktar",
+  steamImportSaving: "Aktarılıyor…",
+  steamImportNotFound: "Profil bulunamadı. URL'ini kontrol et.",
+  steamImportPrivate: "İstek listesi boş veya gizli. Steam'de gizliliği 'Herkese açık' yap.",
+  steamImportAddedSuffix: "oyun takibe eklendi",
+  steamImportNoneNew: "İstek listendeki oyunlar zaten takipte.",
+  steamImportInCatalog: "katalogda",
   // v5
   allGamesPage: "Tüm Oyunlar",
   freePage: "Ücretsiz Oyunlar",
