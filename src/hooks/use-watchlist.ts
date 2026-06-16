@@ -48,5 +48,22 @@ export function useWatchlist() {
 
   const watched = useCallback((slug: string) => isWatched(list, slug), [list]);
 
-  return { list, ready, toggle, setTargetFor, watched };
+  /** Bulk add (e.g. Steam wishlist import); returns how many were newly added. */
+  const addMany = useCallback(
+    (slugs: string[]) => {
+      let next = list;
+      let added = 0;
+      for (const slug of slugs) {
+        if (!isWatched(next, slug)) {
+          next = addWatch(next, slug);
+          added++;
+        }
+      }
+      if (added) persist(next);
+      return added;
+    },
+    [list, persist]
+  );
+
+  return { list, ready, toggle, setTargetFor, watched, addMany };
 }
