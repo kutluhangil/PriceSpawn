@@ -9,6 +9,7 @@ import { HoverTrailer } from "@/components/hover-trailer";
 import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
 import { DealVerdict } from "@/components/deal-verdict";
+import { StoreDot } from "@/components/deal-tag";
 import { StoreLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
 import { WatchButton } from "@/components/watch-button";
@@ -76,7 +77,7 @@ export function GameCard({ game }: { game: Game }) {
                 nested
                 className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted transition-colors hover:text-fg"
               >
-                <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label} ↗
+                <StoreDot store={best.price.store} /> <StoreLogo id={best.price.store} size={12} /> {STORES[best.price.store].label} ↗
               </StoreLink>
               <PriceTag rp={best} locale={locale} size="sm" highlight />
             </span>

@@ -9,6 +9,7 @@ import { filterSortGames } from "@/lib/filters";
 import { formatTRY } from "@/lib/format";
 import { GameCard } from "@/components/game-card";
 import { CoverImage } from "@/components/cover-image";
+import { GameArt } from "@/components/game-art";
 import { FilterBar } from "@/components/filter-bar";
 import { useGameFilters } from "@/hooks/use-game-filters";
 import { parseOpts, serializeOpts } from "@/lib/filter-url";
@@ -78,7 +79,10 @@ export function BrowseContent() {
       </p>
 
       {count === 0 ? (
-        <div className="panel-strong rounded-2xl px-6 py-12 text-center text-sm text-muted">{t.noResults}</div>
+        <div className="panel-strong rounded-2xl px-6 py-12 text-center text-sm text-muted">
+          <GameArt className="mx-auto mb-3 w-52" />
+          {t.noResults}
+        </div>
       ) : query ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {(searchResults ?? []).map((r) => (
