@@ -8,6 +8,9 @@ const sql = neon(process.env.DBURL);
 const KEY = process.env.ITAD_KEY;
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124 Safari/537.36";
 const MAX_NEW = Number(process.env.MAX_NEW || 300);
+const SPY_PAGES = Number(process.env.SPY_PAGES || 60);
+const SPY_TAKE = Number(process.env.SPY_TAKE || 3000);
+const AD_DELAY = Number(process.env.AD_DELAY || 1200); // Steam appdetails ~200/5min
 const MIN_YEAR = 2016;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -90,7 +93,7 @@ for (const f of FRANCHISES) {
 }
 console.log("franchise appids:", franchiseAppids.length);
 
-const spyAppids = await steamSpyTop(60, 3000);
+const spyAppids = await steamSpyTop(SPY_PAGES, SPY_TAKE);
 console.log("steamspy top-owner appids:", spyAppids.length);
 
 // franchises first (always), then steamspy; dedupe vs catalog
@@ -111,7 +114,7 @@ for (const c of candidates) {
   if (inserted.length >= MAX_NEW) break;
   processed++;
   const d = await appdetails(c.appid);
-  await sleep(1200);
+  await sleep(AD_DELAY);
   if (!d || !d.title) continue;
   if (!c.franchise && d.year && d.year < MIN_YEAR) continue; // 10-year window for the broad set
   const norm = normTitle(d.title);
@@ -141,7 +144,7 @@ for (const g of inserted) {
     await sql`INSERT INTO itad_map (appid, itad_id) VALUES (${g.appid}, ${id}) ON CONFLICT (appid) DO UPDATE SET itad_id=${id}`;
     if (id) slugByItad.set(id, g.slug);
   } catch {}
-  await sleep(120);
+  await sleep(340); // ITAD ~1000/5min
 }
 console.log("itad ids:", slugByItad.size);
 const ids = [...slugByItad.keys()];
