@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { notFound } from "next/navigation";
-import { GAMES } from "@/data/games";
+import { GAMES, type Game } from "@/data/games";
+import type { CatalogGamePayload } from "@/app/api/catalog-game/route";
 import { sortedPrices } from "@/lib/price";
 import { formatTRY } from "@/lib/format";
 import { STORES } from "@/lib/stores";
@@ -40,9 +41,45 @@ export function GameDetail({ slug }: { slug: string }) {
   // priceVersion in useApp() makes this re-render when live prices apply.
   const { locale, t, priceLoaded } = useApp();
   const priceListRef = useRef<HTMLElement | null>(null);
-  const game = GAMES.find((g) => g.slug === slug);
-  if (!game) notFound();
-  const { extra, ready: extraReady } = useGameExtra(/^\d+$/.test(game.id) ? game.id : null);
+
+  // Catalog-resident games come from the bundled GAMES (live prices via applyLive);
+  // others (bulk-imported, DB-only) are fetched on demand from /api/catalog-game.
+  const inCatalog = useMemo(() => GAMES.find((g) => g.slug === slug), [slug]);
+  const [dbGame, setDbGame] = useState<Game | null>(null);
+  const [dbResolved, setDbResolved] = useState(false);
+
+  useEffect(() => {
+    if (inCatalog) return;
+    let cancelled = false;
+    fetch(`/api/catalog-game?slug=${encodeURIComponent(slug)}`)
+      .then((r) => r.json())
+      .then((d: CatalogGamePayload) => {
+        if (cancelled) return;
+        if (d.found && d.game) setDbGame(d.game);
+        setDbResolved(true);
+      })
+      .catch(() => {
+        if (!cancelled) setDbResolved(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, inCatalog]);
+
+  const game = inCatalog ?? dbGame;
+  const { extra, ready: extraReady } = useGameExtra(game && /^\d+$/.test(game.id) ? game.id : null);
+
+  if (!game) {
+    if (dbResolved) notFound();
+    return (
+      <div className="mx-auto w-[min(100%-2rem,60rem)] py-16">
+        <div className="animate-shimmer h-64 rounded-2xl" />
+      </div>
+    );
+  }
+
+  // DB-only games arrive with their prices already attached.
+  const pricesReady = inCatalog ? priceLoaded : true;
   const prices = sortedPrices(game);
 
   return (
@@ -128,7 +165,7 @@ export function GameDetail({ slug }: { slug: string }) {
             </div>
           )}
           {prices.length === 0 ? (
-            priceLoaded ? (
+            pricesReady ? (
               <div className="panel rounded-[var(--radius-card)] px-5 py-8 text-center text-sm text-muted">
                 {t.noPriceFound}
               </div>
