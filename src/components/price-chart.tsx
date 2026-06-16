@@ -47,7 +47,15 @@ export function PriceChart({ game }: { game: Game }) {
   const span = max - min || 1;
   const x = (i: number) => PAD + (i / Math.max(1, points.length - 1)) * (W - 2 * PAD);
   const y = (v: number) => PAD + (1 - (v - min) / span) * (H - 2 * PAD);
-  const line = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(p.amount).toFixed(1)}`).join(" ");
+  // Step line: a price holds until it changes, so draw horizontal-then-vertical
+  // segments (like ITAD) rather than diagonal interpolation.
+  const line = points
+    .map((p, i) =>
+      i === 0
+        ? `M${x(0).toFixed(1)},${y(p.amount).toFixed(1)}`
+        : `L${x(i).toFixed(1)},${y(points[i - 1].amount).toFixed(1)} L${x(i).toFixed(1)},${y(p.amount).toFixed(1)}`,
+    )
+    .join(" ");
   const area = points.length >= 2 ? `${line} L${x(points.length - 1).toFixed(1)},${H - PAD} L${x(0).toFixed(1)},${H - PAD} Z` : "";
 
   function onMove(e: React.MouseEvent<SVGSVGElement>) {
