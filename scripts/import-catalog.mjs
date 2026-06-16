@@ -11,7 +11,7 @@ const MAX_NEW = Number(process.env.MAX_NEW || 300);
 const SPY_PAGES = Number(process.env.SPY_PAGES || 60);
 const SPY_TAKE = Number(process.env.SPY_TAKE || 3000);
 const AD_DELAY = Number(process.env.AD_DELAY || 1200); // Steam appdetails ~200/5min
-const MIN_YEAR = 2016;
+const MIN_YEAR = Number(process.env.MIN_YEAR ?? 2016);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const FRANCHISES = [
