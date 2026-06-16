@@ -53,9 +53,14 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, reason: "no titles scraped" }, { status: 502 });
   }
 
-  // Match by normalized title.
+  // Match by normalized title — across bundled GAMES + the full DB catalog.
   const slugByNorm = new Map<string, string>();
   for (const g of GAMES) slugByNorm.set(normTitle(g.title), g.slug);
+  const catRows = (await sql!`SELECT slug, title FROM catalog`) as { slug: string; title: string }[];
+  for (const r of catRows) {
+    const n = normTitle(r.title);
+    if (!slugByNorm.has(n)) slugByNorm.set(n, r.slug);
+  }
   const matched = new Set<string>();
   const missed: string[] = [];
   for (const t of titles) {
