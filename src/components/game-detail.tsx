@@ -14,7 +14,7 @@ import { SubBadges } from "@/components/sub-badges";
 import { PriceTag } from "@/components/price-tag";
 import { StoreLogo, SubLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
-import { SavingsBadge } from "@/components/savings-badge";
+import { DealTag, StoreDot } from "@/components/deal-tag";
 import { AtlBadge } from "@/components/atl-badge";
 import { DealVerdict } from "@/components/deal-verdict";
 import { RelatedGames } from "@/components/related-games";
@@ -190,8 +190,9 @@ export function GameDetail({ slug }: { slug: string }) {
                         isBest ? "spectrum-ring shadow-lg" : "panel"
                       }`}
                     >
-                      <span className="flex min-w-0 items-center gap-3">
-                        <StoreLogo id={rp.price.store} size={20} />
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <StoreDot store={rp.price.store} />
+                        <StoreLogo id={rp.price.store} size={18} />
                         <span className="truncate text-sm font-bold text-bright">{store.label}</span>
                         {isBest && (
                           <span className="discount-chip shrink-0 rounded-full px-2 py-0.5 text-[10px]">
@@ -202,23 +203,23 @@ export function GameDetail({ slug }: { slug: string }) {
                       </span>
 
                       <span className="flex shrink-0 flex-col items-end gap-0.5">
-                        {isBest ? (
-                          <span className="inline-flex items-center gap-2">
-                            <SavingsBadge rp={rp} />
-                            {rp.tryOriginal !== undefined && (
-                              <span className="text-xs text-muted line-through">
-                                {formatTRY(rp.tryOriginal, locale)}
-                              </span>
-                            )}
+                        <span className="inline-flex items-center gap-2">
+                          <DealTag cut={rp.price.discountPercent ?? 0} />
+                          {rp.tryOriginal !== undefined && (
+                            <span className="text-xs text-muted line-through">
+                              {formatTRY(rp.tryOriginal, locale)}
+                            </span>
+                          )}
+                          {isBest ? (
                             <CountUp
                               value={rp.tryAmount}
                               locale={locale}
-                              className="text-lg font-bold tabular-nums text-best"
+                              className="text-lg font-bold tabular-nums price-best"
                             />
-                          </span>
-                        ) : (
-                          <PriceTag rp={rp} locale={locale} />
-                        )}
+                          ) : (
+                            <PriceTag rp={rp} locale={locale} />
+                          )}
+                        </span>
                         {rp.price.currency === "USD" && (
                           <span className="text-[11px] text-muted">
                             ${rp.price.amount.toFixed(2)} · {t.steamNote}

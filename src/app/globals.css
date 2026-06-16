@@ -243,6 +243,37 @@ a, button, [role="button"], input, label, select {
   letter-spacing: 0.02em;
 }
 
+/* ── ITAD-tarzı deal etiketi (pennant) + mağaza renk noktası ───────── */
+.deal-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 9px 2px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #06270f;
+  background: linear-gradient(135deg, #22c55e, #84cc16);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%);
+  white-space: nowrap;
+}
+.deal-tag--low {
+  /* tüm zamanların en düşüğü → spektrum marka ipliği */
+  color: #fff;
+  background: linear-gradient(95deg, #ff6b6b, #ffc371, #4ade80, #38bdf8, #a78bfa);
+}
+.store-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  box-shadow: 0 0 6px currentColor;
+}
+/* en-iyi fiyat satırı vurgusu */
+.price-best {
+  color: var(--best);
+}
+
 /* ── Liste satırı ─────────────────────────────────────────────────── */
 .game-row {
   background: var(--row);

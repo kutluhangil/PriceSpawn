@@ -15,6 +15,7 @@ import { CoverImage } from "@/components/cover-image";
 import { PriceTag } from "@/components/price-tag";
 import { StoreLogo } from "@/components/store-logo";
 import { StorageNotice } from "@/components/storage-notice";
+import { GameArt } from "@/components/game-art";
 
 export function WatchContent() {
   const { t, locale, priceLoaded } = useApp();
@@ -142,6 +143,7 @@ export function WatchContent() {
 
       {ready && rows.length === 0 && (
         <div className="panel-strong rounded-2xl px-6 py-12 text-center">
+          <GameArt className="mx-auto mb-3 w-52" />
           <p className="text-sm text-muted">{t.emptyWatch}</p>
           <Link
             href="/oyunlar"
