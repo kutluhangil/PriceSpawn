@@ -1,58 +1,29 @@
 import type { Company } from "@/data/companies";
 
-/** Initials fallback for companies without an official SVG glyph. */
-function monogram(name: string): string {
-  const stop = new Set(["games", "interactive", "studios", "studio", "entertainment", "the", "bit", "of"]);
-  const words = name
-    .replace(/[().]/g, " ")
-    .split(/\s+/)
-    .filter((w) => w && !stop.has(w.toLowerCase()));
-  const letters = (words.length ? words : name.split(/\s+/)).map((w) => w[0]);
-  return letters.slice(0, 2).join("").toUpperCase();
-}
-
 /**
- * Company glyph. Official SVG (simple-icons) is rendered via CSS mask so it
- * inherits `currentColor` and can be tinted per-tile; companies without a glyph
- * get a designed monogram in the brand accent.
+ * Real, full-colour official logo shown as-is (no tint, no mask, original
+ * proportions on transparent bg). The three companies without a usable official
+ * logo file fall back to a clean wordmark of the real name (brand accent),
+ * never an invented glyph.
  */
-export function CompanyLogo({ company, size = 48 }: { company: Company; size?: number }) {
+export function CompanyLogo({ company, className = "" }: { company: Company; className?: string }) {
   if (company.logo) {
-    const url = `url(/logos/${company.logo}.svg)`;
     return (
-      <span
-        aria-hidden="true"
-        style={{
-          display: "inline-block",
-          width: size,
-          height: size,
-          backgroundColor: "currentColor",
-          WebkitMaskImage: url,
-          maskImage: url,
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-          WebkitMaskPosition: "center",
-          maskPosition: "center",
-          WebkitMaskSize: "contain",
-          maskSize: "contain",
-        }}
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={`/logos/${company.logo}`}
+        alt={`${company.name} logo`}
+        loading="lazy"
+        className={`max-h-full max-w-full object-contain ${className}`}
       />
     );
   }
   return (
     <span
-      aria-hidden="true"
-      className="grid place-items-center rounded-2xl font-display font-black leading-none tracking-tight"
-      style={{
-        width: size,
-        height: size,
-        fontSize: size * 0.42,
-        color: company.accent,
-        background: `linear-gradient(140deg, ${company.accent}26, ${company.accent}0d)`,
-        border: `1px solid ${company.accent}40`,
-      }}
+      className={`font-display text-center font-extrabold leading-tight tracking-tight ${className}`}
+      style={{ color: company.accent }}
     >
-      {monogram(company.name)}
+      {company.name}
     </span>
   );
 }

@@ -1,31 +1,35 @@
 /**
  * Curated, fact-checked directory of game companies for the Explorer.
  *
- * NO FAKE DATA: founding years, founders, HQ and notable games are stable
- * public facts. Employee counts and market caps are *approximate* public-source
- * estimates that drift over time — they are prefixed with "~" and the UI shows a
- * disclaimer. Where a current CEO/figure is genuinely uncertain it is left null
- * rather than guessed. Subsidiaries carry a `parent`; private firms read
- * "Özel şirket".
+ * NO FAKE DATA: founding years, founders, HQ, history and notable games are
+ * stable public facts. Employee counts and market caps are *approximate*
+ * public-source estimates that drift over time — prefixed "~" with a UI
+ * disclaimer. Where a current CEO/figure is genuinely uncertain it is left null.
+ * Subsidiaries carry a `parent`; private firms read "Özel şirket".
+ *
+ * `logo` is a real, full-colour, transparent official logo file under
+ * /public/logos (sourced from Wikimedia). The three companies without a usable
+ * official logo file (11 bit studios, Team Cherry, ConcernedApe) use null → a
+ * clean text wordmark of the real name (no invented glyph).
  */
 export type CompanyCategory = "Platform" | "Yayıncı" | "Stüdyo" | "Bağımsız";
 
 export interface Company {
   id: string;
   name: string;
-  accent: string; // tile theme color
-  logo: string | null; // /logos/<id>.svg, or null → designed monogram
+  accent: string; // tile/border theme colour (never applied to the logo)
+  logo: string | null; // filename under /logos (with extension), or null → wordmark
   category: CompanyCategory;
   founded: number;
   founders: string;
-  hq: string; // şehir, ülke
-  ceo: string | null; // güncel başkan/CEO (rol etiketiyle)
+  hq: string;
+  ceo: string | null;
   employees: string | null; // yaklaşık (~)
-  marketCap: string | null; // yaklaşık / "Özel şirket" / null
-  parent: string | null; // bağlı olduğu ana şirket
+  marketCap: string | null;
+  parent: string | null;
   platforms: string[];
-  games: string[]; // öne çıkan oyunlar
-  blurb: string; // kısa tarihçe
+  games: string[];
+  blurb: string; // tarihçe (zengin)
   site: string;
 }
 
@@ -34,7 +38,7 @@ export const COMPANIES: Company[] = [
     id: "valve",
     name: "Valve",
     accent: "#e35d2b",
-    logo: "valve",
+    logo: "valve.svg",
     category: "Platform",
     founded: 1996,
     founders: "Gabe Newell, Mike Harrington",
@@ -43,17 +47,17 @@ export const COMPANIES: Company[] = [
     employees: "~360",
     marketCap: "Özel şirket",
     parent: null,
-    platforms: ["PC", "Steam Deck", "SteamOS"],
+    platforms: ["PC", "Steam Deck", "SteamOS", "VR"],
     games: ["Half-Life", "Portal", "Counter-Strike 2", "Dota 2", "Team Fortress 2", "Left 4 Dead"],
     blurb:
-      "İki eski Microsoft çalışanı tarafından kuruldu. Half-Life ile efsane oldu, ardından dünyanın en büyük PC oyun mağazası Steam'i yarattı. Bugün hem oyun geliştirir hem de Steam ve Steam Deck'i işletir.",
+      "1996'da iki eski Microsoft çalışanı Gabe Newell ve Mike Harrington tarafından kuruldu. 1998'de çıkan Half-Life, FPS'lerde hikâye anlatımını yeniden tanımladı; mod sahnesinden Counter-Strike ve Team Fortress doğdu. 2003'te dijital dağıtım platformu Steam'i başlattı — bugün PC oyunculuğunun merkezi. Portal ve Half-Life: Alyx ile sınırları zorladı, 2022'de taşınabilir PC Steam Deck'i çıkardı. Klasik yönetim hiyerarşisi olmayan düz yapısıyla bilinen, hâlâ özel bir şirket.",
     site: "https://www.valvesoftware.com",
   },
   {
     id: "sony",
     name: "PlayStation (Sony Interactive)",
     accent: "#0070d1",
-    logo: "sony",
+    logo: "sony.svg",
     category: "Platform",
     founded: 1993,
     founders: "Ken Kutaragi (PlayStation'ın babası)",
@@ -65,14 +69,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PlayStation 5", "PlayStation 4", "PC", "PS VR2"],
     games: ["God of War", "Marvel's Spider-Man", "The Last of Us", "Horizon", "Gran Turismo", "Uncharted"],
     blurb:
-      "Sony'nin oyun kolu; ilk PlayStation 1994'te çıktı ve konsol pazarını yeniden şekillendirdi. Naughty Dog, Insomniac ve Santa Monica gibi birinci parti stüdyolarıyla sinematik tek-oyunculu yapımların adresi.",
+      "Sony'nin oyun kolu; köken Ken Kutaragi'nin Nintendo ile başarısız CD eklentisi projesine dayanır. İlk PlayStation 1994'te çıktı ve CD tabanlı oyunlarla pazarı yeniden şekillendirdi; PS2 tüm zamanların en çok satan konsolu oldu. Naughty Dog, Insomniac, Santa Monica ve Guerrilla gibi birinci parti stüdyolarıyla sinematik tek-oyunculu yapımların adresi. Son yıllarda büyük markalarını PC'ye ve sinema/diziye (The Last of Us) taşıdı.",
     site: "https://www.playstation.com",
   },
   {
     id: "xbox",
     name: "Xbox Game Studios",
     accent: "#107c10",
-    logo: null,
+    logo: "xbox.svg",
     category: "Platform",
     founded: 2000,
     founders: "Microsoft",
@@ -84,14 +88,14 @@ export const COMPANIES: Company[] = [
     platforms: ["Xbox Series X|S", "PC", "Game Pass / Cloud"],
     games: ["Halo", "Forza", "Gears of War", "Fable", "Sea of Thieves", "Flight Simulator"],
     blurb:
-      "Microsoft'un oyun stüdyoları çatısı. Game Pass aboneliğiyle modeli değiştirdi; Bethesda ve Activision Blizzard'ı bünyesine katarak sektörün en büyük yayıncılarından biri oldu.",
+      "Microsoft'un oyun stüdyoları çatısı; 2000'de Microsoft Game Studios olarak kuruldu, ilk Xbox 2001'de Halo ile çıktı. 2017'de Game Pass aboneliğiyle 'gün-1 tüm oyunlar' modelini başlatarak sektörü sarstı. Tarihin en büyük satın almalarıyla büyüdü: Mojang (2014), ZeniMax/Bethesda (2021) ve 69 milyar dolara Activision Blizzard (2023). Bugün konsol, PC ve bulut üzerinden çok platformlu bir strateji izliyor.",
     site: "https://www.xbox.com",
   },
   {
     id: "nintendo",
     name: "Nintendo",
     accent: "#e60012",
-    logo: null,
+    logo: "nintendo.svg",
     category: "Platform",
     founded: 1889,
     founders: "Fusajiro Yamauchi",
@@ -103,14 +107,14 @@ export const COMPANIES: Company[] = [
     platforms: ["Nintendo Switch", "Switch 2"],
     games: ["Super Mario", "The Legend of Zelda", "Pokémon", "Metroid", "Animal Crossing", "Splatoon"],
     blurb:
-      "1889'da oyun kâğıdı şirketi olarak kuruldu, 20. yüzyılda video oyununa geçti. Mario ve Zelda gibi sektörün en değerli markalarına sahip; kendine özgü donanım felsefesiyle tanınır.",
+      "1889'da Kyoto'da hanafuda oyun kâğıdı şirketi olarak kuruldu; 20. yüzyılda oyuncak ve elektronik oyuna geçti. 1980'lerde Donkey Kong ve NES ile video oyun krizinden sonra sektörü yeniden ayağa kaldırdı. Mario, Zelda ve Pokémon gibi sektörün en değerli fikrî mülkiyetlerine sahip. Güç yarışına girmek yerine özgün donanım fikirlerine (Wii, DS, Switch) odaklanan kendine has felsefesiyle bilinir.",
     site: "https://www.nintendo.com",
   },
   {
     id: "epic",
     name: "Epic Games",
     accent: "#2f80ed",
-    logo: "epic",
+    logo: "epic.svg",
     category: "Platform",
     founded: 1991,
     founders: "Tim Sweeney",
@@ -119,17 +123,17 @@ export const COMPANIES: Company[] = [
     employees: "~4.500",
     marketCap: "Özel şirket (Tencent ~%40)",
     parent: null,
-    platforms: ["PC", "Epic Games Store", "Unreal Engine"],
+    platforms: ["PC", "Epic Games Store", "Unreal Engine", "Mobil"],
     games: ["Fortnite", "Gears of War", "Unreal", "Rocket League", "Fall Guys"],
     blurb:
-      "Tim Sweeney'nin garajında başladı. Unreal Engine ile sektörün en yaygın oyun motorunu, Fortnite ile bir kültür fenomenini yarattı; Epic Games Store ile Steam'e rakip oldu.",
+      "Tim Sweeney'nin 1991'de kurduğu, başta paylaşımlı yazılım (shareware) oyunları yapan şirket. Unreal (1998) hem oyun hem de sektörün en yaygın oyun motoru Unreal Engine'i doğurdu; bugün oyun dışında film ve mimaride de kullanılıyor. 2017'de çıkan Fortnite, battle royale moduyla küresel bir kültür fenomenine dönüştü. Epic Games Store ile Steam'e rakip oldu ve Apple/Google'a karşı mağaza komisyonu davaları açtı.",
     site: "https://www.epicgames.com",
   },
   {
     id: "rockstar",
     name: "Rockstar Games",
     accent: "#fcaf17",
-    logo: "rockstar",
+    logo: "rockstar.svg",
     category: "Stüdyo",
     founded: 1998,
     founders: "Sam Houser, Dan Houser, Terry Donovan, Jamie King, Gary Foreman",
@@ -141,14 +145,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox"],
     games: ["Grand Theft Auto", "Red Dead Redemption", "Max Payne", "Bully", "L.A. Noire"],
     blurb:
-      "Açık dünya türünün zirvesi. GTA ve Red Dead Redemption serileriyle her çıkışında satış rekorları kırar; sinematik anlatı ve devasa, detaylı dünyalarıyla bilinir.",
+      "1998'de New York'ta, çoğunlukla İngiliz bir ekip tarafından Take-Two çatısı altında kuruldu. GTA III (2001) 3 boyutlu açık dünya türünü ana akıma taşıdı; GTA V tüm zamanların en çok kâr eden eğlence ürünlerinden biri oldu. Red Dead Redemption 2 ile sinematik anlatı ve dünya detayında çıtayı zirveye çıkardı. Uzun geliştirme süreleri ve her çıkışında satış rekorları kırmasıyla tanınır.",
     site: "https://www.rockstargames.com",
   },
   {
     id: "cdpr",
     name: "CD Projekt Red",
     accent: "#ed1c24",
-    logo: null,
+    logo: "cdpr.svg",
     category: "Stüdyo",
     founded: 2002,
     founders: "Marcin Iwiński, Michał Kiciński (CD Projekt, 1994)",
@@ -160,14 +164,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["The Witcher 3", "Cyberpunk 2077", "The Witcher 1-2"],
     blurb:
-      "Polonyalı stüdyo; The Witcher 3 ile dünya çapında zirveye çıktı. Cyberpunk 2077'nin sorunlu çıkışından sonra büyük güncellemelerle toparlanması oyun tarihine geçti. DRM'siz mağaza GOG'un da sahibi.",
+      "Kökleri 1994'te kurulan, oyun ithal eden CD Projekt şirketine dayanır; geliştirme kolu 2002'de doğdu. The Witcher serisi, Polonyalı yazar Andrzej Sapkowski'nin romanlarından uyarlandı ve The Witcher 3 (2015) onlarca Yılın Oyunu ödülü kazandı. Cyberpunk 2077'nin 2020'deki sorunlu çıkışı büyük tepki çekti; stüdyo yıllar süren ücretsiz güncelleme ve Phantom Liberty ekiyle oyunu toparladı. DRM'siz dijital mağaza GOG'un da sahibi.",
     site: "https://www.cdprojektred.com",
   },
   {
     id: "ea",
     name: "Electronic Arts",
     accent: "#ff4747",
-    logo: "ea",
+    logo: "ea.svg",
     category: "Yayıncı",
     founded: 1982,
     founders: "Trip Hawkins",
@@ -179,14 +183,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch", "Mobil"],
     games: ["EA SPORTS FC / FIFA", "Battlefield", "The Sims", "Apex Legends", "Need for Speed", "Madden NFL"],
     blurb:
-      "Dünyanın en büyük oyun yayıncılarından. Spor (FC, Madden), simülasyon (The Sims) ve aksiyon serileriyle tanınır; DICE, BioWare, Respawn ve Maxis gibi stüdyolara sahiptir.",
+      "Apple'dan ayrılan Trip Hawkins tarafından 1982'de, geliştiricileri 'yazılım sanatçısı' olarak öne çıkaran bir vizyonla kuruldu. Yıllar içinde spor lisanslarıyla devleşti: Madden NFL ve FIFA (bugün EA SPORTS FC) en büyük markaları. The Sims simülasyon türünü, Apex Legends battle royale'i besledi. DICE, BioWare, Respawn ve Maxis gibi köklü stüdyolara sahip; agresif satın alma geçmişiyle de tartışıldı.",
     site: "https://www.ea.com",
   },
   {
     id: "ubisoft",
     name: "Ubisoft",
     accent: "#0098db",
-    logo: "ubisoft",
+    logo: "ubisoft.svg",
     category: "Yayıncı",
     founded: 1986,
     founders: "Guillemot kardeşler (beş kardeş)",
@@ -198,14 +202,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["Assassin's Creed", "Far Cry", "Rainbow Six", "Watch Dogs", "The Division", "Just Dance"],
     blurb:
-      "Fransız aile şirketi; dünyaya yayılmış geniş stüdyo ağıyla devasa açık dünya yapımları üretir. Assassin's Creed ve Far Cry en bilinen serileridir.",
+      "1986'da Fransa'da çiftçi bir ailenin beş Guillemot kardeşi tarafından kuruldu. Montreal başta olmak üzere dünyaya yayılmış devasa stüdyo ağıyla geniş, ikon-dolu açık dünya yapımları üretir. Assassin's Creed serisi tarihî kurguyu aksiyonla birleştirerek amiral gemisi oldu; Far Cry, Rainbow Six ve Just Dance da güçlü markaları. Son yıllarda satışların düşmesi ve devralma söylentileriyle gündemde.",
     site: "https://www.ubisoft.com",
   },
   {
     id: "taketwo",
     name: "Take-Two Interactive",
     accent: "#c0392b",
-    logo: null,
+    logo: "taketwo.svg",
     category: "Yayıncı",
     founded: 1993,
     founders: "Ryan Brant",
@@ -217,14 +221,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch", "Mobil"],
     games: ["GTA", "NBA 2K", "Red Dead Redemption", "Borderlands", "BioShock"],
     blurb:
-      "Rockstar Games, 2K ve Zynga'nın sahibi olan holding. Sektörün en değerli markalarını (GTA, NBA 2K) elinde tutar.",
+      "1993'te Ryan Brant tarafından kurulan holding; iki güçlü etiketi Rockstar Games ve 2K aracılığıyla yayın yapar. Rockstar ile GTA ve Red Dead, 2K ile NBA 2K, Borderlands ve BioShock gibi serilere sahip. 2022'de mobil dev Zynga'yı ~12,7 milyar dolara satın alarak mobil pazara güçlü giriş yaptı. CEO Strauss Zelnick uzun süredir sektörün en bilinen yöneticilerinden biri.",
     site: "https://www.take2games.com",
   },
   {
     id: "activision",
     name: "Activision",
     accent: "#e23b3b",
-    logo: "activision",
+    logo: "activision.svg",
     category: "Yayıncı",
     founded: 1979,
     founders: "David Crane, Alan Miller, Bob Whitehead, Larry Kaplan",
@@ -236,14 +240,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Mobil"],
     games: ["Call of Duty", "Crash Bandicoot", "Tony Hawk's", "Guitar Hero", "Spyro"],
     blurb:
-      "İlk bağımsız oyun yayıncısı olarak kuruldu (eski Atari geliştiricileri). Call of Duty serisinin sahibi; 2023'te Microsoft 69 milyar dolara Activision Blizzard'ı satın aldı.",
+      "1979'da, emeklerinin tanınmadığını düşünen eski Atari geliştiricileri tarafından kuruldu — tarihin ilk bağımsız üçüncü-parti oyun yayıncısı. 2008'de Vivendi Games (Blizzard) ile birleşip Activision Blizzard oldu. Call of Duty bugün dünyanın en çok satan yıllık aksiyon serisi. 2023'te Microsoft, 69 milyar dolarlık sektör rekoru bir anlaşmayla şirketi satın aldı.",
     site: "https://www.activision.com",
   },
   {
     id: "blizzard",
     name: "Blizzard Entertainment",
     accent: "#00aeff",
-    logo: null,
+    logo: "blizzard.svg",
     category: "Stüdyo",
     founded: 1991,
     founders: "Michael Morhaime, Allen Adham, Frank Pearce",
@@ -255,14 +259,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Mobil"],
     games: ["World of Warcraft", "Diablo", "Overwatch", "StarCraft", "Hearthstone"],
     blurb:
-      "Cila ve kalite takıntısıyla bilinen stüdyo. World of Warcraft ile MMO türünü tanımladı; Diablo, StarCraft ve Overwatch gibi tür belirleyen serilere sahip.",
+      "1991'de UCLA mezunlarınca kuruldu; 'biz oyunu çıkana kadar hazır değildir' diyen cila takıntısıyla efsane oldu. Warcraft ve StarCraft strateji türünü, Diablo aksiyon-RPG'yi tanımladı. 2004'te çıkan World of Warcraft MMO türünün zirvesi oldu ve milyonlarca aboneye ulaştı. Overwatch ve Hearthstone ile portföyünü genişletti; bugün Microsoft bünyesinde.",
     site: "https://www.blizzard.com",
   },
   {
     id: "squareenix",
     name: "Square Enix",
     accent: "#c8102e",
-    logo: "squareenix",
+    logo: "squareenix.svg",
     category: "Yayıncı",
     founded: 2003,
     founders: "Square (1986) + Enix (1975) birleşmesi",
@@ -274,14 +278,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch", "Mobil"],
     games: ["Final Fantasy", "Dragon Quest", "Kingdom Hearts", "NieR", "Octopath Traveler"],
     blurb:
-      "İki Japon RPG devinin birleşmesinden doğdu. Final Fantasy ve Dragon Quest serileriyle JRPG türünün en büyük temsilcilerinden biridir.",
+      "2003'te iki JRPG devi Square (Final Fantasy) ve Enix'in (Dragon Quest) birleşmesinden doğdu. Final Fantasy serisi neredeyse her ana sürümle tür sınırlarını yeniden çizdi; Dragon Quest ise Japonya'da kültürel bir kurum. Kingdom Hearts ile Disney evrenini RPG'ye taşıdı. Son yıllarda HD-2D tarzı (Octopath Traveler) ile retro estetiği modern yapımlara taşıyor.",
     site: "https://www.square-enix.com",
   },
   {
     id: "capcom",
     name: "Capcom",
     accent: "#1e63b3",
-    logo: null,
+    logo: "capcom.svg",
     category: "Yayıncı",
     founded: 1979,
     founders: "Kenzo Tsujimoto",
@@ -293,14 +297,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["Resident Evil", "Street Fighter", "Monster Hunter", "Devil May Cry", "Mega Man"],
     blurb:
-      "Japon yayıncı; korku (Resident Evil), dövüş (Street Fighter) ve avcılık (Monster Hunter) türlerinin öncüsü. Kendi RE Engine motoruyla son yıllarda büyük çıkış yaptı.",
+      "1979'da Kenzo Tsujimoto tarafından Osaka'da kuruldu, arcade makineleriyle başladı. Street Fighter II dövüş oyunu çılgınlığını başlattı; Resident Evil hayatta kalma-korku türünü icat etti. Monster Hunter, özellikle Monster Hunter: World ile küresel bir fenomene dönüştü. Kendi RE Engine motoruyla son yıllarda hem teknik hem ticari olarak altın çağını yaşıyor.",
     site: "https://www.capcom.com",
   },
   {
     id: "bandainamco",
     name: "Bandai Namco",
     accent: "#ec1c24",
-    logo: null,
+    logo: "bandainamco.svg",
     category: "Yayıncı",
     founded: 2006,
     founders: "Bandai + Namco birleşmesi",
@@ -312,14 +316,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch", "Arcade"],
     games: ["Tekken", "Elden Ring (yayıncı)", "Dark Souls (yayıncı)", "Pac-Man", "Tales of", "Ace Combat"],
     blurb:
-      "İki Japon eğlence devinin birleşmesi. Tekken ve Tales serilerinin sahibi; FromSoftware'in Dark Souls ve Elden Ring oyunlarının dünya yayıncısı.",
+      "Oyuncak devi Bandai ile arcade efsanesi Namco'nun (Pac-Man) 2006'daki birleşmesinden doğdu. Tekken ile dövüş türünün, Tales of ile anime tarzı JRPG'lerin önde gelen ismi. FromSoftware'in Dark Souls, Sekiro ve Elden Ring oyunlarının dünya yayıncısı olarak 'soulslike' akımının yayılmasında kritik rol oynadı. Anime lisansları (Dragon Ball, Naruto) oyunlarıyla da güçlü bir portföye sahip.",
     site: "https://www.bandainamcoent.com",
   },
   {
     id: "sega",
     name: "SEGA",
     accent: "#0089cf",
-    logo: "sega",
+    logo: "sega.svg",
     category: "Yayıncı",
     founded: 1960,
     founders: "—",
@@ -331,14 +335,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["Sonic the Hedgehog", "Like a Dragon (Yakuza)", "Persona", "Total War", "Football Manager"],
     blurb:
-      "Eski konsol üreticisi; Dreamcast'ten sonra yazılıma yöneldi. Sonic'in yanı sıra Atlus (Persona) ve Creative Assembly (Total War) gibi stüdyolara sahiptir.",
+      "Kökleri 1960'lara uzanan, bir dönem Nintendo'nun en büyük konsol rakibi olan şirket. Genesis/Mega Drive ve Sonic ile 90'lara damga vurdu; Dreamcast'in başarısızlığından sonra 2001'de donanımı bırakıp yazılıma odaklandı. Sonic'in yanında Like a Dragon (Yakuza) ve Atlus'un Persona serisi güçlü markaları. Creative Assembly (Total War) ve Sports Interactive (Football Manager) gibi Batılı stüdyolara da sahip.",
     site: "https://www.sega.com",
   },
   {
     id: "konami",
     name: "Konami",
     accent: "#b3001b",
-    logo: "konami",
+    logo: "konami.svg",
     category: "Yayıncı",
     founded: 1969,
     founders: "Kagemasa Kozuki",
@@ -350,14 +354,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Mobil", "Arcade"],
     games: ["Metal Gear Solid", "Silent Hill", "Castlevania", "eFootball / PES", "Yu-Gi-Oh!"],
     blurb:
-      "Köklü Japon yayıncı. Metal Gear ve Silent Hill efsane serileri; son yıllarda mobil, arcade ve eFootball'a ağırlık verdi, klasik markalarını yeniden canlandırıyor.",
+      "1969'da kuruldu; arcade salonlarından konsola uzanan köklü bir Japon yayıncı. Hideo Kojima'nın Metal Gear Solid'i gizlilik (stealth) türünü, Silent Hill psikolojik korkuyu tanımladı. 2015'te Kojima'dan ayrılış ve konsoldan uzaklaşma kararı tartışma yarattı; şirket pachinko, mobil ve sağlık-fitness işlerine yöneldi. Son dönemde Silent Hill ve Metal Gear yeniden yapımlarıyla klasik markalarına geri dönüyor.",
     site: "https://www.konami.com",
   },
   {
     id: "fromsoftware",
     name: "FromSoftware",
     accent: "#b08d57",
-    logo: null,
+    logo: "fromsoftware.svg",
     category: "Stüdyo",
     founded: 1986,
     founders: "Naotoshi Zin",
@@ -369,14 +373,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["Elden Ring", "Dark Souls", "Bloodborne", "Sekiro", "Armored Core"],
     blurb:
-      "Hidetaka Miyazaki yönetiminde 'soulslike' alt türünü yarattı. Zorlu ama adil tasarımı ve gizemli dünya anlatımıyla bir akım başlattı; Elden Ring ile Yılın Oyunu kazandı.",
+      "1986'da kuruldu, uzun yıllar King's Field ve Armored Core serileriyle bilindi. 2009'da Demon's Souls ve ardından Hidetaka Miyazaki liderliğindeki Dark Souls, zorlu ama adil tasarımıyla 'soulslike' akımını başlattı. Bloodborne ve Sekiro ile formülü çeşitlendirdi; 2022'de Elden Ring, George R. R. Martin iş birliğiyle açık dünyaya taşındı ve Yılın Oyunu oldu. Gizemli, dolaylı dünya anlatımı imzasıdır.",
     site: "https://www.fromsoftware.jp",
   },
   {
     id: "riot",
     name: "Riot Games",
     accent: "#d13639",
-    logo: "riot",
+    logo: "riot.svg",
     category: "Stüdyo",
     founded: 2006,
     founders: "Brandon Beck, Marc Merrill",
@@ -388,14 +392,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Mobil", "Konsol"],
     games: ["League of Legends", "VALORANT", "Teamfight Tactics", "Wild Rift", "Legends of Runeterra"],
     blurb:
-      "Tek oyunla (League of Legends) e-spor ve MOBA dünyasının zirvesine çıktı. VALORANT ile FPS pazarına girdi; Arcane dizisiyle yapımcılığa da el attı.",
+      "İki tutkulu oyuncu Brandon Beck ve Marc Merrill tarafından 2006'da kuruldu. Tek oyunu League of Legends (2009) MOBA türünü ve modern e-sporu küresel ölçeğe taşıdı; Dünya Şampiyonası en çok izlenen e-spor etkinliklerinden. 2015'te Çinli dev Tencent tarafından tamamen satın alındı. VALORANT ile taktiksel FPS'e açıldı, Arcane dizisiyle Emmy kazanarak yapımcılığa da el attı.",
     site: "https://www.riotgames.com",
   },
   {
     id: "larian",
     name: "Larian Studios",
     accent: "#c0392b",
-    logo: null,
+    logo: "larian.png",
     category: "Stüdyo",
     founded: 1996,
     founders: "Swen Vincke",
@@ -407,14 +411,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox"],
     games: ["Baldur's Gate 3", "Divinity: Original Sin 2", "Divinity: Original Sin"],
     blurb:
-      "Belçikalı stüdyo; yıllarca Divinity serisiyle isim yaptı, ardından Baldur's Gate 3 ile birçok Yılın Oyunu ödülü topladı. Derin, seçim odaklı RPG'leriyle tanınır.",
+      "Swen Vincke'nin 1996'da Belçika'da kurduğu, yıllarca finansal zorluklarla boğuşan stüdyo. Kitle fonlamasıyla hayata geçen Divinity: Original Sin serisi derin, etkileşimli RPG mekaniğiyle isim yaptı. 2023'te çıkan Baldur's Gate 3, masaüstü D&D kurallarını eksiksiz bir video oyununa taşıyarak birçok Yılın Oyunu ödülü topladı. Oyuncu özgürlüğü ve cömert içerik desteğiyle tanınır.",
     site: "https://larian.com",
   },
   {
     id: "bethesda",
     name: "Bethesda Game Studios",
     accent: "#2c5f8a",
-    logo: null,
+    logo: "bethesda.svg",
     category: "Stüdyo",
     founded: 2001,
     founders: "Bethesda Softworks (1986)",
@@ -426,14 +430,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Xbox", "PlayStation"],
     games: ["The Elder Scrolls V: Skyrim", "Fallout 4", "Starfield", "Fallout: New Vegas (yayıncı)"],
     blurb:
-      "Devasa, keşfe dayalı açık dünya RPG'lerin adresi. Skyrim ve Fallout serileriyle tanınır; 2021'de Microsoft, ZeniMax/Bethesda'yı satın aldı.",
+      "Yayıncı Bethesda Softworks'ün (1986) geliştirme stüdyosu olarak 2001'de ayrıştı; Todd Howard'ın yönetiminde devasa, keşfe dayalı RPG'lerin simgesi oldu. The Elder Scrolls III: Morrowind ve özellikle Skyrim (2011), açık dünya rol yapma türünü ana akıma taşıdı. Fallout 3 ile post-apokaliptik seriyi birinci şahıs bakışına taşıdı. 2021'de ZeniMax/Bethesda Microsoft tarafından satın alındı; 2023'te uzay RPG'si Starfield'i çıkardı.",
     site: "https://bethesda.net",
   },
   {
     id: "kojima",
     name: "Kojima Productions",
     accent: "#c0a062",
-    logo: null,
+    logo: "kojima.svg",
     category: "Bağımsız",
     founded: 2015,
     founders: "Hideo Kojima",
@@ -445,14 +449,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox"],
     games: ["Death Stranding", "Death Stranding 2", "OD (yapım aşamasında)"],
     blurb:
-      "Metal Gear yaratıcısı Hideo Kojima'nın Konami'den ayrıldıktan sonra kurduğu bağımsız stüdyo. Death Stranding ile kendine özgü, sinematik ve deneysel oyunlar üretiyor.",
+      "Metal Gear yaratıcısı Hideo Kojima, Konami'den ayrılışının ardından 2015'te bağımsız stüdyosunu kurdu. İlk oyunu Death Stranding (2019), bağlantı ve yalnızlık temalı kendine özgü 'kargo teslim' türüyle hem hayranlık hem tartışma topladı. Sinemaya tutkusuyla bilinen Kojima, oyunlarında ünlü film oyuncularını ve yönetmenlerini bir araya getirir. Death Stranding 2'nin yanında Xbox ile korku oyunu OD üzerinde çalışıyor.",
     site: "https://www.kojimaproductions.jp",
   },
   {
     id: "naughtydog",
     name: "Naughty Dog",
     accent: "#f0a500",
-    logo: null,
+    logo: "naughtydog.png",
     category: "Stüdyo",
     founded: 1984,
     founders: "Andy Gavin, Jason Rubin",
@@ -464,14 +468,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PlayStation", "PC"],
     games: ["The Last of Us", "Uncharted", "Crash Bandicoot", "Jak and Daxter"],
     blurb:
-      "Crash Bandicoot'tan The Last of Us'a uzanan Sony birinci parti stüdyosu. Sinematik anlatı ve teknik ustalığıyla nesle damga vuran tek-oyunculu yapımlarıyla bilinir.",
+      "1984'te kurulan stüdyo, PlayStation'ın amiral markası Crash Bandicoot ve Jak and Daxter ile büyüdü. 2007'de Uncharted ile sinematik aksiyon-macera türünü zirveye taşıdı. The Last of Us (2013) anlatı odaklı oyunlarda bir dönüm noktası kabul edilir ve HBO dizisiyle daha geniş kitleye ulaştı. Teknik ustalığı ve duygusal hikâye anlatımıyla nesle damga vurdu; 2001'den beri Sony bünyesinde.",
     site: "https://www.naughtydog.com",
   },
   {
     id: "insomniac",
     name: "Insomniac Games",
     accent: "#e8401f",
-    logo: null,
+    logo: "insomniac.svg",
     category: "Stüdyo",
     founded: 1994,
     founders: "Ted Price",
@@ -483,14 +487,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PlayStation", "PC"],
     games: ["Marvel's Spider-Man", "Ratchet & Clank", "Spyro the Dragon", "Resistance"],
     blurb:
-      "Spyro ve Ratchet & Clank ile büyüdü, Marvel's Spider-Man ile süper kahraman oyunlarının çıtasını yükseltti. 2019'da Sony bünyesine katıldı.",
+      "Ted Price'ın 1994'te kurduğu stüdyo; Spyro the Dragon ve Ratchet & Clank ile PlayStation'ın renkli platform/aksiyon yüzü oldu. Resistance ile FPS'e açıldı, teknik becerisini kanıtladı. 2018'de Marvel's Spider-Man, akıcı hareket sistemi ve sıcak hikâyesiyle süper kahraman oyunlarının çıtasını yükseltti. 2019'da Sony bünyesine katıldı ve birinci parti üretiminin lokomotiflerinden biri haline geldi.",
     site: "https://insomniac.games",
   },
   {
     id: "remedy",
     name: "Remedy Entertainment",
     accent: "#b3203b",
-    logo: null,
+    logo: "remedy.svg",
     category: "Stüdyo",
     founded: 1995,
     founders: "Samuli Syvähuoko ve ekibi",
@@ -502,14 +506,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox"],
     games: ["Control", "Alan Wake 2", "Max Payne", "Quantum Break"],
     blurb:
-      "Finlandiyalı stüdyo; Max Payne ile sinematik aksiyonu tanımladı. Control ve Alan Wake ile birbirine bağlı, atmosferik ve deneysel bir evren kuruyor.",
+      "1995'te Finlandiya'da kuruldu; Max Payne ile 'bullet time' ve noir anlatımı oyunlara taşıyarak ün kazandı. Alan Wake psikolojik gerilimi, Control ise doğaüstü bürokrasi temalı 'Eski Ev'i tanıttı. Stüdyo bugün oyunlarını ortak bir 'Remedy Bağlantılı Evren'de buluşturuyor; Alan Wake 2 ile anlatım ve görsel cesarette zirve yaptı. Halka açık, bağımsız bir Avrupa stüdyosu.",
     site: "https://www.remedygames.com",
   },
   {
     id: "id",
     name: "id Software",
     accent: "#9b1c1c",
-    logo: null,
+    logo: "id.png",
     category: "Stüdyo",
     founded: 1991,
     founders: "John Carmack, John Romero, Tom Hall, Adrian Carmack",
@@ -521,14 +525,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["DOOM", "Quake", "Wolfenstein 3D", "Rage"],
     blurb:
-      "FPS türünün mucidi. DOOM ve Quake ile 3B aksiyonu ve çok oyunculu deathmatch'i icat etti; teknolojiye odaklı id Tech motorlarıyla tanınır.",
+      "1991'de John Carmack ve John Romero başta olmak üzere bir grup teknoloji dâhisi tarafından kuruldu. Wolfenstein 3D ve DOOM (1993) ile birinci şahıs nişancı türünü icat etti; çevrimiçi deathmatch ve mod kültürünü başlattı. Quake ile gerçek 3B grafikleri ve rekabetçi e-sporu doğurdu. id Tech motorları nesiller boyunca lisanslandı; bugün Bethesda üzerinden Microsoft bünyesinde DOOM serisini sürdürüyor.",
     site: "https://www.idsoftware.com",
   },
   {
     id: "bungie",
     name: "Bungie",
     accent: "#4aa3df",
-    logo: null,
+    logo: "bungie.svg",
     category: "Stüdyo",
     founded: 1991,
     founders: "Alex Seropian, Jason Jones",
@@ -540,14 +544,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox"],
     games: ["Destiny 2", "Halo", "Marathon", "Myth"],
     blurb:
-      "Halo ile Xbox'ı zirveye taşıdı, sonra bağımsızlaşıp Destiny ile 'looter-shooter' türünü popülerleştirdi. 2022'de Sony bünyesine katıldı ama bağımsız işleyişini korudu.",
+      "1991'de Chicago'da kuruldu; Mac oyunları Marathon ve Myth ile başladı. 2000'de Microsoft tarafından alındı ve Halo: Combat Evolved (2001) ilk Xbox'ın amiral oyunu, konsol FPS'inin standardı oldu. 2007'de bağımsızlaştı ve Destiny ile çevrimiçi 'looter-shooter' türünü popülerleştirdi. 2022'de Sony tarafından satın alındı ama bağımsız işleyişini koruyor.",
     site: "https://www.bungie.net",
   },
   {
     id: "respawn",
     name: "Respawn Entertainment",
     accent: "#e8492b",
-    logo: null,
+    logo: "respawn.svg",
     category: "Stüdyo",
     founded: 2010,
     founders: "Vince Zampella, Jason West",
@@ -559,14 +563,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["Apex Legends", "Titanfall 2", "Star Wars Jedi: Fallen Order", "Star Wars Jedi: Survivor"],
     blurb:
-      "Call of Duty'nin asıl yaratıcılarının kurduğu stüdyo. Titanfall'ın akıcı hareket mekanikleri, Apex Legends battle royale'i ve Star Wars Jedi serisiyle bilinir.",
+      "Call of Duty'yi yaratan Vince Zampella ve Jason West'in Activision'dan ayrılışının ardından 2010'da kurduğu stüdyo. Titanfall, dev robotlar (Titan) ve akıcı duvar koşusu mekanikleriyle dikkat çekti. Aynı evrende geçen Apex Legends (2019) bir battle royale fenomeni oldu. Star Wars Jedi serisiyle tek-oyunculu aksiyon-maceraya da imza attı; 2017'den beri EA bünyesinde.",
     site: "https://www.respawn.com",
   },
   {
     id: "obsidian",
     name: "Obsidian Entertainment",
     accent: "#3a7d44",
-    logo: null,
+    logo: "obsidian.svg",
     category: "Stüdyo",
     founded: 2003,
     founders: "Feargus Urquhart, Chris Avellone ve ekibi",
@@ -578,14 +582,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Xbox", "PlayStation", "Switch"],
     games: ["Fallout: New Vegas", "The Outer Worlds", "Pillars of Eternity", "Avowed", "Grounded"],
     blurb:
-      "Yazı ve seçim odaklı RPG'lerin ustası. Fallout: New Vegas ve Pillars of Eternity ile ün kazandı; 2018'de Microsoft bünyesine katıldı.",
+      "Eski Black Isle Studios (Fallout) ekibi tarafından 2003'te kuruldu; yazı, diyalog ve oyuncu seçimi odaklı RPG'lerin ustası. Star Wars: KOTOR II ve Fallout: New Vegas ile büyük serilere derinlik kattı. Kitle fonlamalı Pillars of Eternity ile klasik izometrik RPG'yi diriltti. 2018'de Microsoft bünyesine katıldı; The Outer Worlds ve Avowed ile ilk-parti üretimine geçti.",
     site: "https://www.obsidian.net",
   },
   {
     id: "paradox",
     name: "Paradox Interactive",
     accent: "#283593",
-    logo: "paradox",
+    logo: "paradox.svg",
     category: "Yayıncı",
     founded: 1999,
     founders: "—",
@@ -597,14 +601,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol"],
     games: ["Crusader Kings III", "Europa Universalis", "Stellaris", "Cities: Skylines", "Hearts of Iron"],
     blurb:
-      "Derin strateji ve büyük-strateji oyunlarının kralı. Uzun ömürlü oyunları ve kapsamlı DLC modeliyle sadık bir kitle oluşturdu; Cities: Skylines'ın da yayıncısı.",
+      "1999'da İsveç'te kuruldu; derin tarihî büyük-strateji oyunlarının tartışmasız lideri. Europa Universalis, Crusader Kings ve Hearts of Iron serileriyle yıllarca güncellenen, sonsuz oynanan oyunlar üretir. Bilim kurgu (Stellaris) ve şehir kurma (Cities: Skylines, yayıncı olarak) türlerine de açıldı. Kapsamlı DLC modeli ve sadık, derinlik arayan oyuncu kitlesiyle tanınır.",
     site: "https://www.paradoxinteractive.com",
   },
   {
     id: "mojang",
     name: "Mojang Studios",
     accent: "#5a8f3c",
-    logo: null,
+    logo: "mojang.svg",
     category: "Stüdyo",
     founded: 2009,
     founders: "Markus Persson, Jakob Porsér",
@@ -616,14 +620,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol", "Mobil", "Her platform"],
     games: ["Minecraft", "Minecraft Dungeons", "Minecraft Legends"],
     blurb:
-      "Tek oyunla tarihin en çok satan video oyununu (Minecraft) yarattı. 2014'te Microsoft 2,5 milyar dolara satın aldı; Minecraft hâlâ tüm platformlarda devasa bir topluluğa sahip.",
+      "Markus 'Notch' Persson'ın 2009'da geliştirdiği Minecraft'ı yayınlamak için kuruldu. Açık uçlu, blok tabanlı yaratım oyunu hızla küresel bir fenomene dönüştü ve tarihin en çok satan video oyunu oldu (300+ milyon kopya). 2014'te Microsoft, şirketi 2,5 milyar dolara satın aldı ve kurucular ayrıldı. Minecraft hâlâ devasa bir topluluk, eğitim sürümü ve düzenli güncellemelerle yaşıyor.",
     site: "https://www.minecraft.net",
   },
   {
     id: "devolver",
     name: "Devolver Digital",
     accent: "#d61f5c",
-    logo: null,
+    logo: "devolver.svg",
     category: "Yayıncı",
     founded: 2009,
     founders: "Mike Wilson, Harry Miller, Rick Stults, Graeme Struthers",
@@ -635,14 +639,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol", "Mobil"],
     games: ["Hotline Miami", "Cult of the Lamb", "Inscryption", "The Talos Principle", "Enter the Gungeon"],
     blurb:
-      "Bağımsız oyunların ikonik yayıncısı; alaycı mizahı ve E3 sahne gösterileriyle tanınır. Cesur, özgün indie yapımlara alan açar.",
+      "2009'da kurulan, bağımsız oyunların en ikonik yayıncılarından biri. Cesur, özgün ve çoğu zaman tuhaf indie yapımlara alan açar; Hotline Miami, Enter the Gungeon ve Cult of the Lamb büyük çıkışları. Geleneksel pazarlamayla dalga geçen alaycı E3/yaz sahne gösterileriyle de tanınır. Geliştirici dostu, yaratıcı özgürlüğe öncelik veren yaklaşımıyla saygı görür.",
     site: "https://www.devolverdigital.com",
   },
   {
     id: "annapurna",
     name: "Annapurna Interactive",
     accent: "#e3553b",
-    logo: null,
+    logo: "annapurna.png",
     category: "Yayıncı",
     founded: 2016,
     founders: "Megan Ellison (Annapurna Pictures)",
@@ -654,14 +658,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol", "Mobil"],
     games: ["Outer Wilds", "Stray", "What Remains of Edith Finch", "Cocoon", "Kentucky Route Zero"],
     blurb:
-      "Sinema şirketi Annapurna'nın oyun kolu; sanatsal ve duygusal anlatıya öncelik veren bağımsız yapımların yayıncısı. Stray ve Outer Wilds en bilinenleri.",
+      "Sinema şirketi Annapurna Pictures'ın 2016'da kurduğu oyun yayın kolu. Sanatsal, duygusal ve deneysel bağımsız yapımlara öncelik verir; What Remains of Edith Finch, Outer Wilds ve robot-kedi macerası Stray en bilinenleri. Az sayıda ama yüksek beğeni toplayan oyunlar yayınlamasıyla bir 'kalite mührü' itibarı kazandı. 2024'te ekibin tamamının ayrılmasıyla büyük bir değişim yaşadı.",
     site: "https://annapurna.com",
   },
   {
     id: "supergiant",
     name: "Supergiant Games",
     accent: "#e0533d",
-    logo: null,
+    logo: "supergiant.png",
     category: "Bağımsız",
     founded: 2009,
     founders: "Amir Rao, Gavin Simon",
@@ -673,7 +677,7 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol"],
     games: ["Hades", "Hades II", "Bastion", "Transistor", "Pyre"],
     blurb:
-      "Küçük ama etkili bağımsız stüdyo. Sanat yönetimi, müzik ve anlatımıyla öne çıkar; Hades ile birçok ödül kazandı ve roguelike türünü ana akıma taşıdı.",
+      "2009'da, ilk oyunu Bastion'ı bir evden geliştiren küçük bir ekip olarak kuruldu. Güçlü sanat yönetimi, Darren Korb imzalı müzikler ve anlatıcı kullanımıyla kendine has bir kimlik oluşturdu. Roguelike Hades (2020), türü ana akıma taşıdı ve bir video oyununun kazandığı ilk Hugo Ödülü'nü aldı. Küçük kalmayı tercih eden, her oyununa imza atan bağımsız bir stüdyo.",
     site: "https://www.supergiantgames.com",
   },
   {
@@ -692,7 +696,7 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol"],
     games: ["Hollow Knight", "Hollow Knight: Silksong"],
     blurb:
-      "Avustralyalı üç kişilik küçük ekip. Hollow Knight ile metroidvania türünün en sevilen yapımlarından birini çıkardı; el çizimi sanat tarzıyla bilinir.",
+      "Adelaide'de Ari Gibson ve William Pellen tarafından 2014'te kurulan, çekirdeği sadece üç kişiden oluşan küçük bir Avustralya stüdyosu. Kitle fonlamasıyla geliştirdikleri Hollow Knight (2017), el çizimi sanatı, atmosferi ve devasa dünyasıyla metroidvania türünün en sevilen yapımlarından biri oldu. Uzun süredir beklenen devam oyunu Hollow Knight: Silksong, topluluk için bir efsaneye dönüştü. Az ama öz üretim felsefesiyle tanınır.",
     site: "https://www.teamcherry.com.au",
   },
   {
@@ -711,14 +715,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol", "Mobil"],
     games: ["Stardew Valley", "Haunted Chocolatier (yapım aşamasında)"],
     blurb:
-      "Eric Barone'un tek başına yıllarca geliştirdiği Stardew Valley, çiftlik simülasyonu türünü yeniden canlandırdı. Tüm grafik, müzik ve kodu kendisi yaptı; oyunu ücretsiz güncellemelerle desteklemeye devam ediyor.",
+      "Eric Barone'un tek kişilik takma adı. Programlamayı öğrenmek için yaklaşık dört buçuk yıl boyunca tek başına geliştirdiği Stardew Valley (2016), tüm grafik, müzik, tasarım ve kodlarıyla onun eseridir. Oyun, çiftlik simülasyonu türünü diriltti ve 30 milyondan fazla sattı. Barone, oyunu yıllarca büyük ve ücretsiz güncellemelerle desteklemeye devam ederken yeni oyunu Haunted Chocolatier üzerinde çalışıyor.",
     site: "https://www.stardewvalley.net",
   },
   {
     id: "relogic",
     name: "Re-Logic",
     accent: "#4a9d52",
-    logo: null,
+    logo: "relogic.png",
     category: "Bağımsız",
     founded: 2011,
     founders: "Andrew Spinks",
@@ -730,7 +734,7 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol", "Mobil"],
     games: ["Terraria"],
     blurb:
-      "Terraria ile tek oyundan 60 milyondan fazla satışa ulaşan bağımsız stüdyo. Yıllar boyunca verdiği ücretsiz güncellemelerle topluluk sadakatinin sembolü oldu.",
+      "Andrew Spinks'in 2011'de kurduğu, tek bir oyunla efsaneleşen bağımsız stüdyo. İki boyutlu kum havuzu-macera oyunu Terraria, keşif, inşa ve dövüşü birleştirerek 60 milyondan fazla sattı. Re-Logic, oyunu 'bittik' dediği halde defalarca büyük ve tamamen ücretsiz güncellemelerle genişleterek topluluk sadakatinin sembolü oldu. Küçük, bağımsız ve oyuncu odaklı kalmasıyla saygı görür.",
     site: "https://re-logic.com",
   },
   {
@@ -749,14 +753,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Konsol", "Mobil"],
     games: ["Frostpunk", "Frostpunk 2", "This War of Mine", "The Alters"],
     blurb:
-      "Polonyalı stüdyo ve yayıncı; 'anlam taşıyan oyunlar' felsefesiyle bilinir. This War of Mine ve Frostpunk ile sosyal ve ahlaki temaları oyun mekaniğine işledi.",
+      "2010'da Polonya'da kurulan, hem geliştiren hem yayınlayan stüdyo; 'anlam taşıyan oyunlar' (meaningful games) felsefesiyle bilinir. This War of Mine, savaşı askerin değil hayatta kalmaya çalışan sivillerin gözünden anlatarak türü sarstı. Frostpunk serisi, donmuş bir dünyada toplum yönetiminin ahlaki ikilemlerini oyun mekaniğine işledi. Halka açık bir Avrupa stüdyosu olarak bağımsız yapımları da yayınlar.",
     site: "https://www.11bitstudios.com",
   },
   {
     id: "hellogames",
     name: "Hello Games",
     accent: "#f0932b",
-    logo: null,
+    logo: "hellogames.png",
     category: "Bağımsız",
     founded: 2008,
     founders: "Sean Murray ve ekibi",
@@ -768,14 +772,14 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "PlayStation", "Xbox", "Switch"],
     games: ["No Man's Sky", "Joe Danger", "Light No Fire (yapım aşamasında)"],
     blurb:
-      "Küçük İngiliz ekip; No Man's Sky'ı sorunlu çıkışının ardından yıllarca süren ücretsiz güncellemelerle baştan yarattı. Sektörde 'toparlanma' hikâyesinin en güçlü örneği.",
+      "Sean Murray liderliğinde 2008'de kurulan küçük İngiliz stüdyo; Joe Danger ile başladı. 2016'da çıkan No Man's Sky, prosedürel olarak üretilen 18 kentilyon gezegenli evreniyle muazzam beklenti yarattı ama eksik çıkışıyla büyük tepki topladı. Stüdyo yıllar boyunca verdiği onlarca büyük ve ücretsiz güncellemeyle oyunu baştan yarattı — sektördeki en güçlü 'toparlanma' hikâyesi. Şimdi açık dünya fantezi oyunu Light No Fire üzerinde çalışıyor.",
     site: "https://hellogames.org",
   },
   {
     id: "gsc",
     name: "GSC Game World",
     accent: "#e08a1e",
-    logo: null,
+    logo: "gsc.svg",
     category: "Stüdyo",
     founded: 1995,
     founders: "Sergiy Grygorovych",
@@ -787,7 +791,7 @@ export const COMPANIES: Company[] = [
     platforms: ["PC", "Xbox", "PlayStation"],
     games: ["S.T.A.L.K.E.R. 2", "S.T.A.L.K.E.R.: Shadow of Chernobyl", "Cossacks"],
     blurb:
-      "Ukraynalı stüdyo; atmosferik, zorlu hayatta kalma-FPS S.T.A.L.K.E.R. serisiyle tanınır. S.T.A.L.K.E.R. 2'yi savaş koşulları altında, ekibin bir kısmı yer değiştirerek tamamladı.",
+      "1995'te Ukrayna'da kuruldu; strateji serisi Cossacks ile tanındı. 2007'de çıkan S.T.A.L.K.E.R.: Shadow of Chernobyl, Çernobil yasak bölgesinde geçen atmosferik, zorlu ve açık uçlu hayatta kalma-FPS türüyle kült bir hayran kitlesi oluşturdu. Uzun süredir beklenen S.T.A.L.K.E.R. 2'yi, Rusya'nın Ukrayna'yı işgali koşulları altında, ekibin bir kısmı Prag'a taşınarak tamamladı. Direnç ve bağlılığın sembolü bir stüdyo.",
     site: "https://www.gsc-game.com",
   },
 ];

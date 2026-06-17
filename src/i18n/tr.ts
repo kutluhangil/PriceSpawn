@@ -210,6 +210,7 @@ export const tr = {
   companyMarketCap: "Piyasa değeri",
   companyParent: "Ana şirket",
   companyIndependent: "Bağımsız",
+  companyHistory: "Tarihçe",
   companyFounders: "Kurucular",
   companyPlatforms: "Platformlar",
   companyGames: "Öne çıkan oyunlar",
