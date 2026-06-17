@@ -165,7 +165,22 @@ export function GameDetail({ slug }: { slug: string }) {
             </div>
           )}
           {prices.length === 0 ? (
-            pricesReady ? (
+            game.isFree ? (
+              <a
+                href={`https://store.steampowered.com/app/${game.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="spectrum-ring flex w-full items-center justify-between gap-4 rounded-[var(--radius-card)] px-4 py-4 text-left shadow-lg transition-transform hover:scale-[1.005] sm:px-5"
+              >
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <StoreDot store="steam" />
+                  <StoreLogo id="steam" size={18} />
+                  <span className="truncate text-sm font-bold text-bright">{STORES.steam.label}</span>
+                  <span className="text-xs text-muted">↗</span>
+                </span>
+                <span className="text-lg font-bold price-best">{t.freeLabel}</span>
+              </a>
+            ) : pricesReady ? (
               <div className="panel rounded-[var(--radius-card)] px-5 py-8 text-center text-sm text-muted">
                 {t.noPriceFound}
               </div>
@@ -236,7 +251,7 @@ export function GameDetail({ slug }: { slug: string }) {
         )}
 
         {/* Fiyat geçmişi */}
-        {!game.unreleased && (
+        {!game.unreleased && !game.isFree && (
         <section className="reveal mt-8" style={{ animationDelay: "0.16s" }}>
           <PriceChart game={game} />
         </section>

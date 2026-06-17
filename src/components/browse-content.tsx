@@ -97,9 +97,11 @@ export function BrowseContent() {
                   <span className="block truncate text-sm font-bold text-bright">{r.title}</span>
                   {r.year > 0 && <span className="text-xs text-muted">{r.year}</span>}
                 </span>
-                {r.priceTRY !== null && (
+                {r.priceTRY !== null ? (
                   <span className="shrink-0 text-sm font-bold tabular-nums text-best">{formatTRY(r.priceTRY, locale)}</span>
-                )}
+                ) : r.isFree ? (
+                  <span className="shrink-0 text-sm font-bold text-best">{t.freeLabel}</span>
+                ) : null}
               </div>
             </Link>
           ))}

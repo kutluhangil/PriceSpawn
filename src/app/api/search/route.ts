@@ -10,6 +10,7 @@ export interface SearchResult {
   cover: string;
   year: number;
   priceTRY: number | null;
+  isFree?: boolean;
 }
 
 export interface SearchPayload {
@@ -30,14 +31,14 @@ export async function GET(req: Request) {
     const pre = `${q}%`;
     const word = `% ${q}%`;
     const rows = (await sql!`
-      SELECT c.slug, c.title, c.cover, c.year,
+      SELECT c.slug, c.title, c.cover, c.year, c.free,
         (SELECT MIN(CASE WHEN gp.currency = 'USD' THEN gp.amount * ${fx} ELSE gp.amount END)
            FROM game_prices gp WHERE gp.slug = c.slug) AS min_try
       FROM catalog c
       WHERE c.norm LIKE ${like}
       ORDER BY (CASE WHEN c.norm LIKE ${pre} THEN 3 WHEN c.norm LIKE ${word} THEN 2 ELSE 1 END) DESC,
                c.score DESC
-      LIMIT ${limit}`) as { slug: string; title: string; cover: string; year: number; min_try: unknown }[];
+      LIMIT ${limit}`) as { slug: string; title: string; cover: string; year: number; free: boolean; min_try: unknown }[];
 
     const results: SearchResult[] = rows.map((r) => ({
       slug: r.slug,
@@ -45,6 +46,7 @@ export async function GET(req: Request) {
       cover: r.cover,
       year: Number(r.year),
       priceTRY: r.min_try == null ? null : Math.round(Number(r.min_try) * 100) / 100,
+      ...(r.free ? { isFree: true } : {}),
     }));
     return NextResponse.json({ results } satisfies SearchPayload, {
       headers: { "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600" },

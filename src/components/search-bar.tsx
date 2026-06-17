@@ -178,11 +178,13 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "nav" }) {
                       <span className="block truncate text-sm font-semibold text-bright">{game.title}</span>
                       {game.year > 0 && <span className="text-xs text-muted">{game.year}</span>}
                     </span>
-                    {game.priceTRY !== null && (
+                    {game.priceTRY !== null ? (
                       <span className="shrink-0 text-sm font-bold tabular-nums text-best">
                         {formatTRY(game.priceTRY, locale)}
                       </span>
-                    )}
+                    ) : game.isFree ? (
+                      <span className="shrink-0 text-sm font-bold text-best">{t.freeLabel}</span>
+                    ) : null}
                   </Link>
                 </li>
               ))}
