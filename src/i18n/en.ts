@@ -140,6 +140,7 @@ export const en: Record<keyof typeof tr, string> = {
   freeEpicNote: "Games currently free on the Epic Games Store. Claim them before the offer ends.",
   freeEmpty: "No free Epic games right now.",
   freeNow: "Free Now",
+  freeLabel: "Free",
   freeUntilLabel: "Ends in",
   daysLeft: "days",
   allTimeLow: "All-time low",

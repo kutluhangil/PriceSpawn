@@ -23,6 +23,7 @@ export interface Game {
   subscriptions: SubscriptionId[];
   trailerId?: string; // Steam movie id for hover microtrailer
   unreleased?: boolean; // no real price yet (unreleased / not on any store)
+  isFree?: boolean; // free-to-play (Steam is_free) — show "Ücretsiz" instead of a price
 }
 
 const cover = (appid: number) =>

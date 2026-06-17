@@ -8,7 +8,7 @@ export async function catalogGameBySlug(slug: string): Promise<Game | null> {
   if (!hasDb()) return null;
   try {
     const rows = (await sql!`
-      SELECT slug, appid, title, cover, genres, score, year, unreleased FROM catalog WHERE slug = ${slug}`) as {
+      SELECT slug, appid, title, cover, genres, score, year, unreleased, free FROM catalog WHERE slug = ${slug}`) as {
       slug: string;
       appid: string;
       title: string;
@@ -17,6 +17,7 @@ export async function catalogGameBySlug(slug: string): Promise<Game | null> {
       score: number;
       year: number;
       unreleased: boolean;
+      free: boolean;
     }[];
     if (rows.length === 0) return null;
     const c = rows[0];
@@ -53,6 +54,7 @@ export async function catalogGameBySlug(slug: string): Promise<Game | null> {
       prices,
       subscriptions: subRows.map((s) => s.sub_id as SubscriptionId),
       ...(c.unreleased ? { unreleased: true } : {}),
+      ...(c.free ? { isFree: true } : {}),
     };
   } catch {
     return null;

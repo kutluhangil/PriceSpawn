@@ -126,5 +126,6 @@ export async function ensureSchema(): Promise<void> {
       unreleased boolean NOT NULL DEFAULT false,
       updated_at timestamptz NOT NULL DEFAULT now()
     )`;
+  await sql`ALTER TABLE catalog ADD COLUMN IF NOT EXISTS free boolean NOT NULL DEFAULT false`;
   await sql`CREATE INDEX IF NOT EXISTS catalog_norm_idx ON catalog (norm text_pattern_ops)`;
 }

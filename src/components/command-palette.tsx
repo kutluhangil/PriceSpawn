@@ -178,11 +178,13 @@ export function CommandPalette() {
                           <span className={`block text-[11px] ${active ? "text-white/70" : "text-muted"}`}>{g.year}</span>
                         )}
                       </span>
-                      {g.priceTRY !== null && (
+                      {g.priceTRY !== null ? (
                         <span className={`shrink-0 text-sm font-bold tabular-nums ${active ? "text-white" : "text-best"}`}>
                           {formatTRY(g.priceTRY, locale)}
                         </span>
-                      )}
+                      ) : g.isFree ? (
+                        <span className={`shrink-0 text-sm font-bold ${active ? "text-white" : "text-best"}`}>{t.freeLabel}</span>
+                      ) : null}
                     </Link>
                   </li>
                 );
