@@ -6,6 +6,10 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 // Pre-render the bundled catalog; DB-only (bulk-imported) games render on demand.
 export const dynamicParams = true;
+// On-demand pages must refresh so they pick up new deploys (chunks) + catalog
+// changes (e.g. the free flag); without this they'd cache the first render
+// forever. Manual purge: /api/revalidate-game.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return GAMES.map((game) => ({ slug: game.slug }));
