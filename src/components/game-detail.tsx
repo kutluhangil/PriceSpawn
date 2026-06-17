@@ -47,15 +47,23 @@ export function GameDetail({ slug }: { slug: string }) {
   const inCatalog = useMemo(() => GAMES.find((g) => g.slug === slug), [slug]);
   const [dbGame, setDbGame] = useState<Game | null>(null);
   const [dbResolved, setDbResolved] = useState(false);
+  // A bundled (GAMES) game can still be free-to-play; the free flag lives in the
+  // DB catalog, so fetch it as a fallback even when we have a bundled match.
+  const [dbFree, setDbFree] = useState(false);
 
   useEffect(() => {
-    if (inCatalog) return;
     let cancelled = false;
     fetch(`/api/catalog-game?slug=${encodeURIComponent(slug)}`)
       .then((r) => r.json())
       .then((d: CatalogGamePayload) => {
         if (cancelled) return;
-        if (d.found && d.game) setDbGame(d.game);
+        if (d.found && d.game) {
+          if (inCatalog) {
+            if (d.game.isFree) setDbFree(true);
+          } else {
+            setDbGame(d.game);
+          }
+        }
         setDbResolved(true);
       })
       .catch(() => {
@@ -81,6 +89,7 @@ export function GameDetail({ slug }: { slug: string }) {
   // DB-only games arrive with their prices already attached.
   const pricesReady = inCatalog ? priceLoaded : true;
   const prices = sortedPrices(game);
+  const isFree = Boolean(game.isFree || dbFree);
 
   return (
     <div>
@@ -165,7 +174,7 @@ export function GameDetail({ slug }: { slug: string }) {
             </div>
           )}
           {prices.length === 0 ? (
-            game.isFree ? (
+            isFree ? (
               <a
                 href={`https://store.steampowered.com/app/${game.id}`}
                 target="_blank"
@@ -251,7 +260,7 @@ export function GameDetail({ slug }: { slug: string }) {
         )}
 
         {/* Fiyat geçmişi */}
-        {!game.unreleased && !game.isFree && (
+        {!game.unreleased && !isFree && (
         <section className="reveal mt-8" style={{ animationDelay: "0.16s" }}>
           <PriceChart game={game} />
         </section>
