@@ -20,8 +20,9 @@ function ColHeading({ children }: { children: React.ReactNode }) {
 const linkClass =
   "inline-flex items-center gap-2 text-muted transition-all hover:translate-x-0.5 hover:text-bright";
 
-export function Footer() {
-  const { t, liveUpdatedAt } = useApp();
+export function Footer({ catalogTotal }: { catalogTotal?: number }) {
+  const { t, locale, liveUpdatedAt } = useApp();
+  const gameCount = (catalogTotal || GAMES.length).toLocaleString(locale === "tr" ? "tr-TR" : "en-US");
   const storeCount = Object.keys(STORES).length;
   const subCount = Object.keys(SUBSCRIPTIONS).length;
   const rateText = `$1 ≈ ₺${currentRate().toLocaleString("tr-TR", { maximumFractionDigits: 2 })}`;
@@ -42,7 +43,7 @@ export function Footer() {
           <p className="max-w-xs text-sm leading-relaxed text-muted">{t.footerTagline}</p>
           <div className="mt-1 flex flex-wrap gap-2">
             <span className="rounded-full border border-border bg-(--row) px-3 py-1 text-xs font-semibold text-fg">
-              <span className="text-best">{GAMES.length}</span> {t.gamesWord}
+              <span className="text-best">{gameCount}</span> {t.gamesWord}
             </span>
             <span className="rounded-full border border-border bg-(--row) px-3 py-1 text-xs font-semibold text-fg">
               <span className="text-accent">{storeCount}</span> {t.storesCount}

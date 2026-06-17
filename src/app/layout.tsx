@@ -10,8 +10,15 @@ import { BottomNav } from "@/components/bottom-nav";
 import { CookieConsent } from "@/components/cookie-consent";
 import { InstallPrompt } from "@/components/install-prompt";
 import { ConstellationBg } from "@/components/constellation-bg";
+import { unstable_cache } from "next/cache";
 import { SITE_NAME, SITE_SHORT, SITE_URL } from "@/lib/site";
+import { catalogCount } from "@/lib/catalog";
 import "./globals.css";
+
+// Cached so the footer count doesn't opt every route into dynamic rendering.
+const getCatalogTotal = unstable_cache(async () => catalogCount(), ["footer-catalog-total"], {
+  revalidate: 3600,
+});
 
 const sora = Sora({
   variable: "--font-sora",
@@ -70,11 +77,12 @@ const siteJsonLd = {
 
 const themeInit = `(function(){try{var p=localStorage.getItem("pricespawn-theme")||localStorage.getItem("hdu-theme")||"system";var t=(p==="system"||!p)?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):p;document.documentElement.dataset.theme=t;var l=localStorage.getItem("hdu-locale");if(l)document.documentElement.lang=l;}catch(e){}})();`;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const catalogTotal = await getCatalogTotal();
   return (
     <html
       lang="tr"
@@ -98,7 +106,7 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           <main className="flex-1 pb-16 sm:pb-0">{children}</main>
-          <Footer />
+          <Footer catalogTotal={catalogTotal} />
           <CommandPalette />
           <BottomNav />
           <CookieConsent />
