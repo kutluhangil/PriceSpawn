@@ -17,18 +17,19 @@ const ORDER: StoreId[] = [
   "humble",
 ];
 
-function countFor(store: StoreId): number {
+function gamesCountFor(store: StoreId): number {
   return GAMES.filter((g) => g.prices.some((p) => p.store === store)).length;
 }
 
-export function PlatformTiles() {
+/** `counts` are real DB catalog counts per store; falls back to bundled GAMES. */
+export function PlatformTiles({ counts = {} }: { counts?: Record<string, number> }) {
   const { t } = useApp();
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {ORDER.map((id) => {
         const s = STORES[id];
-        const n = countFor(id);
+        const n = counts[id] ?? gamesCountFor(id);
         return (
           <Link
             key={id}

@@ -1,9 +1,9 @@
 import { HomeContent } from "@/components/home-content";
-import { catalogCount } from "@/lib/catalog";
+import { catalogCount, catalogStoreCounts } from "@/lib/catalog";
 
 export const revalidate = 3600;
 
 export default async function Home() {
-  const catalogTotal = await catalogCount();
-  return <HomeContent catalogTotal={catalogTotal} />;
+  const [catalogTotal, storeCounts] = await Promise.all([catalogCount(), catalogStoreCounts()]);
+  return <HomeContent catalogTotal={catalogTotal} storeCounts={storeCounts} />;
 }

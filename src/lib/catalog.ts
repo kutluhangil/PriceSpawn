@@ -82,6 +82,22 @@ export async function catalogMetaBySlug(
   }
 }
 
+/** Distinct catalog games priced per store (for the Platformlar tiles). */
+export async function catalogStoreCounts(): Promise<Record<string, number>> {
+  if (!hasDb()) return {};
+  try {
+    const rows = (await sql!`
+      SELECT store, COUNT(DISTINCT slug)::int AS n
+      FROM game_prices WHERE slug IN (SELECT slug FROM catalog)
+      GROUP BY store`) as { store: string; n: number }[];
+    const out: Record<string, number> = {};
+    for (const r of rows) out[r.store] = Number(r.n);
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 /** Total games in the catalog (for the home stat bar). 0 if DB unavailable. */
 export async function catalogCount(): Promise<number> {
   if (!hasDb()) return 0;

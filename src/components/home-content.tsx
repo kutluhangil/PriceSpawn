@@ -52,7 +52,13 @@ function pagesToShow(current: number, total: number): (number | "…")[] {
   return out;
 }
 
-export function HomeContent({ catalogTotal = 0 }: { catalogTotal?: number }) {
+export function HomeContent({
+  catalogTotal = 0,
+  storeCounts = {},
+}: {
+  catalogTotal?: number;
+  storeCounts?: Record<string, number>;
+}) {
   const { t } = useApp();
   const [page, setPage] = useState(1);
   const popularRef = useRef<HTMLElement | null>(null);
@@ -131,7 +137,7 @@ export function HomeContent({ catalogTotal = 0 }: { catalogTotal?: number }) {
       {/* Platformlar */}
       <section className="reveal pt-12" style={{ animationDelay: "0.14s" }}>
         <SectionHeading title={t.platforms} />
-        <PlatformTiles />
+        <PlatformTiles counts={storeCounts} />
       </section>
 
       {/* En Büyük İndirimler */}
