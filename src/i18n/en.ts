@@ -212,6 +212,7 @@ export const en: Record<keyof typeof tr, string> = {
   companyMarketCap: "Market cap",
   companyParent: "Parent",
   companyIndependent: "Independent",
+  companyHistory: "History",
   companyFounders: "Founders",
   companyPlatforms: "Platforms",
   companyGames: "Notable games",
