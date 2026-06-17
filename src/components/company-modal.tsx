@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Company } from "@/data/companies";
 import { CompanyLogo } from "@/components/company-logo";
 import { useApp } from "@/components/providers";
@@ -19,6 +20,8 @@ function Stat({ label, value }: { label: string; value: string }) {
 /** Company detail modal: full history, leadership, scale, platforms and games. */
 export function CompanyModal({ company, onClose }: { company: Company; onClose: () => void }) {
   const { t } = useApp();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -41,7 +44,9 @@ export function CompanyModal({ company, onClose }: { company: Company; onClose: 
     { label: t.companyParent, value: company.parent ?? t.companyIndependent },
   ];
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     // scroll container OUTSIDE the panel → robust centering even when tall
     <div
       role="dialog"
@@ -145,6 +150,7 @@ export function CompanyModal({ company, onClose }: { company: Company; onClose: 
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
