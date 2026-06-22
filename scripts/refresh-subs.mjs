@@ -52,6 +52,36 @@ for (let i = 0; i < ids.length; i += 50) {
 }
 console.log("games with subs:", bySlug.size);
 
+// Ensure the change table exists (route's ensureSchema may not have run here).
+await sql`CREATE TABLE IF NOT EXISTS sub_changes (
+  slug text NOT NULL, sub_id text NOT NULL, change text NOT NULL, day date NOT NULL,
+  PRIMARY KEY (slug, sub_id, day, change))`;
+
+// Capture added/removed by diffing the previous ITAD membership before rewrite.
+const ITAD_SERVICES = ["gamepass", "eaplay", "eaplaypro", "ubisoftplus", "luna"];
+const oldRows = await sql`SELECT slug, sub_id FROM game_subs WHERE sub_id <> 'psplus'`;
+const oldM = new Map();
+for (const r of oldRows) { if (!oldM.has(r.slug)) oldM.set(r.slug, new Set()); oldM.get(r.slug).add(r.sub_id); }
+const warm = new Set();
+for (const set of oldM.values()) for (const s of set) warm.add(s);
+const coldServices = new Set(ITAD_SERVICES.filter((s) => !warm.has(s)));
+const today = new Date().toISOString().slice(0, 10);
+const changeRows = [];
+const allSlugs = new Set([...oldM.keys(), ...bySlug.keys()]);
+for (const slug of allSlugs) {
+  const oldSet = oldM.get(slug) ?? new Set();
+  const newSet = bySlug.get(slug) ?? new Set();
+  for (const s of ITAD_SERVICES) {
+    const inOld = oldSet.has(s), inNew = newSet.has(s);
+    if (inNew && !inOld) { if (!coldServices.has(s)) changeRows.push([slug, s, "added"]); }
+    else if (inOld && !inNew) changeRows.push([slug, s, "removed"]);
+  }
+}
+for (const [slug, s, change] of changeRows) {
+  await sql`INSERT INTO sub_changes (slug, sub_id, change, day) VALUES (${slug}, ${s}, ${change}, ${today}) ON CONFLICT DO NOTHING`;
+}
+console.log("sub_changes recorded:", changeRows.length);
+
 // Rewrite ITAD-owned services; psplus is managed separately.
 await sql`DELETE FROM game_subs WHERE sub_id <> 'psplus'`;
 const slugs = [];
