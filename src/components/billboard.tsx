@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Game } from "@/data/games";
 import { sortedPrices } from "@/lib/price";
@@ -12,6 +12,17 @@ import { StoreLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
 import { PriceTag } from "@/components/price-tag";
 import { useApp } from "@/components/providers";
+
+const trailerUrl = (id: string) =>
+  `https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/microtrailer.webm`;
+
+// Hover-trailer ile paylaşılan appid → movie-id çözümleme önbelleği ("" = yok).
+const movieCache = new Map<string, string>();
+
+/** Maks. parallax kayması (px) — her eksende. */
+const PARALLAX_MAX = 10;
+/** Aktif slide'da otomatik fragman oynatmaya başlamadan önceki bekleme (ms). */
+const TRAILER_DWELL_MS = 1200;
 
 /**
  * The billboard renders ~760 CSS px wide (≈1520px on retina), so the 460px
@@ -35,6 +46,17 @@ export function Billboard({ games }: { games: Game[] }) {
   const { locale, t } = useApp();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const [movieId, setMovieId] = useState<string>("");
+  const [playTrailer, setPlayTrailer] = useState(false);
+  const reducedMotionRef = useRef(false);
+  const imgWrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      reducedMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+  }, []);
 
   useEffect(() => {
     if (paused || games.length < 2) return;
@@ -42,12 +64,63 @@ export function Billboard({ games }: { games: Game[] }) {
     return () => clearInterval(id);
   }, [paused, games.length]);
 
-  if (games.length === 0) return null;
   const game = games[index];
+
+  // Slide değişince fragmanı sıfırla ve aktif oyun için movie-id'yi çöz.
+  useEffect(() => {
+    if (!game) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPlayTrailer(false);
+    setMovieId(game.trailerId ?? "");
+
+    if (reducedMotionRef.current) return;
+    if (game.trailerId || !/^\d+$/.test(game.id)) return;
+
+    const cached = movieCache.get(game.id);
+    if (cached !== undefined) {
+      if (cached) setMovieId(cached);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/trailer?appid=${game.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const id = data?.id ?? "";
+        movieCache.set(game.id, id);
+        if (!cancelled && id) setMovieId(id);
+      })
+      .catch(() => movieCache.set(game.id, ""));
+    return () => {
+      cancelled = true;
+    };
+  }, [game]);
+
+  // ~1.2s dwell sonrası aktif slide'da fragmanı otomatik oynat (azaltılmış hareket hariç).
+  useEffect(() => {
+    if (reducedMotionRef.current || paused || !movieId) return;
+    const id = setTimeout(() => setPlayTrailer(true), TRAILER_DWELL_MS);
+    return () => clearTimeout(id);
+  }, [movieId, paused, index]);
+
+  if (!game) return null;
   const prices = sortedPrices(game).slice(0, 4);
   const best = prices[0];
   const prev = () => setIndex((i) => (i - 1 + games.length) % games.length);
   const next = () => setIndex((i) => (i + 1) % games.length);
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (reducedMotionRef.current) return;
+    const rect = imgWrapRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setParallax({ x: px * 2 * PARALLAX_MAX, y: py * 2 * PARALLAX_MAX });
+  }
+
+  function onPointerLeave() {
+    setPaused(false);
+    setParallax({ x: 0, y: 0 });
+  }
 
   return (
     <section
@@ -59,25 +132,73 @@ export function Billboard({ games }: { games: Game[] }) {
     >
       <div className="panel-strong grid overflow-hidden rounded-[var(--radius-card)] md:grid-cols-[1.7fr_1fr]">
         {/* Büyük net görsel + gezinme okları */}
-        <div className="group/img relative aspect-[616/353] overflow-hidden">
+        <div
+          ref={imgWrapRef}
+          className="group/img relative aspect-[616/353] overflow-hidden"
+          onPointerMove={onPointerMove}
+          onPointerLeave={onPointerLeave}
+        >
           <Link href={`/oyun/${game.slug}`} className="block h-full w-full">
-            <CoverImage
-              key={game.slug}
-              src={heroArt(game).src}
-              fallbackSrc={heroArt(game).fallback}
-              title={game.title}
-              sizes="(max-width: 768px) 100vw, 800px"
-              quality={90}
-              className="billboard-fade h-full w-full transition-transform duration-700 group-hover/img:scale-[1.04]"
-            />
+            <div
+              className="h-full w-full transition-transform duration-300 ease-out"
+              style={{ transform: `translate3d(${parallax.x}px, ${parallax.y}px, 0)` }}
+            >
+              <CoverImage
+                key={game.slug}
+                src={heroArt(game).src}
+                fallbackSrc={heroArt(game).fallback}
+                title={game.title}
+                sizes="(max-width: 768px) 100vw, 800px"
+                quality={90}
+                className="billboard-fade h-full w-full scale-[1.06] transition-transform duration-700 ease-out group-hover/img:scale-[1.1]"
+              />
+            </div>
           </Link>
 
+          {/* Otomatik sessiz fragman (Steam microtrailer) — sadece aktif slide */}
+          {playTrailer && movieId && (
+            <video
+              key={movieId}
+              src={trailerUrl(movieId)}
+              autoPlay
+              muted
+              loop
+              playsInline
+              onError={() => setPlayTrailer(false)}
+              className="trailer-fade-in pointer-events-none absolute inset-0 h-full w-full object-cover"
+              aria-hidden="true"
+            />
+          )}
+
+          {/* Sinematik alt-sol gradyan perde + üst bindirme başlık */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+          <div
+            className="pointer-events-none absolute bottom-0 left-0 max-w-[85%] p-4 transition-transform duration-300 ease-out sm:p-6"
+            style={{ transform: `translate3d(${-parallax.x * 0.4}px, ${-parallax.y * 0.4}px, 0)` }}
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+              {t.featured}
+            </p>
+            <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)] sm:text-5xl">
+              {game.title}
+            </h2>
+            <p className="mt-1 text-xs text-white/80 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] sm:text-sm">
+              {game.releaseYear} · {game.genres.join(" · ")}
+            </p>
+          </div>
+
           {best?.price.discountPercent !== undefined ? (
-            <span className="discount-chip pointer-events-none absolute left-4 top-4 rounded-lg px-2.5 py-1 text-sm shadow-lg">
+            <span
+              className="discount-chip pointer-events-none absolute left-4 top-4 rounded-lg px-2.5 py-1 text-sm shadow-lg transition-transform duration-300 ease-out"
+              style={{ transform: `translate3d(${-parallax.x * 0.6}px, ${-parallax.y * 0.6}px, 0)` }}
+            >
               -%{best.price.discountPercent}
             </span>
           ) : game.unreleased ? (
-            <span className="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-lg bg-bg/75 px-2.5 py-1 text-xs font-bold text-bright shadow-lg backdrop-blur">
+            <span
+              className="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-lg bg-bg/75 px-2.5 py-1 text-xs font-bold text-bright shadow-lg backdrop-blur transition-transform duration-300 ease-out"
+              style={{ transform: `translate3d(${-parallax.x * 0.6}px, ${-parallax.y * 0.6}px, 0)` }}
+            >
               <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               {t.comingSoon} · {game.releaseYear}
             </span>
@@ -106,15 +227,6 @@ export function Billboard({ games }: { games: Game[] }) {
 
         {/* Bilgi paneli */}
         <div className="flex flex-col gap-3 bg-(--row) p-5 sm:p-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">
-            {t.featured}
-          </p>
-          <h2 className="font-display text-2xl font-bold leading-tight text-bright">
-            {game.title}
-          </h2>
-          <p className="text-xs text-muted">
-            {game.releaseYear} · {game.genres.join(" · ")}
-          </p>
           <SubBadges ids={game.subscriptions} size="md" />
 
           {/* Mağaza fiyat satırları (yayımlanmamış oyunlarda gizli) */}
