@@ -118,7 +118,8 @@ export function Billboard({ games }: { games: Game[] }) {
   }
 
   function onPointerLeave() {
-    setPaused(false);
+    // Pause is owned solely by the section's onMouseEnter/onMouseLeave; only
+    // reset parallax here (leaving the image for the info panel must NOT unpause).
     setParallax({ x: 0, y: 0 });
   }
 
