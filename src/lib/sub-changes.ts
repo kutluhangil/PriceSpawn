@@ -31,7 +31,7 @@ export async function recentChangeSummary(days = 30): Promise<SubChangeSummaryEn
       FROM sub_changes sc
       JOIN catalog cat ON cat.slug = sc.slug
       WHERE sc.change = 'added' AND sc.day >= CURRENT_DATE - ${days}::int AND cat.cover <> ''
-      ORDER BY sc.day DESC`) as { sub_id: string; cover: string }[];
+      ORDER BY sc.day DESC, sc.slug ASC`) as { sub_id: string; cover: string }[];
 
     const byId = new Map<string, SubChangeSummaryEntry>();
     const ensure = (id: string) => {
