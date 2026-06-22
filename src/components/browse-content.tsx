@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { SearchResult } from "@/app/api/search/route";
-import type { BrowseItem, BrowsePayload } from "@/app/api/catalog-browse/route";
-import { formatTRY } from "@/lib/format";
-import { CoverImage } from "@/components/cover-image";
+import type { BrowsePayload } from "@/app/api/catalog-browse/route";
 import { GameArt } from "@/components/game-art";
 import { FilterBar } from "@/components/filter-bar";
+import { ResultCard } from "@/components/result-card";
 import { useGameFilters } from "@/hooks/use-game-filters";
 import { parseOpts, serializeOpts } from "@/lib/filter-url";
 import { useApp } from "@/components/providers";
@@ -25,37 +23,6 @@ function pagesToShow(current: number, total: number): (number | "…")[] {
     out.push(nums[i]);
   }
   return out;
-}
-
-/** Lightweight result card (DB browse + search) — no per-card live fetch. */
-function ResultCard({ r, locale, freeLabel }: { r: BrowseItem | SearchResult; locale: "tr" | "en"; freeLabel: string }) {
-  const discount = "discount" in r ? r.discount : null;
-  return (
-    <Link
-      href={`/oyun/${r.slug}`}
-      className="group block overflow-hidden rounded-[var(--radius-card)] border border-border bg-(--panel-strong) transition-all hover:-translate-y-0.5 hover:border-accent"
-    >
-      <div className="relative">
-        <CoverImage src={r.cover} title={r.title} className="aspect-[460/215] w-full" />
-        {discount ? (
-          <span className="discount-chip absolute left-2 top-2 rounded-full px-2 py-0.5 text-[11px] font-bold">
-            -%{discount}
-          </span>
-        ) : null}
-      </div>
-      <div className="flex items-center justify-between gap-2 p-3">
-        <span className="min-w-0">
-          <span className="block truncate text-sm font-bold text-bright">{r.title}</span>
-          {r.year > 0 && <span className="text-xs text-muted">{r.year}</span>}
-        </span>
-        {r.priceTRY !== null ? (
-          <span className="shrink-0 text-sm font-bold tabular-nums text-best">{formatTRY(r.priceTRY, locale)}</span>
-        ) : r.isFree ? (
-          <span className="shrink-0 text-sm font-bold text-best">{freeLabel}</span>
-        ) : null}
-      </div>
-    </Link>
-  );
 }
 
 export function BrowseContent() {

@@ -2,6 +2,7 @@ import { sql, hasDb } from "@/lib/db";
 import type { Game, Price } from "@/data/games";
 import type { StoreId } from "@/lib/stores";
 import type { SubscriptionId } from "@/lib/subscriptions";
+import type { BrowseItem } from "@/app/api/catalog-browse/route";
 
 /** A single game from the DB catalog (catalog + live prices + subs), or null. */
 export async function catalogGameBySlug(slug: string): Promise<Game | null> {
@@ -117,5 +118,41 @@ export async function catalogSlugs(): Promise<{ slug: string; updatedAt: Date }[
     return rows.map((r) => ({ slug: r.slug, updatedAt: new Date(r.updated_at) }));
   } catch {
     return [];
+  }
+}
+
+/** Games in a genre (by exact stored label), best discounts first, + total count. */
+export async function catalogByGenre(label: string, limit = 36): Promise<{ items: BrowseItem[]; total: number }> {
+  if (!hasDb()) return { items: [], total: 0 };
+  try {
+    const fxRows = (await sql!`SELECT rate FROM fx_rate WHERE base='USD_TRY' LIMIT 1`) as { rate: number }[];
+    const fx = fxRows.length ? Number(fxRows[0].rate) : 1;
+    const rows = (await sql!`
+      WITH pr AS (
+        SELECT slug,
+          MIN(CASE WHEN currency='USD' THEN amount*${fx} ELSE amount END) AS min_try,
+          MAX(COALESCE(discount_percent,0)) AS max_disc
+        FROM game_prices GROUP BY slug
+      )
+      SELECT c.slug, c.title, c.cover, c.year, c.free,
+             pr.min_try, pr.max_disc, COUNT(*) OVER()::int AS total
+      FROM catalog c
+      LEFT JOIN pr ON pr.slug = c.slug
+      WHERE EXISTS (SELECT 1 FROM jsonb_array_elements_text(c.genres) g WHERE g = ${label})
+      ORDER BY pr.max_disc DESC NULLS LAST, c.score DESC
+      LIMIT ${limit}`) as Array<{
+        slug: string; title: string; cover: string; year: number; free: boolean;
+        min_try: string | number | null; max_disc: string | number | null; total: number;
+      }>;
+    const total = rows.length ? Number(rows[0].total) : 0;
+    const items: BrowseItem[] = rows.map((r) => ({
+      slug: r.slug, title: r.title, cover: r.cover, year: Number(r.year),
+      priceTRY: r.min_try == null ? null : Math.round(Number(r.min_try) * 100) / 100,
+      discount: r.max_disc == null || Number(r.max_disc) === 0 ? null : Number(r.max_disc),
+      ...(r.free ? { isFree: true } : {}),
+    }));
+    return { items, total };
+  } catch {
+    return { items: [], total: 0 };
   }
 }
