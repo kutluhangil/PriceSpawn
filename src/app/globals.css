@@ -339,6 +339,20 @@ a, button, [role="button"], input, label, select {
   }
 }
 
+/* ── Billboard otomatik fragman (doku) — sessiz mikro-fragman üstte belirir ── */
+.trailer-fade-in {
+  animation: trailer-fade-in 0.8s ease both;
+}
+
+@keyframes trailer-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ── Sayfa geçişi ─────────────────────────────────────────────────── */
 @keyframes page-in {
   from {
@@ -467,6 +481,7 @@ a, button, [role="button"], input, label, select {
   .reveal,
   .page-fade,
   .billboard-fade,
+  .trailer-fade-in,
   .aurora::before,
   .aurora::after,
   .animate-shimmer {
