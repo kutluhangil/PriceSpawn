@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { sql, ensureSchema, hasDb } from "@/lib/db";
 import { itadSubs } from "@/lib/fetchers";
+import { diffMembership, type Membership } from "@/lib/sub-diff";
 import { GAMES } from "@/data/games";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +50,26 @@ export async function GET(req: Request) {
     }
   }
 
+  // Capture catalog changes (added/removed) by diffing the previous ITAD-owned
+  // membership against the freshly computed one, before the rewrite destroys it.
+  const ITAD_SERVICES = ["gamepass", "eaplay", "eaplaypro", "ubisoftplus", "luna"];
+  const oldRows = (await sql!`SELECT slug, sub_id FROM game_subs WHERE sub_id <> 'psplus'`) as {
+    slug: string;
+    sub_id: string;
+  }[];
+  const oldM: Membership = {};
+  for (const r of oldRows) (oldM[r.slug] ??= new Set()).add(r.sub_id);
+  const warm = new Set<string>();
+  for (const set of Object.values(oldM)) for (const s of set) warm.add(s);
+  const coldServices = new Set(ITAD_SERVICES.filter((s) => !warm.has(s)));
+  const newM: Membership = Object.fromEntries(bySlug);
+  const changes = diffMembership(oldM, newM, ITAD_SERVICES, coldServices);
+  const today = new Date().toISOString().slice(0, 10);
+  for (const ch of changes) {
+    await sql!`INSERT INTO sub_changes (slug, sub_id, change, day)
+      VALUES (${ch.slug}, ${ch.subId}, ${ch.change}, ${today}) ON CONFLICT DO NOTHING`;
+  }
+
   // Rewrite only the ITAD-owned services; PlayStation Plus is managed separately
   // (console-only, not tracked by ITAD) via /api/refresh-psplus.
   await sql!`DELETE FROM game_subs WHERE sub_id <> 'psplus'`;
@@ -67,5 +88,5 @@ export async function GET(req: Request) {
   const tally: Record<string, number> = {};
   for (const set of bySlug.values()) for (const s of set) tally[s] = (tally[s] ?? 0) + 1;
 
-  return NextResponse.json({ ok: true, queried: ids.length, games: bySlug.size, rows, tally });
+  return NextResponse.json({ ok: true, queried: ids.length, games: bySlug.size, rows, changes: changes.length, tally });
 }
