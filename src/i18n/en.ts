@@ -224,4 +224,14 @@ export const en: Record<keyof typeof tr, string> = {
   bundlesIntroTitle: "What is an active bundle?",
   bundlesIntroBody:
     "Bundles are limited-time discounted game packs from stores — usually far cheaper than buying titles individually, sometimes with pick-and-mix or pay-what-you-want pricing. The bundles below are live right now; head to the store before they expire.",
+  // subscription changes
+  subChangesPage: "Subscription Changes",
+  subChangesDesc: "Games added to and removed from subscription catalogs.",
+  subActivity: "Subscription Activity",
+  subAdded: "Added",
+  subRemoved: "Removed",
+  subLast30: "Last 30 days",
+  subSeeAll: "See all →",
+  subAllServices: "All services",
+  subNoChanges: "No recorded changes yet.",
 };
