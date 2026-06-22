@@ -68,7 +68,7 @@ export function CompanyModal({ company, onClose }: { company: Company; onClose: 
             }}
           >
             <span className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-b from-white to-[#e9ebef] p-2.5 shadow-lg">
-              <CompanyLogo company={company} className="max-h-10 text-[10px]" />
+              <CompanyLogo company={company} onLightSurface className="max-h-10 text-[10px]" />
             </span>
             <div className="min-w-0">
               <span
