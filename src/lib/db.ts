@@ -128,4 +128,15 @@ export async function ensureSchema(): Promise<void> {
     )`;
   await sql`ALTER TABLE catalog ADD COLUMN IF NOT EXISTS free boolean NOT NULL DEFAULT false`;
   await sql`CREATE INDEX IF NOT EXISTS catalog_norm_idx ON catalog (norm text_pattern_ops)`;
+  // Subscription catalog changes (added/removed), derived by diffing membership
+  // on each refresh. Powers the /abonelikler change surfaces.
+  await sql`
+    CREATE TABLE IF NOT EXISTS sub_changes (
+      slug   text NOT NULL,
+      sub_id text NOT NULL,
+      change text NOT NULL,
+      day    date NOT NULL,
+      PRIMARY KEY (slug, sub_id, day, change)
+    )`;
+  await sql`CREATE INDEX IF NOT EXISTS sub_changes_recent_idx ON sub_changes (sub_id, day DESC)`;
 }

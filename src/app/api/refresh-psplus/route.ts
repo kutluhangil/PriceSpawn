@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sql, ensureSchema, hasDb } from "@/lib/db";
 import { GAMES } from "@/data/games";
 import { normTitle } from "@/lib/normalize-title";
+import { diffMembership, type Membership } from "@/lib/sub-diff";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -69,6 +70,20 @@ export async function GET(req: Request) {
     else missed.push(t);
   }
 
+  // Capture psplus catalog changes before the rewrite.
+  const oldRows = (await sql!`SELECT slug FROM game_subs WHERE sub_id = 'psplus'`) as { slug: string }[];
+  const oldM: Membership = {};
+  for (const r of oldRows) oldM[r.slug] = new Set(["psplus"]);
+  const newM: Membership = {};
+  for (const slug of matched) newM[slug] = new Set(["psplus"]);
+  const coldServices = oldRows.length === 0 ? new Set(["psplus"]) : new Set<string>();
+  const changes = diffMembership(oldM, newM, ["psplus"], coldServices);
+  const today = new Date().toISOString().slice(0, 10);
+  for (const ch of changes) {
+    await sql!`INSERT INTO sub_changes (slug, sub_id, change, day)
+      VALUES (${ch.slug}, ${ch.subId}, ${ch.change}, ${today}) ON CONFLICT DO NOTHING`;
+  }
+
   await sql!`DELETE FROM game_subs WHERE sub_id = 'psplus'`;
   for (const slug of matched) {
     await sql!`INSERT INTO game_subs (slug, sub_id) VALUES (${slug}, 'psplus') ON CONFLICT DO NOTHING`;
@@ -78,6 +93,7 @@ export async function GET(req: Request) {
     ok: true,
     scraped: titles.length,
     matched: matched.size,
+    changes: changes.length,
     missedCount: missed.length,
     missedSample: missed.slice(0, 20),
   });
