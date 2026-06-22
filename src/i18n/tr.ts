@@ -222,4 +222,14 @@ export const tr = {
   bundlesIntroTitle: "Aktif paket nedir?",
   bundlesIntroBody:
     "Paketler, mağazaların sınırlı süreyle sunduğu indirimli oyun demetleridir — çoğu zaman tek tek almaktan çok daha ucuza, bazılarında istediğin kadarını seç (pick & mix) ya da ödediğin kadar (pay-what-you-want) modeliyle. Aşağıdaki paketler şu an canlı; süreleri dolmadan mağazaya gidersin.",
+  // abonelik değişiklikleri
+  subChangesPage: "Abonelik Değişiklikleri",
+  subChangesDesc: "Abonelik kataloglarına eklenen ve kaldırılan oyunlar.",
+  subActivity: "Abonelik Hareketleri",
+  subAdded: "Eklenenler",
+  subRemoved: "Kaldırılanlar",
+  subLast30: "Son 30 gün",
+  subSeeAll: "Tümünü gör →",
+  subAllServices: "Tüm servisler",
+  subNoChanges: "Henüz kayıtlı değişiklik yok.",
 } as const;
