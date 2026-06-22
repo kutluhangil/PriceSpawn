@@ -6,7 +6,16 @@ import type { Company } from "@/data/companies";
  * logo file fall back to a clean wordmark of the real name (brand accent),
  * never an invented glyph.
  */
-export function CompanyLogo({ company, className = "" }: { company: Company; className?: string }) {
+export function CompanyLogo({
+  company,
+  className = "",
+  onLightSurface = false,
+}: {
+  company: Company;
+  className?: string;
+  /** True when rendered on a light chip (e.g. modal) → skip the dark-tile invert. */
+  onLightSurface?: boolean;
+}) {
   if (company.logo) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
@@ -14,7 +23,9 @@ export function CompanyLogo({ company, className = "" }: { company: Company; cla
         src={`/logos/${company.logo}`}
         alt={`${company.name} logo`}
         loading="lazy"
-        className={`max-h-full max-w-full object-contain ${className}`}
+        className={`max-h-full max-w-full object-contain ${
+          company.lightLogo && !onLightSurface ? "logo-invert-dark" : ""
+        } ${className}`}
       />
     );
   }

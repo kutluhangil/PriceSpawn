@@ -19,6 +19,9 @@ export interface Company {
   name: string;
   accent: string; // tile/border theme colour (never applied to the logo)
   logo: string | null; // filename under /logos (with extension), or null → wordmark
+  /** Logo is a pure black/mono wordmark with no brand colour → invert to white so
+   *  it stays legible on the transparent dark Explorer tile (no colour to lose). */
+  lightLogo?: boolean;
   category: CompanyCategory;
   founded: number;
   founders: string;
@@ -77,6 +80,7 @@ export const COMPANIES: Company[] = [
     name: "Xbox Game Studios",
     accent: "#107c10",
     logo: "xbox.svg",
+    lightLogo: true,
     category: "Platform",
     founded: 2000,
     founders: "Microsoft",
@@ -210,6 +214,7 @@ export const COMPANIES: Company[] = [
     name: "Take-Two Interactive",
     accent: "#c0392b",
     logo: "taketwo.svg",
+    lightLogo: true,
     category: "Yayıncı",
     founded: 1993,
     founders: "Ryan Brant",
@@ -229,6 +234,7 @@ export const COMPANIES: Company[] = [
     name: "Activision",
     accent: "#e23b3b",
     logo: "activision.svg",
+    lightLogo: true,
     category: "Yayıncı",
     founded: 1979,
     founders: "David Crane, Alan Miller, Bob Whitehead, Larry Kaplan",
@@ -267,6 +273,7 @@ export const COMPANIES: Company[] = [
     name: "Square Enix",
     accent: "#c8102e",
     logo: "squareenix.svg",
+    lightLogo: true,
     category: "Yayıncı",
     founded: 2003,
     founders: "Square (1986) + Enix (1975) birleşmesi",
@@ -362,6 +369,7 @@ export const COMPANIES: Company[] = [
     name: "FromSoftware",
     accent: "#b08d57",
     logo: "fromsoftware.svg",
+    lightLogo: true,
     category: "Stüdyo",
     founded: 1986,
     founders: "Naotoshi Zin",

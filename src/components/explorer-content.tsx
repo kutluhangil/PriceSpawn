@@ -15,15 +15,15 @@ function CompanyTile({ company, onOpen }: { company: Company; onOpen: () => void
       style={{ "--c": company.accent } as React.CSSProperties}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-bg-deep p-2.5 text-left transition-all duration-300 will-change-transform hover:-translate-y-1.5 hover:border-(--c) hover:shadow-[0_18px_40px_-12px_var(--c)] focus:outline-none focus-visible:border-(--c)"
     >
-      {/* logo well — light surface so any real logo stays legible */}
-      <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white to-[#e9ebef] p-5">
-        {/* faint brand wash at top for identity */}
+      {/* logo stage — transparent: the real logo sits straight on the dark tile */}
+      <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden rounded-xl p-5">
+        {/* brand-accent glow for premium depth (always faint, blooms on hover) */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%)" }}
+          className="pointer-events-none absolute inset-0 opacity-40 transition-opacity duration-300 group-hover:opacity-100"
+          style={{ background: "radial-gradient(68% 58% at 50% 46%, color-mix(in srgb, var(--c) 18%, transparent), transparent 72%)" }}
         />
-        <CompanyLogo company={company} className="relative max-h-12 text-base transition-transform duration-300 group-hover:scale-[1.06] sm:max-h-14" />
+        <CompanyLogo company={company} className="relative max-h-14 text-base drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-[1.06] sm:max-h-16" />
       </div>
 
       <div className="px-1.5 pb-1 pt-2.5">

@@ -563,3 +563,12 @@ a, button, [role="button"], input, label, select {
 .panel-strong {
   box-shadow: var(--shadow);
 }
+
+/* Explorer: pure black/mono company logos invert to white so they stay legible
+   on the dark transparent tile. Light theme keeps a white tile → leave as-is. */
+.logo-invert-dark {
+  filter: invert(1);
+}
+:root[data-theme="light"] .logo-invert-dark {
+  filter: none;
+}
