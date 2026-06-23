@@ -1,6 +1,8 @@
 // Live data fetchers. Keyless public endpoints; structured for later expansion
 // to Epic/GOG/Xbox (see docs/LIVE_API_INTEGRATION.md).
 
+import { toTRY } from "@/lib/exchange";
+
 /**
  * ITAD bundle/deal links are affiliate redirects (awin1.com, *.sjv.io, etc).
  * Ad-blockers and tracking-protection kill those tabs the instant they open
@@ -555,3 +557,103 @@ export async function mapLimit<T, R>(
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
   return out;
 }
+
+// ── Steam: yaklaşan oyun çıkışları (wishlist-popüler "coming soon") ──────────
+const STEAM = "https://store.steampowered.com";
+const STEAM_UA = { "User-Agent": "Mozilla/5.0" };
+const STEAM_MONTHS: Record<string, number> = {
+  Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+  Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+};
+
+export interface SteamUpcoming {
+  appid: number;
+  name: string;
+  date: string; // ISO yyyy-mm-dd (yalnızca tam tarihli olanlar)
+  cover: string; // header_image (460×215 landscape)
+  priceTRY: number | null; // ön sipariş fiyatı varsa
+  free: boolean;
+  url: string;
+}
+
+/**
+ * Steam'in "popüler yaklaşan çıkışlar" (wishlist bazlı) listesi → her oyun için
+ * appdetails ile GERÇEK çıkış tarihi + ön sipariş fiyatı. Sadece type==='game',
+ * coming_soon ve tam-tarihli (gün/ay/yıl) olanları döndürür; "TBA/Q3 2026" gibi
+ * belirsiz tarihler takvime girmez (uydurma yok). Tarihe göre artan sıralı.
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function steamUpcoming(limit = 24): Promise<SteamUpcoming[]> {
+  try {
+    const s = await fetch(
+      `${STEAM}/search/results/?filter=popularcomingsoon&os=win&cc=tr&l=english&json=1&count=60&infinite=1`,
+      { headers: STEAM_UA },
+    );
+    if (!s.ok) return [];
+    const sd = (await s.json()) as { results_html?: string };
+    const ids = [...(sd.results_html ?? "").matchAll(/data-ds-appid="(\d+)"/g)]
+      .map((m) => m[1])
+      .filter((v, i, a) => a.indexOf(v) === i)
+      .slice(0, 60);
+
+    const todayUTC = (() => {
+      const n = new Date();
+      return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate());
+    })();
+
+    const fetched = await mapLimit(
+      ids,
+      5,
+      async (id): Promise<SteamUpcoming | null> => {
+        try {
+          const r = await fetch(
+            `${STEAM}/api/appdetails?appids=${id}&cc=tr&l=english&filters=basic,price_overview,release_date`,
+            { headers: STEAM_UA },
+          );
+          if (!r.ok) return null;
+          const j = (await r.json()) as Record<string, { success: boolean; data?: any }>;
+          const entry = j[id];
+          const g = entry?.data;
+          if (!entry?.success || !g || g.type !== "game") return null;
+          if (!g.release_date?.coming_soon) return null;
+
+          const m = String(g.release_date.date ?? "").match(/^(\d{1,2})\s+(\w{3}),?\s+(\d{4})$/);
+          if (!m || !(m[2] in STEAM_MONTHS)) return null; // belirsiz tarih → atla
+          const dt = Date.UTC(Number(m[3]), STEAM_MONTHS[m[2]], Number(m[1]));
+          if (dt <= todayUTC) return null; // bugün/geçmiş değil — yalnızca yaklaşan
+
+          let priceTRY: number | null = null;
+          const po = g.price_overview;
+          if (po && typeof po.final === "number") {
+            const amt = po.final / 100;
+            priceTRY = po.currency === "TRY" ? amt : po.currency === "USD" ? toTRY(amt) : null;
+          }
+
+          return {
+            appid: Number(id),
+            name: String(g.name),
+            date: new Date(dt).toISOString().slice(0, 10),
+            cover: String(g.header_image ?? ""),
+            priceTRY,
+            free: Boolean(g.is_free),
+            url: `${STEAM}/app/${id}/`,
+          };
+        } catch {
+          return null;
+        }
+      },
+      120,
+    );
+
+    // `fetched` Steam'in popülerlik (wishlist) sırasını korur. Önce en popüler
+    // `limit` oyunu seç (spam/bilinmeyen küçük çıkışlar elensin), SONRA takvim
+    // için tarihe göre sırala.
+    return fetched
+      .filter((x): x is SteamUpcoming => x !== null)
+      .slice(0, limit)
+      .sort((a, b) => a.date.localeCompare(b.date));
+  } catch {
+    return [];
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */

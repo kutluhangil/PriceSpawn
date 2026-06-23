@@ -15,6 +15,7 @@ import { LiveDeals } from "@/components/live-deals";
 import { Anticipated } from "@/components/anticipated";
 import { SaleCalendar } from "@/components/sale-calendar";
 import { NextSaleCountdown } from "@/components/next-sale-countdown";
+import { UpcomingReleases } from "@/components/upcoming-releases";
 import { FreeCard } from "@/components/free-card";
 import { BrandMark } from "@/components/brand-mark";
 import { StatBar } from "@/components/stat-bar";
@@ -165,6 +166,12 @@ export function HomeContent({
           <NextSaleCountdown />
           <SaleCalendar />
         </div>
+      </section>
+
+      {/* Yaklaşan oyun çıkışları (Steam, canlı) */}
+      <section className="reveal pt-12" style={{ animationDelay: "0.23s" }}>
+        <SectionHeading title={t.upcomingTitle} sub={t.upcomingNote} />
+        <UpcomingReleases />
       </section>
 
       {/* Şu An Ücretsiz (Epic, canlı) — şerit */}
