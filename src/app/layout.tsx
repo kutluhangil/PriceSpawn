@@ -105,7 +105,7 @@ export default async function RootLayout({
         <ConstellationBg />
         <Providers>
           <Navbar />
-          <main className="flex-1 pb-16 sm:pb-0">{children}</main>
+          <main className="flex-1 overflow-x-clip pb-16 sm:pb-0">{children}</main>
           <Footer catalogTotal={catalogTotal} />
           <CommandPalette />
           <BottomNav />

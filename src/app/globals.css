@@ -563,3 +563,43 @@ a, button, [role="button"], input, label, select {
 .panel-strong {
   box-shadow: var(--shadow);
 }
+
+/* Explorer: pure black/mono company logos invert to white so they stay legible
+   on the dark glass pane. Light theme keeps a light glass → leave as-is. */
+.logo-invert-dark {
+  filter: invert(1);
+}
+:root[data-theme="light"] .logo-invert-dark {
+  filter: none;
+}
+
+/* Explorer 3D tile — mouse-follow tilt + lift, children float in real depth. */
+.tile3d {
+  transform: translateY(var(--ty, 0px)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.16s ease-out,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  will-change: transform;
+}
+
+/* Frosted-glass logo well: translucent film + blur + top gloss + raised shadow. */
+.logo-glass {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -14px 28px rgba(0, 0, 0, 0.28),
+    0 16px 32px -14px rgba(0, 0, 0, 0.6);
+}
+:root[data-theme="light"] .logo-glass {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.66));
+  border-color: rgba(15, 18, 28, 0.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -12px 24px rgba(15, 18, 28, 0.05),
+    0 14px 26px -14px rgba(15, 18, 28, 0.2);
+}
