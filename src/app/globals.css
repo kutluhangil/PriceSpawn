@@ -384,6 +384,59 @@ a, button, [role="button"], input, label, select {
   animation: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
+/* ── Section başlığı: scroll-reveal + spektrum çizilen alt çizgi ───── */
+.sec-head {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.sec-head.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Sol spektrum bar — görünürken alttan yukarı büyür */
+.sec-head-bar {
+  transform: scaleY(0.28);
+  transform-origin: center;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) 0.05s;
+}
+.sec-head.is-in .sec-head-bar {
+  transform: scaleY(1);
+}
+
+/* Başlık altına soldan çizilen spektrum çizgisi (marka ipliği) */
+.sec-head-title {
+  display: inline-block;
+}
+.sec-head-line {
+  position: absolute;
+  left: 0;
+  bottom: -0.3em;
+  height: 3px;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--best));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.75s cubic-bezier(0.2, 0.7, 0.3, 1) 0.12s;
+}
+.sec-head.is-in .sec-head-line {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sec-head,
+  .sec-head-bar,
+  .sec-head-line {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ── Yatay ray ────────────────────────────────────────────────────── */
 .row-scroll {
   scrollbar-width: thin;
