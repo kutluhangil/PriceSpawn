@@ -22,6 +22,7 @@ import { StatBar } from "@/components/stat-bar";
 import { GenreChips } from "@/components/genre-chips";
 import { DealOfTheDay } from "@/components/deal-of-the-day";
 import { SectionHeading } from "@/components/section-heading";
+import { WishlistImport } from "@/components/wishlist-import";
 import { useApp } from "@/components/providers";
 
 const PER_PAGE = 16;
@@ -111,6 +112,9 @@ export function HomeContent({
         <p className="max-w-xl text-sm text-muted sm:text-base">{t.tagline}</p>
         <div className="w-full pt-4">
           <SearchBar variant="hero" />
+        </div>
+        <div className="w-full max-w-xl">
+          <WishlistImport />
         </div>
         <div className="pt-1">
           <StatBar catalogTotal={catalogTotal} dealCount={byDiscount.length} />
