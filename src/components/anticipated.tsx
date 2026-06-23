@@ -6,6 +6,7 @@ import type { AnticipatedPayload } from "@/app/api/anticipated/route";
 import type { ItadRankItem } from "@/lib/fetchers";
 import { GAMES } from "@/data/games";
 import { CoverImage } from "@/components/cover-image";
+import { SectionHeading } from "@/components/section-heading";
 import { useApp } from "@/components/providers";
 
 const ITAD_BANNER = (id: string) => `https://assets.isthereanydeal.com/${id}/banner400.jpg`;
@@ -33,8 +34,7 @@ export function Anticipated() {
 
   return (
     <section className="reveal pt-12" style={{ animationDelay: "0.19s" }}>
-      <h2 className="font-display mb-1 text-lg font-bold text-bright sm:text-xl">{t.anticipated}</h2>
-      <p className="mb-4 text-sm text-muted">{t.anticipatedNote}</p>
+      <SectionHeading title={t.anticipated} note={t.anticipatedNote} />
       <div className="row-scroll -mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-3">
         {items.map((it) => {
           const game = bySlug.get(it.slug);
