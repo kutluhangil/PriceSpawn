@@ -2,6 +2,7 @@
 // to Epic/GOG/Xbox (see docs/LIVE_API_INTEGRATION.md).
 
 import { toTRY } from "@/lib/exchange";
+import { UPCOMING_APPIDS } from "@/data/upcoming-games";
 
 /**
  * ITAD bundle/deal links are affiliate redirects (awin1.com, *.sjv.io, etc).
@@ -577,24 +578,15 @@ export interface SteamUpcoming {
 }
 
 /**
- * Steam'in "popüler yaklaşan çıkışlar" (wishlist bazlı) listesi → her oyun için
- * appdetails ile GERÇEK çıkış tarihi + ön sipariş fiyatı. Sadece type==='game',
- * coming_soon ve tam-tarihli (gün/ay/yıl) olanları döndürür; "TBA/Q3 2026" gibi
- * belirsiz tarihler takvime girmez (uydurma yok). Tarihe göre artan sıralı.
+ * Elle seçili (UPCOMING_APPIDS) yaklaşan oyunlar için `appdetails`'ten GERÇEK
+ * çıkış tarihi + ön sipariş fiyatı + kapak. Sadece type==='game', coming_soon ve
+ * tam-tarihli (gün/ay/yıl) olanlar; "2026/Q3/TBA" belirsiz tarihler, zaten çıkmış
+ * veya bugün/geçmiş olanlar gizlenir (uydurma yok). Tarihe göre artan sıralı.
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function steamUpcoming(limit = 24): Promise<SteamUpcoming[]> {
   try {
-    const s = await fetch(
-      `${STEAM}/search/results/?filter=popularcomingsoon&os=win&cc=tr&l=english&json=1&count=60&infinite=1`,
-      { headers: STEAM_UA },
-    );
-    if (!s.ok) return [];
-    const sd = (await s.json()) as { results_html?: string };
-    const ids = [...(sd.results_html ?? "").matchAll(/data-ds-appid="(\d+)"/g)]
-      .map((m) => m[1])
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .slice(0, 60);
+    const ids = UPCOMING_APPIDS.map(String);
 
     const todayUTC = (() => {
       const n = new Date();
@@ -645,13 +637,11 @@ export async function steamUpcoming(limit = 24): Promise<SteamUpcoming[]> {
       120,
     );
 
-    // `fetched` Steam'in popülerlik (wishlist) sırasını korur. Önce en popüler
-    // `limit` oyunu seç (spam/bilinmeyen küçük çıkışlar elensin), SONRA takvim
-    // için tarihe göre sırala.
+    // Geçerli (yaklaşan + tam-tarihli) olanları takvim için tarihe göre sırala.
     return fetched
       .filter((x): x is SteamUpcoming => x !== null)
-      .slice(0, limit)
-      .sort((a, b) => a.date.localeCompare(b.date));
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, limit);
   } catch {
     return [];
   }
