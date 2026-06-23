@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useWatchlist } from "@/hooks/use-watchlist";
 import { usePush } from "@/hooks/use-push";
 import { useEmailAlerts } from "@/hooks/use-email-alerts";
-import { SteamImport } from "@/components/steam-import";
+import { WishlistImport } from "@/components/wishlist-import";
 import { useApp } from "@/components/providers";
 import { GAMES, type Game } from "@/data/games";
 import { bestPrice } from "@/lib/price";
@@ -19,7 +19,7 @@ import { GameArt } from "@/components/game-art";
 
 export function WatchContent() {
   const { t, locale, priceLoaded } = useApp();
-  const { list, ready, setTargetFor, toggle, addMany } = useWatchlist();
+  const { list, ready, setTargetFor, toggle } = useWatchlist();
   const { enabled, supported, enable, disable } = usePush(list);
   const { email, status, save } = useEmailAlerts(list);
   const [notice, setNotice] = useState(false);
@@ -90,8 +90,9 @@ export function WatchContent() {
       )}
 
       {ready && (
-        <div className="mb-5">
-          <SteamImport addMany={addMany} />
+        <div className="panel mb-5 rounded-2xl p-4">
+          <p className="mb-3 text-sm font-bold text-bright">🎮 {t.wlEmptyTitle}</p>
+          <WishlistImport />
         </div>
       )}
 
