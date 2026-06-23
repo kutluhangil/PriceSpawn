@@ -6,6 +6,7 @@ import {
   removeWatch,
   isWatched,
   setTarget,
+  addManyWithTargets as addManyWithTargetsPure,
   type WatchItem,
 } from "@/lib/watchlist";
 
@@ -65,5 +66,14 @@ export function useWatchlist() {
     [list, persist]
   );
 
-  return { list, ready, toggle, setTargetFor, watched, addMany };
+  /** Bulk add/update with explicit targets (e.g. Steam wishlist → price alarms). */
+  const addManyWithTargets = useCallback(
+    (entries: { slug: string; targetTRY: number | null }[]) => {
+      persist(addManyWithTargetsPure(list, entries));
+      return entries.length;
+    },
+    [list, persist]
+  );
+
+  return { list, ready, toggle, setTargetFor, watched, addMany, addManyWithTargets };
 }

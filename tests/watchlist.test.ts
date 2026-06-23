@@ -5,12 +5,32 @@ import {
   isWatched,
   setTarget,
   targetMet,
+  addManyWithTargets,
   type WatchItem,
 } from "@/lib/watchlist";
 import { sampleGames } from "./fixtures";
 import { bestPrice } from "@/lib/price";
 
 const g = sampleGames()[0];
+
+describe("addManyWithTargets", () => {
+  it("adds new items with their target and updates existing ones", () => {
+    const start: WatchItem[] = [{ slug: "a", targetTRY: null }];
+    const next = addManyWithTargets(start, [
+      { slug: "a", targetTRY: 50 },
+      { slug: "b", targetTRY: 99.99 },
+    ]);
+    expect(next).toEqual([
+      { slug: "a", targetTRY: 50 },
+      { slug: "b", targetTRY: 99.99 },
+    ]);
+  });
+  it("does not mutate the input list", () => {
+    const start: WatchItem[] = [{ slug: "a", targetTRY: null }];
+    addManyWithTargets(start, [{ slug: "b", targetTRY: 10 }]);
+    expect(start).toEqual([{ slug: "a", targetTRY: null }]);
+  });
+});
 
 describe("watchlist ops", () => {
   it("adds and detects membership", () => {

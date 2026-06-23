@@ -23,6 +23,19 @@ export function setTarget(list: WatchItem[], slug: string, targetTRY: number | n
   return list.map((w) => (w.slug === slug ? { ...w, targetTRY } : w));
 }
 
+export function addManyWithTargets(
+  list: WatchItem[],
+  entries: { slug: string; targetTRY: number | null }[],
+): WatchItem[] {
+  let next = list;
+  for (const e of entries) {
+    next = isWatched(next, e.slug)
+      ? setTarget(next, e.slug, e.targetTRY)
+      : [...next, { slug: e.slug, targetTRY: e.targetTRY }];
+  }
+  return next;
+}
+
 export function targetMet(item: WatchItem, game: Game): boolean {
   if (item.targetTRY === null) return false;
   const best = bestPrice(game);
