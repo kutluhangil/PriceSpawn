@@ -251,6 +251,22 @@ export async function itadMostWaitlisted(key: string, limit = 16): Promise<ItadR
     return [];
   }
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/** Most-popular games (by ITAD popularity rank) — same shape as most-waitlisted. */
+export async function itadMostPopular(key: string, limit = 40): Promise<ItadRankItem[]> {
+  try {
+    const res = await fetch(`${ITAD}/stats/most-popular/v1?key=${key}&limit=${limit}&offset=0`);
+    if (!res.ok) return [];
+    const d = (await res.json()) as any;
+    const list: any[] = Array.isArray(d) ? d : (d?.list ?? []);
+    return list
+      .filter((x) => x.type === "game" && x.slug && x.title)
+      .map((x) => ({ id: String(x.id), slug: String(x.slug), title: String(x.title), count: Number(x.count ?? 0) }));
+  } catch {
+    return [];
+  }
+}
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface ItadDealItem {

@@ -240,6 +240,12 @@ export const tr = {
   subNoChanges: "Henüz kayıtlı değişiklik yok.",
   atLow: "Tarihî dipte",
   atLowHint: "Şu an tüm zamanların en düşük fiyatında (ya da %5 yakınında) olan oyunlar.",
+  popularPage: "Popüler",
+  popularWaitlisted: "En Çok Beklenenler",
+  popularWaitlistedNote: "Oyuncuların en çok takibe aldığı oyunlar — IsThereAnyDeal sıralaması.",
+  popularMost: "En Popüler",
+  popularMostNote: "Şu an en çok ilgi gören oyunlar.",
+  popularEmpty: "Sıralama şu an yüklenemedi.",
   // Steam wishlist import
   wlTitle: "Steam Wishlist Fırsatların",
   wlImportPlaceholder: "Steam profil/wishlist linki ya da kullanıcı adı",

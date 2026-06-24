@@ -242,6 +242,12 @@ export const en: Record<keyof typeof tr, string> = {
   subNoChanges: "No recorded changes yet.",
   atLow: "At historical low",
   atLowHint: "Games currently at (or within 5% of) their all-time-low price.",
+  popularPage: "Popular",
+  popularWaitlisted: "Most Anticipated",
+  popularWaitlistedNote: "The games players add to their waitlists the most — IsThereAnyDeal ranking.",
+  popularMost: "Most Popular",
+  popularMostNote: "The games getting the most attention right now.",
+  popularEmpty: "Leaderboard could not be loaded right now.",
   // Steam wishlist import
   wlTitle: "Your Steam Wishlist Deals",
   wlImportPlaceholder: "Steam profile/wishlist link or username",

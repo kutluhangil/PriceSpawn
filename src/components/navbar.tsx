@@ -42,6 +42,7 @@ export function Navbar() {
 
   const links = [
     { href: "/oyunlar", label: t.allGamesPage },
+    { href: "/populer", label: t.popularPage },
     { href: "/ucretsiz", label: t.freePage },
     { href: "/abonelikler", label: t.subsPage },
     { href: "/paketler", label: t.bundlesPage },

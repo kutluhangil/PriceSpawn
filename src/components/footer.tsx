@@ -117,6 +117,11 @@ export function Footer({ catalogTotal }: { catalogTotal?: number }) {
               </Link>
             </li>
             <li>
+              <Link href="/populer" className={linkClass}>
+                {t.popularPage}
+              </Link>
+            </li>
+            <li>
               <Link href="/#new" className={linkClass}>
                 {t.tabNew}
               </Link>
