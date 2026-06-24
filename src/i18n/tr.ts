@@ -246,6 +246,9 @@ export const tr = {
   popularMost: "En Popüler",
   popularMostNote: "Şu an en çok ilgi gören oyunlar.",
   popularEmpty: "Sıralama şu an yüklenemedi.",
+  digestOptIn: "Haftalık fırsat bültenini e-posta ile gönder",
+  digestOff: "Haftalık bülten kapatıldı.",
+  digestOn: "Haftalık bülten açıldı.",
   // Steam wishlist import
   wlTitle: "Steam Wishlist Fırsatların",
   wlImportPlaceholder: "Steam profil/wishlist linki ya da kullanıcı adı",

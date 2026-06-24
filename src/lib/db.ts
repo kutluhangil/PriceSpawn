@@ -96,6 +96,8 @@ export async function ensureSchema(): Promise<void> {
       verified   boolean NOT NULL DEFAULT false,
       created_at timestamptz NOT NULL DEFAULT now()
     )`;
+  // Weekly digest opt-in (default on for every verified subscriber).
+  await sql`ALTER TABLE email_subs ADD COLUMN IF NOT EXISTS digest boolean NOT NULL DEFAULT true`;
   await sql`
     CREATE TABLE IF NOT EXISTS email_watches (
       email             text NOT NULL,

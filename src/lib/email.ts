@@ -50,6 +50,37 @@ export function verifyEmailHtml(verifyUrl: string): string {
   `);
 }
 
+export function digestEmailHtml(opts: {
+  items: { title: string; priceText: string; discount: number | null; gameUrl: string }[];
+  browseUrl: string;
+  unsubUrl: string;
+}): string {
+  const rows = opts.items
+    .map(
+      (it) => `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid #eef0f5">
+        <a href="${it.gameUrl}" style="color:#14161e;text-decoration:none;font-weight:700;font-size:14px">${it.title}</a>
+      </td>
+      <td style="padding:10px 0;border-bottom:1px solid #eef0f5;text-align:right;white-space:nowrap">
+        ${it.discount ? `<span style="color:#15803d;font-weight:700;font-size:12px">-%${it.discount}</span> ` : ""}<span style="color:#15803d;font-weight:800;font-size:15px">${it.priceText}</span>
+      </td>
+    </tr>`,
+    )
+    .join("");
+  return shell(
+    `
+    <h1 style="font-size:18px;margin:0 0 6px">📉 Bu haftanın en büyük indirimleri</h1>
+    <p style="font-size:14px;line-height:1.6;color:#2a2d3a;margin:0 0 16px">
+      Türkiye'deki mağazalarda şu an öne çıkan fırsatlar.
+    </p>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px">${rows}</table>
+    ${btn(opts.browseUrl, "Tüm fırsatları gör")}
+  `,
+    `Haftalık bülteni almak istemiyorsan <a href="${opts.unsubUrl}" style="color:#6356f0">buradan bırak</a>.`,
+  );
+}
+
 export function priceDropHtml(opts: {
   title: string;
   priceText: string;

@@ -9,6 +9,8 @@ interface Body {
   watches: { slug: string; targetTRY: number | null }[];
   /** Background re-sync from the client — don't re-send the verification email. */
   silent?: boolean;
+  /** Weekly digest opt-in/out toggle (optional). */
+  digest?: boolean;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,6 +39,9 @@ export async function POST(req: Request) {
   if (!token) {
     token = crypto.randomUUID();
     await sql!`INSERT INTO email_subs (email, token, verified) VALUES (${email}, ${token}, false)`;
+  }
+  if (typeof body.digest === "boolean") {
+    await sql!`UPDATE email_subs SET digest = ${body.digest} WHERE email = ${email}`;
   }
 
   const watches = Array.isArray(body.watches) ? body.watches : [];

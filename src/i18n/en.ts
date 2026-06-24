@@ -248,6 +248,9 @@ export const en: Record<keyof typeof tr, string> = {
   popularMost: "Most Popular",
   popularMostNote: "The games getting the most attention right now.",
   popularEmpty: "Leaderboard could not be loaded right now.",
+  digestOptIn: "Email me the weekly deals digest",
+  digestOff: "Weekly digest turned off.",
+  digestOn: "Weekly digest turned on.",
   // Steam wishlist import
   wlTitle: "Your Steam Wishlist Deals",
   wlImportPlaceholder: "Steam profile/wishlist link or username",

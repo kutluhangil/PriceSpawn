@@ -21,7 +21,7 @@ export function WatchContent() {
   const { t, locale, priceLoaded } = useApp();
   const { list, ready, setTargetFor, toggle } = useWatchlist();
   const { enabled, supported, enable, disable } = usePush(list);
-  const { email, status, save } = useEmailAlerts(list);
+  const { email, status, save, digest, setDigest } = useEmailAlerts(list);
   const [notice, setNotice] = useState(false);
   const [emailInput, setEmailInput] = useState<string | null>(null);
   const [flash, setFlash] = useState<string | null>(null);
@@ -34,6 +34,10 @@ export function WatchContent() {
       timer = window.setTimeout(() => setFlash(t.emailVerified), 0);
     } else if (p === "unsubscribed") {
       timer = window.setTimeout(() => setFlash(t.emailUnsubscribed), 0);
+    } else if (p === "digest-off") {
+      timer = window.setTimeout(() => setFlash(t.digestOff), 0);
+    } else if (p === "digest-on") {
+      timer = window.setTimeout(() => setFlash(t.digestOn), 0);
     }
     return () => {
       if (timer !== undefined) window.clearTimeout(timer);
@@ -137,6 +141,10 @@ export function WatchContent() {
             </form>
             {status === "saved" && <p className="mt-2 text-xs font-semibold text-best">{t.emailSaved}</p>}
             {status === "error" && <p className="mt-2 text-xs font-semibold text-[#fb7185]">{t.emailError}</p>}
+            <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs font-semibold text-muted">
+              <input type="checkbox" checked={digest} onChange={(e) => setDigest(e.target.checked)} />
+              {t.digestOptIn}
+            </label>
           </div>
         </div>
       )}
