@@ -19,6 +19,9 @@ const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 C
 
 const TARGET = Number(process.env.TARGET || 20000);
 const SPY_PAGES = Number(process.env.SPY_PAGES || 80);
+// Quality gate: skip games with fewer than this many total Steam reviews
+// (positive+negative). 0 = no gate. Keeps dead shovelware/asset-flips out.
+const MIN_REVIEWS = Number(process.env.MIN_REVIEWS || 0);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // NOTE: SteamSpy's `request=all` pages carry name/owners/reviews but NOT genre or
@@ -64,10 +67,11 @@ for (let p = 0; p < SPY_PAGES && count < TARGET; p++) {
     const appid = String(a.appid);
     const name = String(a.name || "").replace(/[™®©]/g, "").trim();
     if (!appid || !name || haveApp.has(appid) || NON_GAME.test(name)) continue;
+    const pos = Number(a.positive || 0), neg = Number(a.negative || 0);
+    if (pos + neg < MIN_REVIEWS) continue; // quality gate
     let slug = slugify(name) || `game-${appid}`;
     if (usedSlug.has(slug)) slug = `${slug}-${appid}`;
     if (usedSlug.has(slug)) continue;
-    const pos = Number(a.positive || 0), neg = Number(a.negative || 0);
     const score = pos + neg > 50 ? Math.min(97, Math.max(40, Math.round((100 * pos) / (pos + neg)))) : 70;
     const cover = `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${appid}/header.jpg`;
     try {
