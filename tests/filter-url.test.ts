@@ -4,7 +4,7 @@ import type { FilterOpts } from "@/lib/filters";
 
 const base: FilterOpts = {
   query: "", genres: [], stores: [], subscriptions: [],
-  onlyDiscounted: false, minTRY: null, maxTRY: null, sort: "discount",
+  onlyDiscounted: false, atLow: false, minTRY: null, maxTRY: null, sort: "discount",
 };
 
 describe("filter-url", () => {
@@ -16,10 +16,15 @@ describe("filter-url", () => {
     const o: FilterOpts = {
       query: "need for speed",
       genres: ["RPG", "Aksiyon"], stores: ["steam", "epic"], subscriptions: ["gamepass"],
-      onlyDiscounted: true, minTRY: 100, maxTRY: 900, sort: "priceAsc",
+      onlyDiscounted: true, atLow: true, minTRY: 100, maxTRY: 900, sort: "priceAsc",
     };
     const parsed = parseOpts(new URLSearchParams(serializeOpts(o)));
     expect({ ...base, ...parsed }).toEqual(o);
+  });
+
+  it("round-trips the atLow flag", () => {
+    expect(serializeOpts({ ...base, atLow: true })).toContain("atl=1");
+    expect(parseOpts(new URLSearchParams("atl=1")).atLow).toBe(true);
   });
 
   it("accepts legacy ?store= alias", () => {

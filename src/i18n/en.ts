@@ -240,6 +240,8 @@ export const en: Record<keyof typeof tr, string> = {
   subSeeAll: "See all →",
   subAllServices: "All services",
   subNoChanges: "No recorded changes yet.",
+  atLow: "At historical low",
+  atLowHint: "Games currently at (or within 5% of) their all-time-low price.",
   // Steam wishlist import
   wlTitle: "Your Steam Wishlist Deals",
   wlImportPlaceholder: "Steam profile/wishlist link or username",

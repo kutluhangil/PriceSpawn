@@ -238,6 +238,8 @@ export const tr = {
   subSeeAll: "Tümünü gör →",
   subAllServices: "Tüm servisler",
   subNoChanges: "Henüz kayıtlı değişiklik yok.",
+  atLow: "Tarihî dipte",
+  atLowHint: "Şu an tüm zamanların en düşük fiyatında (ya da %5 yakınında) olan oyunlar.",
   // Steam wishlist import
   wlTitle: "Steam Wishlist Fırsatların",
   wlImportPlaceholder: "Steam profil/wishlist linki ya da kullanıcı adı",

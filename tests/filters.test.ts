@@ -10,6 +10,7 @@ const base: FilterOpts = {
   stores: [],
   subscriptions: [],
   onlyDiscounted: false,
+  atLow: false,
   minTRY: null,
   maxTRY: null,
   sort: "discount",

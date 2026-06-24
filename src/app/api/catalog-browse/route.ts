@@ -44,6 +44,7 @@ export async function GET(req: Request) {
   const stores = (u.searchParams.get("s") ?? "").split(",").filter(Boolean);
   const subs = (u.searchParams.get("sub") ?? "").split(",").filter(Boolean);
   const disc = u.searchParams.get("disc") === "1";
+  const atLow = u.searchParams.get("atl") === "1";
   const min = u.searchParams.get("min");
   const max = u.searchParams.get("max");
   const sort = SORTS[u.searchParams.get("sort") ?? "discount"] ?? SORTS.discount;
@@ -59,6 +60,8 @@ export async function GET(req: Request) {
     if (stores.length) { where.push(`EXISTS(SELECT 1 FROM game_prices gp WHERE gp.slug=c.slug AND gp.store = ANY($${i}))`); p.push(stores); i++; }
     if (subs.length) { where.push(`EXISTS(SELECT 1 FROM game_subs gs WHERE gs.slug=c.slug AND gs.sub_id = ANY($${i}))`); p.push(subs); i++; }
     if (disc) where.push(`pr.max_disc > 0`);
+    // Only games currently at (or within 5% of) their all-time-low.
+    if (atLow) where.push(`pr.min_try IS NOT NULL AND atl.amount IS NOT NULL AND pr.min_try <= atl.amount * 1.05`);
     if (min !== null && min !== "" && !Number.isNaN(Number(min))) { where.push(`pr.min_try >= $${i}`); p.push(Number(min)); i++; }
     if (max !== null && max !== "" && !Number.isNaN(Number(max))) { where.push(`pr.min_try <= $${i}`); p.push(Number(max)); i++; }
 
@@ -76,6 +79,7 @@ export async function GET(req: Request) {
              pr.min_try, pr.max_disc, COUNT(*) OVER()::int AS total
       FROM catalog c
       LEFT JOIN pr ON pr.slug = c.slug
+      LEFT JOIN all_time_low atl ON atl.slug = c.slug
       WHERE ${where.join(" AND ")}
       ORDER BY ${sort}
       LIMIT $${limIdx} OFFSET $${offIdx}`;

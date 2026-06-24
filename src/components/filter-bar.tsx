@@ -17,6 +17,7 @@ export function FilterBar({
   toggleSub,
   setQuery,
   setOnlyDiscounted,
+  setAtLow,
   setMin,
   setMax,
   setSort,
@@ -28,6 +29,7 @@ export function FilterBar({
   toggleSub: (s: SubscriptionId) => void;
   setQuery: (query: string) => void;
   setOnlyDiscounted: (v: boolean) => void;
+  setAtLow: (v: boolean) => void;
   setMin: (v: number | null) => void;
   setMax: (v: number | null) => void;
   setSort: (s: SortKey) => void;
@@ -118,6 +120,9 @@ export function FilterBar({
           className={chip(opts.onlyDiscounted)}
         >
           {t.onlyDiscounted}
+        </button>
+        <button onClick={() => setAtLow(!opts.atLow)} className={chip(opts.atLow)} title={t.atLowHint}>
+          {t.atLow}
         </button>
         <label className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-muted">
           {t.priceRange}

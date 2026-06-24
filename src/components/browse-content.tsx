@@ -108,6 +108,7 @@ export function BrowseContent() {
         toggleSub={f.toggleSub}
         setQuery={f.setQuery}
         setOnlyDiscounted={f.setOnlyDiscounted}
+        setAtLow={f.setAtLow}
         setMin={f.setMin}
         setMax={f.setMax}
         setSort={f.setSort}

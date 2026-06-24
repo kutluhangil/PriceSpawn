@@ -12,6 +12,8 @@ export interface FilterOpts {
   stores: StoreId[];
   subscriptions: SubscriptionId[];
   onlyDiscounted: boolean;
+  /** Only games currently at (or within 5% of) their all-time-low. DB-backed only. */
+  atLow: boolean;
   minTRY: number | null;
   maxTRY: number | null;
   sort: SortKey;

@@ -12,6 +12,7 @@ export function serializeOpts(o: FilterOpts): string {
   if (o.stores.length) p.set("s", o.stores.join(","));
   if (o.subscriptions.length) p.set("sub", o.subscriptions.join(","));
   if (o.onlyDiscounted) p.set("disc", "1");
+  if (o.atLow) p.set("atl", "1");
   if (o.minTRY !== null) p.set("min", String(o.minTRY));
   if (o.maxTRY !== null) p.set("max", String(o.maxTRY));
   if (o.sort !== "discount") p.set("sort", o.sort);
@@ -29,6 +30,7 @@ export function parseOpts(params: URLSearchParams): Partial<FilterOpts> {
   const sub = params.get("sub");
   if (sub) out.subscriptions = sub.split(",").filter(Boolean) as SubscriptionId[];
   if (params.get("disc") === "1") out.onlyDiscounted = true;
+  if (params.get("atl") === "1") out.atLow = true;
   const min = params.get("min");
   if (min !== null && min !== "" && !Number.isNaN(Number(min))) out.minTRY = Number(min);
   const max = params.get("max");
