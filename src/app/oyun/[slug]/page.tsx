@@ -67,7 +67,7 @@ export default async function GamePage({
             url,
             ...(m.cover ? { image: m.cover } : {}),
             genre: m.genres,
-            ...(m.year ? { datePublished: String(m.year) } : {}),
+            ...(m.year > 0 ? { datePublished: String(m.year) } : {}),
           },
           {
             "@type": "BreadcrumbList",

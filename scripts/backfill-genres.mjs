@@ -21,10 +21,19 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function appdetails(appid) {
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
-      const r = await fetch(
-        `https://store.steampowered.com/api/appdetails?appids=${appid}&cc=tr&l=turkish&filters=basic,genres,release_date`,
-        { headers: { "User-Agent": UA } },
-      );
+      // Hard timeout so a dead socket (e.g. after the Mac sleeps) rejects and we
+      // retry/continue instead of hanging forever on an in-flight request.
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 15000);
+      let r;
+      try {
+        r = await fetch(
+          `https://store.steampowered.com/api/appdetails?appids=${appid}&cc=tr&l=turkish&filters=basic,genres,release_date`,
+          { headers: { "User-Agent": UA }, signal: ctrl.signal },
+        );
+      } finally {
+        clearTimeout(timer);
+      }
       if (r.status === 429 || r.status >= 500) {
         await sleep(8000 * (attempt + 1)); // back off hard on throttle
         continue;
@@ -48,30 +57,31 @@ async function appdetails(appid) {
 const rows = await sql`SELECT appid, slug FROM catalog WHERE year = 0 AND appid <> '' ORDER BY score DESC`;
 console.log("rows to backfill (year=0):", rows.length);
 
-let bothSet = 0, genreSet = 0, yearSet = 0, skipped = 0, failed = 0;
+// Every row that gets a Steam response ends with year != 0: a real year, or the
+// sentinel -1 ("checked; no Turkish-store data" — delisted / region-locked / not a
+// game). So year=0 strictly shrinks → visible progress + fully resumable (a re-run
+// only revisits network-fails). year=-1 is hidden everywhere by the `year > 0` guards.
+let withGenre = 0, yearOnly = 0, markedNA = 0, failed = 0;
 for (let i = 0; i < rows.length; i++) {
   const { appid, slug } = rows[i];
   const d = await appdetails(appid);
   await sleep(DELAY);
-  if (!d) { failed++; continue; } // network give-up: leave for a later run
-  if (d.type !== "game") { skipped++; continue; } // delisted / DLC / soundtrack etc
-
-  const hasGenres = d.genres.length > 0;
-  const hasYear = d.year > 0;
-  if (hasGenres && hasYear) {
-    await sql`UPDATE catalog SET genres = ${JSON.stringify(d.genres)}::jsonb, year = ${d.year} WHERE slug = ${slug}`;
-    bothSet++;
-  } else if (hasGenres) {
-    await sql`UPDATE catalog SET genres = ${JSON.stringify(d.genres)}::jsonb WHERE slug = ${slug}`;
-    genreSet++;
-  } else if (hasYear) {
-    await sql`UPDATE catalog SET year = ${d.year} WHERE slug = ${slug}`;
-    yearSet++;
+  if (!d) { failed++; continue; } // network give-up: leave at year=0 for a later run
+  if (d.type !== "game") {
+    await sql`UPDATE catalog SET year = -1 WHERE slug = ${slug} AND year = 0`;
+    markedNA++;
+    continue;
+  }
+  const setYear = d.year > 0 ? d.year : -1;
+  if (d.genres.length) {
+    await sql`UPDATE catalog SET genres = ${JSON.stringify(d.genres)}::jsonb, year = ${setYear} WHERE slug = ${slug}`;
+    withGenre++;
   } else {
-    skipped++;
+    await sql`UPDATE catalog SET year = ${setYear} WHERE slug = ${slug}`;
+    yearOnly++;
   }
   if ((i + 1) % 100 === 0) {
-    console.log(`  ${i + 1}/${rows.length} | both ${bothSet} | genre-only ${genreSet} | year-only ${yearSet} | skip ${skipped} | fail ${failed}`);
+    console.log(`  ${i + 1}/${rows.length} | genre+year ${withGenre} | year-only ${yearOnly} | unavailable ${markedNA} | fail ${failed}`);
   }
 }
-console.log(`DONE. processed ${rows.length} | genre+year ${bothSet} | genre-only ${genreSet} | year-only ${yearSet} | skip ${skipped} | network-fail ${failed}`);
+console.log(`DONE. processed ${rows.length} | genre+year ${withGenre} | year-only ${yearOnly} | unavailable ${markedNA} | network-fail ${failed}`);
