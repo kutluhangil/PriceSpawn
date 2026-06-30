@@ -47,7 +47,17 @@ export function ConstellationBg() {
       }));
     }
 
-    function themeColor() {
+    // Season tints the neutral constellation nodes so the backdrop warms/cools
+    // with the active sale palette (spectrum accent nodes stay untouched).
+    const SEASON_TINT: Record<string, [number, number, number]> = {
+      summer: [255, 165, 110],
+      autumn: [228, 150, 90],
+      winter: [150, 195, 255],
+    };
+
+    function themeColor(): [number, number, number] {
+      const season = document.documentElement.dataset.season;
+      if (season && SEASON_TINT[season]) return SEASON_TINT[season];
       return document.documentElement.dataset.theme === "light"
         ? [60, 70, 110]
         : [150, 162, 235];

@@ -10,9 +10,12 @@ import { BottomNav } from "@/components/bottom-nav";
 import { CookieConsent } from "@/components/cookie-consent";
 import { InstallPrompt } from "@/components/install-prompt";
 import { ConstellationBg } from "@/components/constellation-bg";
+import { SeasonBanner } from "@/components/season-banner";
 import { unstable_cache } from "next/cache";
 import { SITE_NAME, SITE_SHORT, SITE_URL } from "@/lib/site";
 import { catalogCount } from "@/lib/catalog";
+import { activeSeason } from "@/lib/season";
+import { SALE_EVENTS } from "@/data/sales";
 import "./globals.css";
 
 // Cached so the footer count doesn't opt every route into dynamic rendering.
@@ -83,10 +86,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const catalogTotal = await getCatalogTotal();
+  const season = activeSeason(SALE_EVENTS, new Date());
   return (
     <html
       lang="tr"
       data-theme="dark"
+      data-season={season?.theme}
       suppressHydrationWarning
       className={`${sora.variable} ${onest.variable} h-full antialiased`}
     >
@@ -105,6 +110,7 @@ export default async function RootLayout({
         <ConstellationBg />
         <Providers>
           <Navbar />
+          <SeasonBanner />
           <main className="flex-1 overflow-x-clip pb-16 sm:pb-0">{children}</main>
           <Footer catalogTotal={catalogTotal} />
           <CommandPalette />
