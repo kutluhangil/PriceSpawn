@@ -141,4 +141,18 @@ export async function ensureSchema(): Promise<void> {
       PRIMARY KEY (slug, sub_id, day, change)
     )`;
   await sql`CREATE INDEX IF NOT EXISTS sub_changes_recent_idx ON sub_changes (sub_id, day DESC)`;
+  // Community "heat" votes: one row per (game, anonymous device). The device id
+  // is a client-generated uuid stored in localStorage; PK dedupes repeat votes
+  // from the same device. ip_hash is recorded for abuse analysis only, never
+  // used as identity.
+  await sql`
+    CREATE TABLE IF NOT EXISTS deal_votes (
+      slug       text NOT NULL,
+      device     text NOT NULL,
+      ip_hash    text NOT NULL DEFAULT '',
+      created_at timestamptz NOT NULL DEFAULT now(),
+      PRIMARY KEY (slug, device)
+    )`;
+  await sql`CREATE INDEX IF NOT EXISTS deal_votes_slug_idx ON deal_votes (slug)`;
+  await sql`CREATE INDEX IF NOT EXISTS deal_votes_recent_idx ON deal_votes (created_at DESC)`;
 }

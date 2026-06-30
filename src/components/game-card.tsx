@@ -13,6 +13,7 @@ import { StoreDot } from "@/components/deal-tag";
 import { StoreLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
 import { WatchButton } from "@/components/watch-button";
+import { HeatButton } from "@/components/heat-button";
 import { useApp } from "@/components/providers";
 
 export function GameCard({ game }: { game: Game }) {
@@ -48,6 +49,11 @@ export function GameCard({ game }: { game: Game }) {
         <span className="absolute right-2 top-2">
           <WatchButton slug={game.slug} compact />
         </span>
+        {!game.unreleased && (
+          <span className="absolute bottom-2 right-2">
+            <HeatButton slug={game.slug} compact />
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col gap-2 p-3">

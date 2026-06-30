@@ -22,6 +22,7 @@ import { ReviewScores } from "@/components/review-scores";
 import { GameBundles } from "@/components/game-bundles";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
+import { HeatButton } from "@/components/heat-button";
 import { PriceChart } from "@/components/price-chart";
 import { StickyCta } from "@/components/sticky-cta";
 import { GameMedia } from "@/components/game-media";
@@ -137,6 +138,7 @@ export function GameDetail({ slug }: { slug: string }) {
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <SubBadges ids={game.subscriptions} size="md" />
                 <WatchButton slug={game.slug} />
+                <HeatButton slug={game.slug} />
               </div>
             </div>
           </div>
