@@ -14,6 +14,7 @@ import { StoreLogo } from "@/components/store-logo";
 import { StoreLink } from "@/components/store-link";
 import { WatchButton } from "@/components/watch-button";
 import { HeatButton } from "@/components/heat-button";
+import { OwnButton } from "@/components/own-button";
 import { useApp } from "@/components/providers";
 
 export function GameCard({ game }: { game: Game }) {
@@ -46,8 +47,9 @@ export function GameCard({ game }: { game: Game }) {
             🕓 {t.comingSoon} · {game.releaseYear}
           </span>
         )}
-        <span className="absolute right-2 top-2">
+        <span className="absolute right-2 top-2 flex flex-col gap-1.5">
           <WatchButton slug={game.slug} compact />
+          <OwnButton slug={game.slug} compact />
         </span>
         {!game.unreleased && (
           <span className="absolute bottom-2 right-2">

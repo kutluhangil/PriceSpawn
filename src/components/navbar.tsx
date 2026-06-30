@@ -49,6 +49,7 @@ export function Navbar() {
     { href: "/paketler", label: t.bundlesPage },
     { href: "/explorer", label: t.explorerPage },
     { href: "/takip", label: t.watchPage },
+    { href: "/koleksiyon", label: t.collectionPage },
   ];
 
   return (

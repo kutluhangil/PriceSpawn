@@ -23,6 +23,7 @@ import { GameBundles } from "@/components/game-bundles";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
 import { HeatButton } from "@/components/heat-button";
+import { OwnButton } from "@/components/own-button";
 import { PriceChart } from "@/components/price-chart";
 import { StickyCta } from "@/components/sticky-cta";
 import { GameMedia } from "@/components/game-media";
@@ -139,6 +140,7 @@ export function GameDetail({ slug }: { slug: string }) {
                 <SubBadges ids={game.subscriptions} size="md" />
                 <WatchButton slug={game.slug} />
                 <HeatButton slug={game.slug} />
+                <OwnButton slug={game.slug} />
               </div>
             </div>
           </div>
