@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import type { FreeOffer, FreePlatform } from "@/data/free";
 import { formatTRY } from "@/lib/format";
+import { endingSoon } from "@/lib/free-urgency";
 import { CoverImage } from "@/components/cover-image";
+import { FreeCountdown } from "@/components/free-countdown";
 import { useApp } from "@/components/providers";
 
 const PLATFORM_LABEL: Record<FreePlatform, string> = {
@@ -21,19 +22,9 @@ const PLATFORM_COLOR: Record<FreePlatform, string> = {
   gog: "#c44ccc",
 };
 
-function daysUntil(iso: string): number {
-  const ms = Date.parse(iso) - Date.now();
-  return Math.max(0, Math.ceil(ms / 86400000));
-}
-
 export function FreeCard({ offer }: { offer: FreeOffer }) {
   const { t, locale } = useApp();
-  const [days, setDays] = useState<number | null>(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDays(daysUntil(offer.freeUntil));
-  }, [offer.freeUntil]);
+  const soon = endingSoon(offer, new Date());
 
   const inner = (
     <div className="panel-strong group block h-full overflow-hidden rounded-[var(--radius-card)] transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
@@ -49,15 +40,18 @@ export function FreeCard({ offer }: { offer: FreeOffer }) {
         >
           {PLATFORM_LABEL[offer.platform]}
         </span>
+        {soon && (
+          <span className="absolute right-2.5 top-2.5 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-black">
+            ⏰ {t.freeLastChance}
+          </span>
+        )}
       </div>
       <div className="flex items-end justify-between gap-2 p-3.5">
         <div className="min-w-0">
           <h3 className="truncate text-sm font-bold text-bright">{offer.title}</h3>
-          {days !== null && (
-            <p className="text-[11px] text-muted">
-              {t.freeUntilLabel} {days} {t.daysLeft}
-            </p>
-          )}
+          <p className={`text-[11px] ${soon ? "font-semibold text-amber-500" : "text-muted"}`}>
+            {t.freeUntilLabel} <FreeCountdown until={offer.freeUntil} />
+          </p>
         </div>
         <span className="flex shrink-0 flex-col items-end">
           <span className="text-[11px] text-muted line-through">
