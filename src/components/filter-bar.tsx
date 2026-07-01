@@ -35,7 +35,10 @@ export function FilterBar({
   setSort: (s: SortKey) => void;
   reset: () => void;
 }) {
-  const { t } = useApp();
+  const { t, locale } = useApp();
+
+  // Steam-style one-tap budget shortcuts (sets max, clears min).
+  const budgets = [50, 100, 200, 500];
 
   const sorts: { key: SortKey; label: string }[] = [
     { key: "discount", label: t.sortDiscount },
@@ -146,6 +149,23 @@ export function FilterBar({
             className="min-h-10 w-24 rounded-md border border-border bg-bg-deep px-2 py-2 text-base text-fg outline-none focus:border-accent sm:w-20 sm:text-sm"
           />
         </label>
+        {/* Hızlı bütçe kısayolları */}
+        {budgets.map((n) => {
+          const active = opts.maxTRY === n && opts.minTRY === null;
+          return (
+            <button
+              key={n}
+              type="button"
+              onClick={() => {
+                setMin(null);
+                setMax(active ? null : n);
+              }}
+              className={chip(active)}
+            >
+              {locale === "tr" ? `₺${n} altı` : `Under ₺${n}`}
+            </button>
+          );
+        })}
       </div>
 
       {/* Stores */}
