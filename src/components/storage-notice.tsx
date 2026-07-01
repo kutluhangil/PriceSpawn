@@ -36,7 +36,7 @@ export function StorageNotice({ show, onClose }: { show: boolean; onClose: () =>
         <p className="mb-5 text-sm text-muted">{t.storageNoticeBody}</p>
         <button
           onClick={dismiss}
-          className="w-full rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.02] cursor-pointer"
+          className="w-full rounded-full bg-accent-strong px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.02] cursor-pointer"
         >
           {t.storageNoticeOk}
         </button>

@@ -43,7 +43,7 @@ export function GameCard({ game }: { game: Game }) {
           </span>
         )}
         {game.unreleased && (
-          <span className="absolute bottom-2 left-2 rounded-[3px] bg-accent px-1.5 py-0.5 text-[11px] font-bold text-white shadow-lg">
+          <span className="absolute bottom-2 left-2 rounded-[3px] bg-accent-strong px-1.5 py-0.5 text-[11px] font-bold text-white shadow-lg">
             🕓 {t.comingSoon} · {game.releaseYear}
           </span>
         )}

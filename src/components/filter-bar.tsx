@@ -51,7 +51,7 @@ export function FilterBar({
 
   const chip = (active: boolean) =>
     `flex min-h-10 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer ${
-      active ? "bg-accent text-white" : "border border-border text-muted hover:text-fg"
+      active ? "bg-accent-strong text-white" : "border border-border text-muted hover:text-fg"
     }`;
 
   return (

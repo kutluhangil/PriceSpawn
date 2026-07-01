@@ -19,6 +19,7 @@ import { AtlBadge } from "@/components/atl-badge";
 import { DealVerdict } from "@/components/deal-verdict";
 import { RelatedGames } from "@/components/related-games";
 import { ReviewScores } from "@/components/review-scores";
+import { LivePlayers } from "@/components/live-players";
 import { GameBundles } from "@/components/game-bundles";
 import { CountUp } from "@/components/count-up";
 import { WatchButton } from "@/components/watch-button";
@@ -137,7 +138,10 @@ export function GameDetail({ slug }: { slug: string }) {
                 <span className="font-semibold text-accent">{reviewText(game.score, t)}</span>{" "}
                 <span className="text-muted">· {game.score}/100</span>
               </p>
-              <ReviewScores reviews={extra.reviews} />
+              <div className="flex flex-wrap items-center gap-2">
+                <ReviewScores reviews={extra.reviews} />
+                {/^\d+$/.test(game.id) && <LivePlayers appid={game.id} />}
+              </div>
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <SubBadges ids={game.subscriptions} size="md" />
                 <WatchButton slug={game.slug} />

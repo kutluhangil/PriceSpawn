@@ -134,7 +134,7 @@ export function WatchContent() {
               <button
                 type="submit"
                 disabled={status === "saving"}
-                className="rounded-full bg-accent px-5 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.03] disabled:opacity-60 cursor-pointer"
+                className="rounded-full bg-accent-strong px-5 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.03] disabled:opacity-60 cursor-pointer"
               >
                 {t.emailSave}
               </button>
@@ -156,7 +156,7 @@ export function WatchContent() {
           <p className="text-sm text-muted">{t.emptyWatch}</p>
           <Link
             href="/oyunlar"
-            className="mt-4 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
+            className="mt-4 inline-block rounded-full bg-accent-strong px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
           >
             {t.allGamesPage}
           </Link>

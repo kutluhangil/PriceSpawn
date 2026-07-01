@@ -34,7 +34,7 @@ export function PlatformTiles({ counts = {} }: { counts?: Record<string, number>
           <Link
             key={id}
             href={`/oyunlar?store=${id}`}
-            aria-label={s.label}
+            aria-label={`${s.label} — ${n} ${t.gamesWord}`}
             className="group relative flex h-28 flex-col justify-between overflow-hidden rounded-[var(--radius-card)] border border-border p-4 transition-all duration-300 hover:-translate-y-1 hover:border-white/20"
             style={{ background: `linear-gradient(135deg, ${s.accent}26, ${s.accent}0a)` }}
           >

@@ -75,6 +75,11 @@ export const tr = {
   // benzer oyunlar
   relatedGames: "Benzer Oyunlar",
   reviewsWord: "değerlendirme",
+  playingNow: "şu an oynuyor",
+  steamSpecials: "Steam'de Öne Çıkan İndirimler",
+  steamProfileGames: "oyun kütüphanende",
+  steamPlaytime: "toplam oynama",
+  hoursShort: "saat",
   // bundle takibi
   inBundles: "Şu An Pakette",
   bundleEnds: "bitiş:",

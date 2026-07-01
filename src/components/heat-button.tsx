@@ -21,8 +21,8 @@ export function HeatButton({ slug, compact = false }: { slug: string; compact?: 
         aria-pressed={voted}
         aria-label={t.heatVote}
         title={t.heatHint}
-        className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold backdrop-blur transition-colors ${
-          voted ? "bg-accent text-white" : "bg-black/45 text-white/85 hover:text-white"
+        className={`flex min-h-[24px] items-center gap-1 rounded-full px-2 py-1 text-xs font-bold backdrop-blur transition-colors ${
+          voted ? "bg-accent-strong text-white" : "bg-black/45 text-white/85 hover:text-white"
         }`}
       >
         <span aria-hidden="true">🔥</span>
@@ -37,7 +37,7 @@ export function HeatButton({ slug, compact = false }: { slug: string; compact?: 
       aria-pressed={voted}
       title={t.heatHint}
       className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold transition-colors ${
-        voted ? "bg-accent text-white" : "border border-border text-fg hover:text-bright"
+        voted ? "bg-accent-strong text-white" : "border border-border text-fg hover:text-bright"
       }`}
     >
       <span aria-hidden="true">🔥</span>

@@ -77,6 +77,11 @@ export const en: Record<keyof typeof tr, string> = {
   // similar games
   relatedGames: "Similar Games",
   reviewsWord: "reviews",
+  playingNow: "playing now",
+  steamSpecials: "Featured Steam Deals",
+  steamProfileGames: "games in your library",
+  steamPlaytime: "total playtime",
+  hoursShort: "h",
   // bundle tracking
   inBundles: "In a Bundle Now",
   bundleEnds: "ends:",

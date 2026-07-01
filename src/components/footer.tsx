@@ -60,7 +60,13 @@ export function Footer({ catalogTotal }: { catalogTotal?: number }) {
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm sm:grid-cols-1">
             {Object.values(STORES).map((store) => (
               <li key={store.id}>
-                <a href={store.url} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                <a
+                  href={store.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${store.label} — ${t.footerStores} ↗`}
+                  className={linkClass}
+                >
                   <span
                     className="h-1.5 w-1.5 shrink-0 rounded-full"
                     style={{ background: store.accent }}

@@ -51,7 +51,7 @@ export function WatchButton({
         aria-pressed={on}
         aria-label={on ? t.watching : t.watch}
         className={`relative flex h-7 w-7 items-center justify-center rounded-full backdrop-blur transition-colors ${
-          on ? "bg-accent text-white" : "bg-black/40 text-white/80 hover:text-white"
+          on ? "bg-accent-strong text-white" : "bg-black/40 text-white/80 hover:text-white"
         }`}
       >
         <BellIcon filled={on} />
@@ -64,7 +64,7 @@ export function WatchButton({
       onClick={onClick}
       aria-pressed={on}
       className={`relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold transition-colors ${
-        on ? "bg-accent text-white" : "border border-border text-fg hover:text-bright"
+        on ? "bg-accent-strong text-white" : "border border-border text-fg hover:text-bright"
       }`}
     >
       <BellIcon filled={on} />

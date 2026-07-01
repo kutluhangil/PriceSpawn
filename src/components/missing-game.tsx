@@ -58,7 +58,7 @@ export function MissingGame({ query }: { query: string }) {
                 <a
                   href={mailto()}
                   onClick={() => setOpen(false)}
-                  className="rounded-full bg-accent px-5 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
+                  className="rounded-full bg-accent-strong px-5 py-2 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
                 >
                   {t.missingSend}
                 </a>

@@ -76,7 +76,7 @@ export function WishlistImport({ heading = false }: { heading?: boolean }) {
         <button
           type="submit"
           disabled={busy}
-          className="shrink-0 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity disabled:opacity-50 cursor-pointer"
+          className="shrink-0 rounded-full bg-accent-strong px-4 py-2 text-sm font-semibold text-white transition-opacity disabled:opacity-50 cursor-pointer"
         >
           {busy ? "…" : t.wlImportButton}
         </button>

@@ -116,7 +116,7 @@ export function WishlistGrid({
 
         <button
           onClick={bulkAdd}
-          className="ml-auto cursor-pointer rounded-full border border-accent px-3 py-1 font-semibold text-accent transition-colors hover:bg-accent hover:text-white"
+          className="ml-auto cursor-pointer rounded-full border border-accent px-3 py-1 font-semibold text-accent transition-colors hover:bg-accent-strong hover:text-white"
         >
           {t.wlBulkAlarm}
         </button>

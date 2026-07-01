@@ -168,7 +168,7 @@ export function BrowseContent() {
                     onClick={() => goto(p)}
                     aria-current={p === page}
                     className={`h-9 min-w-9 rounded-[var(--radius-card)] border px-2 text-sm font-semibold transition-colors cursor-pointer ${
-                      p === page ? "border-accent bg-accent text-white" : "border-border text-muted hover:text-bright"
+                      p === page ? "border-accent bg-accent-strong text-white" : "border-border text-muted hover:text-bright"
                     }`}
                   >
                     {p}

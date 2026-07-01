@@ -66,7 +66,7 @@ export function DealOfTheDay() {
             <span className="text-sm text-muted line-through">{formatTRY(deal.regularTRY, locale)}</span>
           )}
         </div>
-        <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-full bg-accent px-4 py-2 text-sm font-bold text-white transition-transform group-hover:scale-[1.03]">
+        <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-full bg-accent-strong px-4 py-2 text-sm font-bold text-white transition-transform group-hover:scale-[1.03]">
           {t.viewPrices} ↗
         </span>
       </div>

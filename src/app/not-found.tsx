@@ -13,7 +13,7 @@ export default function NotFound() {
         <p className="text-sm text-muted">{t.notFoundBody}</p>
         <Link
           href="/"
-          className="mt-3 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
+          className="mt-3 rounded-full bg-accent-strong px-5 py-2.5 text-sm font-bold text-white transition-transform hover:scale-[1.03]"
         >
           {t.backHome}
         </Link>

@@ -146,7 +146,7 @@ export function CommandPalette() {
                     onClick={() => go(n.href)}
                     onMouseEnter={() => setHighlight(i)}
                     className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors ${
-                      i === highlight ? "bg-accent text-white" : "text-fg"
+                      i === highlight ? "bg-accent-strong text-white" : "text-fg"
                     }`}
                   >
                     <span className={i === highlight ? "text-white" : "text-muted"}>→</span>

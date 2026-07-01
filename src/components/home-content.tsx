@@ -21,6 +21,7 @@ import { BrandMark } from "@/components/brand-mark";
 import { StatBar } from "@/components/stat-bar";
 import { GenreChips } from "@/components/genre-chips";
 import { DealOfTheDay } from "@/components/deal-of-the-day";
+import { SteamSpecials } from "@/components/steam-specials";
 import { SectionHeading } from "@/components/section-heading";
 import { WishlistImport } from "@/components/wishlist-import";
 import { useApp } from "@/components/providers";
@@ -190,6 +191,11 @@ export function HomeContent({
         </section>
       )}
 
+      {/* Steam'de öne çıkan indirimler (canlı, Steam kaynaklı) */}
+      <div className="reveal" style={{ animationDelay: "0.24s" }}>
+        <SteamSpecials />
+      </div>
+
       {/* Günün Fırsatları — ray */}
       <section id="deals" className="reveal pt-12" style={{ animationDelay: "0.24s" }}>
         <SectionHeading title={t.todaysDeals} href="/oyunlar?disc=1" id="deals-h" />
@@ -257,7 +263,7 @@ export function HomeContent({
                   aria-current={p === current}
                   className={`h-9 min-w-9 rounded-[var(--radius-card)] border px-2 text-sm font-semibold transition-colors cursor-pointer ${
                     p === current
-                      ? "border-accent bg-accent text-white"
+                      ? "border-accent bg-accent-strong text-white"
                       : "border-border text-muted hover:text-bright"
                   }`}
                 >

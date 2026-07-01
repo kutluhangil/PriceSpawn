@@ -266,7 +266,7 @@ export function Billboard({ games }: { games: Game[] }) {
             )}
             <Link
               href={`/oyun/${game.slug}`}
-              className="shrink-0 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.03]"
+              className="shrink-0 rounded-full bg-accent-strong px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.03]"
             >
               {t.viewPrices}
             </Link>

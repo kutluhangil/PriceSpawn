@@ -75,7 +75,7 @@ export function ExplorerContent() {
 
   const chip = (active: boolean) =>
     `rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
-      active ? "border-accent bg-accent text-white" : "border-border bg-(--row) text-muted hover:border-accent hover:text-bright"
+      active ? "border-accent bg-accent-strong text-white" : "border-border bg-(--row) text-muted hover:border-accent hover:text-bright"
     }`;
 
   return (

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { resolveSteamId } from "@/lib/wishlist";
-import { fetchOwnedAppids, ownedSlugs } from "@/lib/owned";
+import { fetchOwned, ownedSlugs, fetchPlayerSummary, type SteamProfile } from "@/lib/owned";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +9,8 @@ export interface OwnedImportPayload {
   steamid?: string;
   total?: number; // owned games on Steam
   slugs?: string[]; // matched to our catalog
+  totalMinutes?: number; // summed playtime across the library
+  profile?: SteamProfile; // persona name + avatar
   reason?: "bad_input" | "not_found" | "no_key" | "empty_or_private";
 }
 
@@ -20,12 +22,19 @@ export async function GET(req: Request): Promise<NextResponse<OwnedImportPayload
   const steamid = await resolveSteamId(input);
   if (!steamid) return NextResponse.json({ ok: false, reason: "not_found" });
 
-  const appids = await fetchOwnedAppids(steamid);
-  if (appids === null) return NextResponse.json({ ok: false, steamid, reason: "no_key" });
-  if (appids.length === 0) {
+  const [owned, profile] = await Promise.all([fetchOwned(steamid), fetchPlayerSummary(steamid)]);
+  if (owned === null) return NextResponse.json({ ok: false, steamid, reason: "no_key" });
+  if (owned.appids.length === 0) {
     return NextResponse.json({ ok: false, steamid, reason: "empty_or_private" });
   }
 
-  const slugs = await ownedSlugs(appids);
-  return NextResponse.json({ ok: true, steamid, total: appids.length, slugs });
+  const slugs = await ownedSlugs(owned.appids);
+  return NextResponse.json({
+    ok: true,
+    steamid,
+    total: owned.appids.length,
+    slugs,
+    totalMinutes: owned.totalMinutes,
+    ...(profile ? { profile } : {}),
+  });
 }

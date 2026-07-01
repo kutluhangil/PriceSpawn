@@ -72,7 +72,7 @@ export function InstallPrompt() {
           </button>
           <button
             onClick={install}
-            className="flex-1 rounded-full bg-accent px-3 py-2 text-xs font-bold text-white shadow-lg transition-transform hover:scale-[1.03] cursor-pointer"
+            className="flex-1 rounded-full bg-accent-strong px-3 py-2 text-xs font-bold text-white shadow-lg transition-transform hover:scale-[1.03] cursor-pointer"
           >
             {t.installApp}
           </button>

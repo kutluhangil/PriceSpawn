@@ -48,7 +48,7 @@ export function BrandMark({ className = "" }: { className?: string }) {
   }, []);
 
   return (
-    <span className={`relative inline-block font-display ${className}`} aria-label={BRAND}>
+    <span className={`relative inline-block font-display ${className}`} role="img" aria-label={BRAND}>
       {/* invisible sizer reserves the final width so nav never shifts */}
       <span aria-hidden="true" className="invisible font-extrabold">
         {BRAND}

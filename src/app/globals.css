@@ -15,6 +15,9 @@
   --bright: #ffffff;
   --muted: #8b91a7;
   --accent: #8b7cf8;
+  /* WCAG AA (≥4.5:1 white): fills carrying white text. --accent stays bright for
+     glows, borders and large display text; buttons/badges use this deeper shade. */
+  --accent-strong: #5b46d0;
   --accent-soft: rgba(139, 124, 248, 0.16);
   --best: #4ade80;
   --best-soft: rgba(74, 222, 128, 0.1);
@@ -43,6 +46,7 @@
   --bright: #14161e;
   --muted: #6a7086;
   --accent: #6356f0;
+  --accent-strong: #4f46e5;
   --accent-soft: rgba(99, 86, 240, 0.1);
   --best: #15803d;
   --best-soft: rgba(21, 128, 61, 0.08);
@@ -66,6 +70,7 @@
 /* Yaz: gün batımı (amber → mercan → deniz) */
 :root[data-theme="dark"][data-season="summer"] {
   --accent: #ff9d4d;
+  --accent-strong: #a85a10;
   --accent-soft: rgba(255, 157, 77, 0.16);
   --search-glow: rgba(255, 157, 77, 0.35);
   --bg-glow-1: rgba(255, 140, 60, 0.18);
@@ -74,6 +79,7 @@
 }
 :root[data-theme="light"][data-season="summer"] {
   --accent: #e8772a;
+  --accent-strong: #a8500b;
   --accent-soft: rgba(232, 119, 42, 0.12);
   --search-glow: rgba(232, 119, 42, 0.25);
   --bg-glow-1: rgba(255, 180, 90, 0.26);
@@ -84,6 +90,7 @@
 /* Sonbahar: kehribar → bakır → koyu kırmızı */
 :root[data-theme="dark"][data-season="autumn"] {
   --accent: #e0792f;
+  --accent-strong: #a8500b;
   --accent-soft: rgba(224, 121, 47, 0.16);
   --search-glow: rgba(224, 121, 47, 0.34);
   --bg-glow-1: rgba(214, 110, 40, 0.18);
@@ -92,6 +99,7 @@
 }
 :root[data-theme="light"][data-season="autumn"] {
   --accent: #c4651f;
+  --accent-strong: #9a4d14;
   --accent-soft: rgba(196, 101, 31, 0.12);
   --search-glow: rgba(196, 101, 31, 0.25);
   --bg-glow-1: rgba(240, 160, 80, 0.24);
@@ -102,6 +110,7 @@
 /* Kış: buz mavisi → kar → ametist */
 :root[data-theme="dark"][data-season="winter"] {
   --accent: #5eb3ff;
+  --accent-strong: #1c6fb0;
   --accent-soft: rgba(94, 179, 255, 0.16);
   --search-glow: rgba(94, 179, 255, 0.34);
   --bg-glow-1: rgba(60, 140, 230, 0.16);
@@ -110,6 +119,7 @@
 }
 :root[data-theme="light"][data-season="winter"] {
   --accent: #2f7fd6;
+  --accent-strong: #1c5f9e;
   --accent-soft: rgba(47, 127, 214, 0.1);
   --search-glow: rgba(47, 127, 214, 0.24);
   --bg-glow-1: rgba(140, 190, 255, 0.24);
@@ -124,6 +134,7 @@
   --color-bright: var(--bright);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
   --color-best: var(--best);
   --color-border: var(--border);
   --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
