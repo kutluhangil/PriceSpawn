@@ -35,3 +35,32 @@ const SLUG_BY_LABEL = new Map(GENRES.map((g) => [g.label, g.slug]));
 export function slugForGenre(label: string): string | undefined {
   return SLUG_BY_LABEL.get(label);
 }
+
+export interface GenreHubItem {
+  label: string;
+  count: number;
+  slug?: string;
+  blurb?: string;
+  href: string;
+}
+
+/**
+ * Merge real catalog genre counts with the curated landing defs into a hub list:
+ * drop tiny genres, sort by popularity, attach blurb/slug where curated, and
+ * point each tile at the full-catalog genre filter.
+ */
+export function genreHub(rows: { genre: string; count: number }[], minCount = 1): GenreHubItem[] {
+  return rows
+    .filter((r) => r.count >= minCount)
+    .sort((a, b) => b.count - a.count)
+    .map((r) => {
+      const def = GENRES.find((g) => g.label === r.genre);
+      return {
+        label: r.genre,
+        count: r.count,
+        slug: def?.slug,
+        blurb: def?.blurb,
+        href: `/oyunlar?g=${encodeURIComponent(r.genre)}`,
+      };
+    });
+}

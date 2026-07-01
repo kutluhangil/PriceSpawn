@@ -6,6 +6,7 @@ import { useApp } from "@/components/providers";
 import { GAMES, type Game } from "@/data/games";
 import { bestPrice } from "@/lib/price";
 import { GameCard } from "@/components/game-card";
+import { SteamOwnedImport } from "@/components/steam-owned-import";
 
 function onSale(game: Game): boolean {
   const best = bestPrice(game);
@@ -66,6 +67,8 @@ export function CollectionContent() {
           </p>
         )}
       </header>
+
+      <SteamOwnedImport />
 
       {ready && list.length === 0 ? (
         <p className="rounded-xl border border-border bg-(--panel) px-5 py-10 text-center text-sm text-muted">

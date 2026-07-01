@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isOwned, addOwned, removeOwned, toggleOwned } from "@/lib/collection";
+import { isOwned, addOwned, removeOwned, toggleOwned, addManyOwned } from "@/lib/collection";
 
 describe("collection", () => {
   it("reports membership", () => {
@@ -28,5 +28,25 @@ describe("collection", () => {
     removeOwned(input, "a");
     toggleOwned(input, "a");
     expect(input).toEqual(["a", "b"]);
+  });
+
+  describe("addManyOwned", () => {
+    it("adds new slugs and skips existing ones", () => {
+      expect(addManyOwned(["a"], ["b", "a", "c"])).toEqual(["a", "b", "c"]);
+    });
+
+    it("de-duplicates within the incoming list", () => {
+      expect(addManyOwned([], ["x", "x", "y"])).toEqual(["x", "y"]);
+    });
+
+    it("returns the same list when nothing new", () => {
+      expect(addManyOwned(["a", "b"], ["a", "b"])).toEqual(["a", "b"]);
+    });
+
+    it("does not mutate the input", () => {
+      const input = ["a"];
+      addManyOwned(input, ["b", "c"]);
+      expect(input).toEqual(["a"]);
+    });
   });
 });

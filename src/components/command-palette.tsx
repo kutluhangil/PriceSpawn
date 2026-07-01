@@ -21,6 +21,7 @@ export function CommandPalette() {
   const navItems = useMemo(
     () => [
       { label: t.allGamesPage, href: "/oyunlar" },
+      { label: t.genresPage, href: "/turler" },
       { label: t.hotDealsPage, href: "/sicak" },
       { label: t.freePage, href: "/ucretsiz" },
       { label: t.subsPage, href: "/abonelikler" },
