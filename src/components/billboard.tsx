@@ -151,6 +151,7 @@ export function Billboard({ games }: { games: Game[] }) {
                 title={game.title}
                 sizes="(max-width: 768px) 100vw, 800px"
                 quality={90}
+                priority
                 className="billboard-fade h-full w-full scale-[1.06] transition-transform duration-700 ease-out group-hover/img:scale-[1.1]"
               />
             </div>

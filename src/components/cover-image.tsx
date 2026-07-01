@@ -23,7 +23,8 @@ export function CoverImage({
   title,
   className = "",
   sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px",
-  quality,
+  quality = 62,
+  priority = false,
 }: {
   src: string;
   /** Tried in order if `src` fails to load, before showing the gradient. */
@@ -32,6 +33,8 @@ export function CoverImage({
   className?: string;
   sizes?: string;
   quality?: number;
+  /** Above-the-fold LCP image: eager-load + preload instead of lazy. */
+  priority?: boolean;
 }) {
   // Build the candidate chain once: primary src, then any fallbacks, de-duped.
   const chain = [src, ...(Array.isArray(fallbackSrc) ? fallbackSrc : fallbackSrc ? [fallbackSrc] : [])]
@@ -65,6 +68,7 @@ export function CoverImage({
         fill
         sizes={sizes}
         quality={quality}
+        priority={priority}
         unoptimized={active.endsWith(".webm")}
         onError={() => {
           setLoaded(false);

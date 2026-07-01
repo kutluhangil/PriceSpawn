@@ -119,6 +119,8 @@ export function GameDetail({ slug }: { slug: string }) {
             <CoverImage
               src={game.coverUrl}
               title={game.title}
+              sizes="(max-width: 640px) 100vw, 320px"
+              priority
               className="aspect-[460/215] w-full shrink-0 rounded-2xl shadow-2xl sm:w-80"
             />
             <div className="flex min-w-0 flex-col gap-2.5">
