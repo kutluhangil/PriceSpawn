@@ -8,8 +8,8 @@ import type { BrowseItem } from "@/app/api/catalog-browse/route";
 export async function catalogGameBySlug(slug: string): Promise<Game | null> {
   if (!hasDb()) return null;
   try {
-    const rows = (await sql!`
-      SELECT slug, appid, title, cover, genres, score, year, unreleased, free FROM catalog WHERE slug = ${slug}`) as {
+    const rows = (await sql`
+      SELECT slug, appid, title, cover, genres, score, year, unreleased, free, hltb_main FROM catalog WHERE slug = ${slug}`) as {
       slug: string;
       appid: string;
       title: string;
@@ -19,6 +19,7 @@ export async function catalogGameBySlug(slug: string): Promise<Game | null> {
       year: number;
       unreleased: boolean;
       free: boolean;
+      hltb_main: number | null;
     }[];
     if (rows.length === 0) return null;
     const c = rows[0];
@@ -52,6 +53,7 @@ export async function catalogGameBySlug(slug: string): Promise<Game | null> {
       genres: Array.isArray(c.genres) ? c.genres : [],
       score: Number(c.score),
       releaseYear: Number(c.year),
+      ...(c.hltb_main ? { hltbMain: Number(c.hltb_main) } : {}),
       prices,
       subscriptions: subRows.map((s) => s.sub_id as SubscriptionId),
       ...(c.unreleased ? { unreleased: true } : {}),

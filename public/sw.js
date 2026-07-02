@@ -27,3 +27,10 @@ self.addEventListener("notificationclick", (event) => {
     })
   );
 });
+
+// Basic fetch listener to pass PWA installation criteria
+self.addEventListener("fetch", (event) => {
+  // Pass through all requests normally
+  // In the future, offline caching could be added here
+});
+

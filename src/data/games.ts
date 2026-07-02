@@ -19,6 +19,7 @@ export interface Game {
   genres: string[];
   score: number; // 0-100
   releaseYear: number;
+  hltbMain?: number; // HowLongToBeat main story hours
   prices: Price[];
   subscriptions: SubscriptionId[];
   trailerId?: string; // Steam movie id for hover microtrailer

@@ -71,6 +71,14 @@ export function GameCard({ game }: { game: Game }) {
               {g}
             </span>
           ))}
+          {game.hltbMain ? (
+            <span
+              className="rounded-[3px] bg-indigo-900/40 px-1.5 py-0.5 text-[10px] font-medium text-indigo-300"
+              title="Ana hikaye oyun süresi (HowLongToBeat)"
+            >
+              ⏱ {game.hltbMain}s
+            </span>
+          ) : null}
         </div>
 
         <div className="mt-0.5 flex items-end justify-between gap-2">

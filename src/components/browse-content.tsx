@@ -2,9 +2,25 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import type { SearchResult } from "@/app/api/search/route";
 import type { BrowsePayload } from "@/app/api/catalog-browse/route";
 import { GameArt } from "@/components/game-art";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 import { FilterBar } from "@/components/filter-bar";
 import { ResultCard } from "@/components/result-card";
 import { useGameFilters } from "@/hooks/use-game-filters";
@@ -130,22 +146,34 @@ export function BrowseContent() {
           {t.noResults}
         </div>
       ) : query ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        >
           {(searchResults ?? []).map((r) => (
-            <ResultCard key={r.slug} r={r} locale={locale} freeLabel={t.freeLabel} />
+            <motion.div key={r.slug} variants={item}>
+              <ResultCard r={r} locale={locale} freeLabel={t.freeLabel} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
         <>
-          <div
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
             className={`grid grid-cols-1 gap-4 transition-opacity sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${
               loading ? "opacity-50" : "opacity-100"
             }`}
           >
             {(browse?.items ?? []).map((r) => (
-              <ResultCard key={r.slug} r={r} locale={locale} freeLabel={t.freeLabel} />
+              <motion.div key={r.slug} variants={item}>
+                <ResultCard r={r} locale={locale} freeLabel={t.freeLabel} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {pageCount > 1 && (
             <nav className="mt-8 flex items-center justify-center gap-1.5">
