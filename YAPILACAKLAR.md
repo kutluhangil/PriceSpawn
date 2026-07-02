@@ -3,12 +3,12 @@
 Bu dosya **senin elle yapman gereken** işleri listeler. Kod tarafı bitti; aşağıdakiler
 sadece sende olan hesap/registrar/panel işleri.
 
-Son güncelleme: 2026-06-24
+Son güncelleme: 2026-07-02
 
 ---
 
 ## ✅ Şu an hazır olan (kod + altyapı)
-- Site canlı: **https://pricespawn.vercel.app** (kısa URL bağlandı)
+- Site canlı: **https://pricespawn.vercel.app**
 - Katalog **10.405 oyun** (8.646'sı gerçek TL fiyatlı) — **canlı/gerçek fiyatlar** (demo değil)
 - Tüm özellikler canlı: arama, detay + fiyat geçmişi + ATL, Al/Bekle, ücretsiz oyunlar,
   abonelik değer, paketler, Explorer, Steam wishlist import (`/liste`), popülerlik
@@ -17,28 +17,19 @@ Son güncelleme: 2026-06-24
 - Prod env'ler **kurulu**: `ITAD_API_KEY`, `DATABASE_URL` (Neon), `CRON_SECRET`,
   `RESEND_API_KEY` + `EMAIL_FROM` (e-posta), `VAPID_*` (web push)
 - Cron'lar aktif: günlük fiyat/abonelik yenileme, fiyat-düşüş bildirimi, **haftalık bülten (Pzt 09:00 UTC)**
+- `hangisidahaucuz.com` Vercel'den kaldırıldı (vazgeçildi).
 
 ---
 
-## 🔴 1. Custom domain'i bağla (`hangisidahaucuz.com`) — opsiyonel ama önerilen
+## 🔴 1. Custom domain bağla (`pricespawn.com`) — ileride
 
-Site şu an `pricespawn.vercel.app`'te çalışıyor. Kendi domainini istiyorsan:
+Site şu an `pricespawn.vercel.app`'te çalışıyor. `pricespawn.com` domain alınca:
 
-`hangisidahaucuz.com` Vercel projesine ekli ama **DNS doğrulaması bekliyor**.
-
-1. Vercel → Project (pricespawn) → **Settings → Domains → `hangisidahaucuz.com`** aç.
-2. Orada Vercel'in **sana gösterdiği tam DNS kayıtlarını** kopyala (A / CNAME ya da
-   nameserver). Kayıtlar zaman zaman değişir → **panelde yazanı baz al**, eski
-   değerlere güvenme.
-3. Domaini aldığın yere (registrar: İsimtescil / GoDaddy / Namecheap vb.) gir,
-   **DNS** ayarlarına o kayıtları ekle.
-4. Kaydet → 10 dk–24 saat içinde yayılır, Vercel doğrulayınca otomatik HTTPS ile açılır.
-
-> En temiz yol: registrar'da **nameserver**'ları `ns1.vercel-dns.com` / `ns2.vercel-dns.com`
-> yap — tüm DNS'i Vercel yönetir, başka kayıt gerekmez.
-
-Bağlanınca bana "domain bağlandı" de — `src/lib/site.ts`'teki site URL'ini ve
-title'ı `hangisidahaucuz.com`'a çeviririm (şu an "pricespawn.com" yazıyor).
+1. Domaini satın al (Namecheap / GoDaddy / İsimtescil vb.).
+2. Vercel → Project (pricespawn) → **Settings → Domains → `pricespawn.com`** ekle.
+3. Vercel'in verdiği DNS kayıtlarını registrar'a gir.
+   > En temiz yol: nameserver'ları `ns1.vercel-dns.com` / `ns2.vercel-dns.com` yap.
+4. Bağlanınca bana haber ver — `src/lib/site.ts`'teki URL'i ve title'ı güncellerim.
 
 ---
 
@@ -52,8 +43,8 @@ Kontrol et: https://resend.com/domains
 - `EMAIL_FROM`'daki domain (ör. `pricespawn.com`) listede **Verified** mı?
 - Değilse: domaini ekle → Resend'in verdiği **DKIM/SPF TXT** kayıtlarını registrar'a koy → doğrulanmasını bekle.
 
-> Not: `EMAIL_FROM` domaini ile site domaini farklı olabilir. Hangi domaini gönderici
-> yaptığını sen biliyorsun; doğrulanması gereken o.
+> Not: E-posta gönderici domain için ayrı bir subdomain kullanabilirsin (ör. `mail.pricespawn.com`).
+> `pricespawn.com` alınınca bu da çözülür.
 
 ---
 
@@ -68,6 +59,6 @@ Kontrol et: https://resend.com/domains
 ---
 
 ## Özet — şimdi ne yapmalısın?
-1. **İstersen** `hangisidahaucuz.com` DNS'ini bağla (madde 1). Şart değil; kısa URL çalışıyor.
-2. **Resend domainini doğrula** (madde 2) — e-postaların tüm abonelere ulaşması için tek gereken bu.
+1. **`pricespawn.com` domain alınca** Vercel'e bağla (madde 1) ve bana haber ver.
+2. **`pricespawn.com` alınınca** Resend'de gönderici domain doğrula (madde 2) — e-postalar tüm abonelere gitsin.
 3. Gerisi hazır ve canlı.
